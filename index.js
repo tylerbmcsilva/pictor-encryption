@@ -4,7 +4,9 @@
 const bodyParser = require('body-parser');
 const express = require('express');
 const exphbs = require('express-handlebars');
+const mysql = require('mysql');
 const router = require('./routes/index');
+const config = require('./config.json');
 
 /*
   Set up server
@@ -39,4 +41,20 @@ app.use('/', router);
 */
 app.listen(app.get('port'), () => {
   console.log('Express started on port: ' + app.get('port') + '; press Ctrl-C to terminate.');
+});
+
+/*
+  Establish database connection
+*/
+var pool = mysql.createPool({
+  host : config.dbhost,
+  user : config.dbuser,
+  password : config.dbpassword,
+  database : config.dbname,
+  ssl : "Amazon RDS"
+});
+
+pool.getConnection(function(err, connection){
+  if (err) throw err;
+  console.log('Database is rolling, boys');
 });
