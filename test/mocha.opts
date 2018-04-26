@@ -1,0 +1,4 @@
+--recursive
+--check-leaks
+--timeout 30000
+--exit

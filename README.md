@@ -5,3 +5,6 @@
 2. Run `npm install`
 3. Run `npm start`
 4. Open browser to `http://localhost:12345`
+
+### Running Test Suite
+Run `npm test`
