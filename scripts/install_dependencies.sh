@@ -7,3 +7,5 @@ yum install -y nodejs npm
 
 npm install -g pm2
 npm install
+
+git submodule update --init --recursive
