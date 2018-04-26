@@ -6,7 +6,7 @@ const express = require('express');
 const exphbs = require('express-handlebars');
 const mysql = require('mysql');
 const router = require('./routes/index');
-const config = require('./config.json');
+const { database } = require('./config');
 
 /*
   Set up server
@@ -47,14 +47,14 @@ app.listen(app.get('port'), () => {
   Establish database connection
 */
 var pool = mysql.createPool({
-  host : config.dbhost,
-  user : config.dbuser,
-  password : config.dbpassword,
-  database : config.dbname,
+  host : database.dbhost,
+  user : database.dbuser,
+  password : database.dbpassword,
+  database : database.dbname,
   ssl : "Amazon RDS"
 });
 
-pool.getConnection(function(err, connection){
+pool.getConnection((err, connection)=>{
   if (err) throw err;
   console.log('Database is rolling, boys');
 });
