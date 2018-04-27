@@ -8,4 +8,4 @@
 4. Open browser to `http://localhost:12345`
 
 ### Running Test Suite
-Run `npm test`
+Run `yarn test`
