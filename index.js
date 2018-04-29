@@ -14,7 +14,7 @@ const app = express();
 /*
   Set up view engine
 */
-app.engine('.hbs', exphbs( {extname: '.hbs', defaultLayout: 'main'} ));
+app.engine('.hbs', exphbs( {extname: '.hbs', defaultLayout: 'dashboard'} ));
 app.set('view engine', '.hbs');
 app.set('port', process.env.PORT || 8080);
 
