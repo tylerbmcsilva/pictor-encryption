@@ -1,12 +1,10 @@
 /*
   Required packages
 */
-const bodyParser = require('body-parser');
-const express = require('express');
-const exphbs = require('express-handlebars');
-const mysql = require('mysql');
-const router = require('./routes/index');
-const { database } = require('./config');
+const bodyParser  = require('body-parser');
+const express     = require('express');
+const exphbs      = require('express-handlebars');
+const router      = require('./routes/index');
 
 /*
   Set up server
@@ -18,7 +16,7 @@ const app = express();
 */
 app.engine('.hbs', exphbs( {extname: '.hbs', defaultLayout: 'main'} ));
 app.set('view engine', '.hbs');
-app.set('port', process.env.PORT || 12345);
+app.set('port', process.env.PORT || 8080);
 
 /*
   Set up Body Parser
@@ -34,27 +32,11 @@ app.use(express.static('public'));
 /*
   Set up routes
 */
-app.use('/', router);
+app.use(require('./routes'));
 
 /*
   Start server
 */
-app.listen(app.get('port'), () => {
-  console.log('Express started on port: ' + app.get('port') + '; press Ctrl-C to terminate.');
-});
-
-/*
-  Establish database connection
-*/
-var pool = mysql.createPool({
-  host : database.dbhost,
-  user : database.dbuser,
-  password : database.dbpassword,
-  database : database.dbname,
-  ssl : "Amazon RDS"
-});
-
-pool.getConnection((err, connection)=>{
-  if (err) throw err;
-  console.log('Database is rolling, boys');
+app.listen(app.get('port'), async function() {
+  console.log(`Express started on port: ${app.get('port')}; press Ctrl-C to terminate.`);
 });
