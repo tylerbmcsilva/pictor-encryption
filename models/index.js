@@ -3,7 +3,6 @@ const POOL          = require('./pool');
 const { promisify } = require('bluebird');
 
 
-
 /*
   Establish database connection
 */
@@ -21,6 +20,7 @@ async function establishConnection(){
     console.error(error);
   }
 }
+
 
 module.exports = {
   establishConnection
