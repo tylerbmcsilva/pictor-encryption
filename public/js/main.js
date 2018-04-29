@@ -6,10 +6,6 @@ function main() {
       if(window.serverData)
         document.getElementsByTagName('body')[0].innerHTML += `<pre>${JSON.stringify(window.serverData)}</pre>`;
     });
-
-  return {
-    getServerData: getServerData
-  }
 }
 
 
