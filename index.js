@@ -32,7 +32,7 @@ app.use(express.static('public'));
 /*
   Set up routes
 */
-app.use(require('./routes/'));
+app.use(require('./routes'));
 
 /*
   Start server
