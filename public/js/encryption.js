@@ -1,9 +1,9 @@
-async function createAndStoreKey() {
+async function createAndStoreKeyPair() {
   let keys = await keyGen();
   let conn;
   try {
     conn = await connect("PictorStore", "keys", 1);
-    await storeData(conn, "keys", keys);
+    await storeData(conn, "keys", keyPair);
   } catch(exception) {
     console.error(exception);
   } finally {
