@@ -6,21 +6,39 @@ function main(window, document) {
 
   getDataFromUrl(dataSourceURL)
     .then(function(data) {
-      window.serverData = data;
-      return data;
-
+      if(data)
+        return data;
+      else
+        throw Error('No Data');
     }).then(function(data) {
-      // decrypt
+      // **********************
+      // DECRYPT HERE
+      // **********************
       return data;
-
     }).then(function(data) {
-      if(window.serverData)
-        document.getElementsByTagName('body')[0].innerHTML += `<pre>${JSON.stringify(window.serverData)}</pre>`;
+      if(window.serverData) {
+        // **********************
+        // EVENTUALLY REMOVE
+        // **********************
+        document.getElementsByClassName('main-page')[0].innerHTML += `<pre>${JSON.stringify(window.serverData)}</pre>`;
+
+        // Loads the data from the server onto the page
         populateDataFromServer(window.location.pathname, data);
+      }
       return;
 
     }).finally(function() {
-      hidePreloader(document);
+      // Hide preloader after 2 seconds
+      setTimeout(function() {
+        hidePreloader(document);
+      }, 2000);
+
+    }).catch(function(error) {
+      if(error.message === 'No Data')
+        return;
+      else {
+        throw error;
+      }
     });
 }
 
@@ -37,10 +55,15 @@ function populateDataFromServer(path, data){
 function getDataFromUrl(url) {
   return axios.get(url)
     .then(function(r){
-      return r.data
+      if(r.status === 404)
+        return {};
+      else
+        return r.data;
     })
     .catch(function(err){
-      console.log(err);
+      // SILENTLY FAIL
+      // console.log(err);
+      return;
     });
 }
 
@@ -109,10 +132,15 @@ function UserPage(data){
 
 function hidePreloader(d) {
   let pl = d.getElementById('preloader');
-  pl.classList.remove('active')
+  pl.classList.remove('active');
   pl.classList.add('hide');
+
+  let plw = d.getElementById('preloader-wrapper');
+  plw.classList.remove('full-height');
+  plw.classList.add('hide');
 }
 
 !function() {
   document.addEventListener('DOMContentLoaded', main(window, document));
+  M.AutoInit();
 }();
