@@ -1,9 +1,15 @@
-async function saveKey() {
+async function createAndStoreKey() {
   let keys = await keyGen();
-  console.log(keys);
-  storeKey(function(store) {
-    store.put({keys: keys});
-  })
+  let conn;
+  try {
+    conn = await connect("PictorStore", "keys", 1);
+    await storeData(conn, "keys", keys);
+  } catch(exception) {
+    console.error(exception);
+  } finally {
+    if(conn)
+      conn.close();
+  }
 }
 
 function keyGen() {
@@ -19,26 +25,24 @@ function keyGen() {
   )
 }
 
-function storeKey(func) {
-  let dbName = "PictorStore";
-  let objectStoreName = "keys";
-
-  let request = window.indexedDB.open(dbName, 1);
-
-  request.onupgradeneeded = function() {
-    let db = request.result;
-    let store = db.createObjectStore(objectStoreName, {autoIncrement:true});
-  };
-
-  request.onsuccess = function() {
-    let db = request.result;
-    let transaction = db.transaction(objectStoreName, "readwrite");
-    let store = transaction.objectStore(objectStoreName);
-
-    func(store);
-
-    transaction.oncomplete = function() {
-      db.close();
+function connect(dbName, objectStoreName, version) {
+  return new Promise((resolve, reject) => {
+    const request = window.indexedDB.open(dbName, version);   request.onupgradeneeded = () => {
+      let db = request.result;
+      let store = db.createObjectStore(objectStoreName, {autoIncrement:true});
     };
-  }
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+    request.onblocked = () => { console.log('blocked'); };
+  });
+}
+
+function storeData(conn, objectStoreName, data) {
+  return new Promise((resolve, reject) => {
+    const tx = conn.transaction(objectStoreName, "readwrite");
+    const store = tx.objectStore(objectStoreName);
+    const request = store.put(data);
+    request.onsuccess = () => resolve(request.result);
+    request.error = () => reject(request.error);
+  });
 }
