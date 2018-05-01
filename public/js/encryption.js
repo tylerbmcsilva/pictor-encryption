@@ -1,3 +1,4 @@
+// temporary
 testData = {
   id: 1,
   name:     'Harry Potter',
@@ -7,19 +8,20 @@ testData = {
   }
 }
 
+// to store encrypted and decrypted data
 let encryptedData;
 let jsonblock;
 
-async function createAndStoreKeyPair() {
-  let keyPair = await keyGen();
+async function createAndStoreKeys() {
+  let keyPair = await keyGenRSA();
   let conn;
-  let email = "harrypotter@gmail.com";
+  let email = "harrypotter@gmail.com";    // temporary
   try {
     conn = await connect("PictorStore", "keys", 1);
     let data = {
       publicKey:  keyPair.publicKey,
       privateKey: keyPair.privateKey,
-      email:      email
+      email:      email   // temporary
     };
     await storeData(conn, "keys", data);
   } catch(exception) {
@@ -30,7 +32,7 @@ async function createAndStoreKeyPair() {
   }
 }
 
-function keyGen() {
+function keyGenRSA() {
   return window.crypto.subtle.generateKey(
     {
       name: "RSA-OAEP",
@@ -38,7 +40,7 @@ function keyGen() {
       publicExponent: new Uint8Array([1, 0, 1]),
       hash: {name: "SHA-256"}
     },
-    true,
+    false,
     ["encrypt", "decrypt"]
   )
   .then((key) => {
@@ -84,7 +86,6 @@ async function encryptData(data) {
   try {
     conn = await connect("PictorStore", "keys", 1);
     let key = await getData(conn, "keys", email);
-    // let usableKey = await convertKey(key);
     let uint8array = new TextEncoder("utf-8").encode(JSON.stringify(data));
     encryptedData = await encrypt(key.publicKey, uint8array);
   } catch(exception) {
