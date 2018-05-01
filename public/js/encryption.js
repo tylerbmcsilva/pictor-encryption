@@ -1,5 +1,6 @@
-// temporary
-testData = {
+// test data - temporary
+const testEmail = "harrypotter@gmail.com";
+const testData = {
   id: 1,
   name:     'Harry Potter',
   location: {
@@ -8,20 +9,22 @@ testData = {
   }
 }
 
+// argument used to search IndexedDB record
+let id = testEmail;
+
 // to store encrypted and decrypted data
 let encryptedData;
-let jsonblock;
+let jsonBlock;
 
 async function createAndStoreKeys() {
   let keyPair = await keyGenRSA();
   let conn;
-  let email = "harrypotter@gmail.com";    // temporary
   try {
     conn = await connect("PictorStore", "keys", 1);
     let data = {
       publicKey:  keyPair.publicKey,
       privateKey: keyPair.privateKey,
-      email:      email   // temporary
+      id:      id   // temporary
     };
     await storeData(conn, "keys", data);
   } catch(exception) {
@@ -52,7 +55,7 @@ function connect(dbName, objectStoreName, version) {
   return new Promise((resolve, reject) => {
     const request = window.indexedDB.open(dbName, version);   request.onupgradeneeded = () => {
       let db = request.result;
-      let store = db.createObjectStore(objectStoreName, {keyPath: "email"});
+      let store = db.createObjectStore(objectStoreName, {keyPath: "id"});  // keyPath may change later
     };
     request.onsuccess = () => resolve(request.result);
     request.onerror = () => reject(request.error);
@@ -80,12 +83,12 @@ function getData(conn, objectStoreName, value) {
   });
 }
 
-async function encryptData(data) {
+// for encrypting json blocks
+async function encryptData(data, id) {
   let conn;
-  let email = "harrypotter@gmail.com";
   try {
     conn = await connect("PictorStore", "keys", 1);
-    let key = await getData(conn, "keys", email);
+    let key = await getData(conn, "keys", id);
     let uint8array = new TextEncoder("utf-8").encode(JSON.stringify(data));
     encryptedData = await encrypt(key.publicKey, uint8array);
   } catch(exception) {
@@ -106,12 +109,12 @@ function encrypt(key, data) {
   )
 }
 
-async function decryptData(data) {
+// for decrypting json blocks
+async function decryptData(data, id) {
   let conn;
-  let email = "harrypotter@gmail.com";
   try {
     conn = await connect("PictorStore", "keys", 1);
-    let key = await getData(conn, "keys", email);
+    let key = await getData(conn, "keys", id);
     let uint8array = await decrypt(key.privateKey, data);
     let decryptedData = new TextDecoder("utf-8").decode(uint8array);
     jsonblock = JSON.parse(decryptedData);
