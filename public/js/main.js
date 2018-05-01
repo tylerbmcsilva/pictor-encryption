@@ -93,6 +93,7 @@ function getPage(pageName) {
   }
 }
 
+
 // mapping argument looks like this:
 //   [ { id: 'id-to-map-to', data: 'data-to-put-in-id'} ]
 function Page(mapping) {
@@ -139,6 +140,7 @@ function hidePreloader(d) {
   plw.classList.remove('full-height');
   plw.classList.add('hide');
 }
+
 
 !function() {
   document.addEventListener('DOMContentLoaded', main(window, document));

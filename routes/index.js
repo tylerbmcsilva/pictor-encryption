@@ -6,7 +6,7 @@ module.exports = router;
 
 
 router.use(require('./api'));
-router.use(require('./dashboard'));
+router.use(require('./app'));
 router.use(require('./home'));
 
 
