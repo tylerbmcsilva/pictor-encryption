@@ -16,15 +16,16 @@ function main(window, document) {
       // **********************
       return data;
     }).then(function(data) {
-      if(window.serverData) {
-        // **********************
-        // EVENTUALLY REMOVE
-        // **********************
-        document.getElementsByClassName('main-page')[0].innerHTML += `<pre>${JSON.stringify(window.serverData)}</pre>`;
+      // **********************
+      // EVENTUALLY REMOVE
+      // **********************
+      document.getElementsByClassName('main-page')[0].innerHTML += `<pre>${JSON.stringify(data)}</pre>`;
+      // **********************
+      // EVENTUALLY REMOVE
+      // **********************
 
-        // Loads the data from the server onto the page
-        populateDataFromServer(window.location.pathname, data);
-      }
+      // Loads the data from the server onto the page
+      populateDataFromServer(window.location.pathname, data);
       return;
 
     }).finally(function() {
