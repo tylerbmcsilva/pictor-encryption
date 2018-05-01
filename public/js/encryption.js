@@ -1,3 +1,15 @@
+testData = {
+  id: 1,
+  name:     'Harry Potter',
+  location: {
+    city:   'New York City',
+    state:  'New York'
+  }
+}
+
+let encryptedData;
+let jsonblock;
+
 async function createAndStoreKeyPair() {
   let keyPair = await keyGen();
   let conn;
@@ -26,9 +38,12 @@ function keyGen() {
       publicExponent: new Uint8Array([1, 0, 1]),
       hash: {name: "SHA-256"}
     },
-    false,
+    true,
     ["encrypt", "decrypt"]
   )
+  .then((key) => {
+    return key;
+  });
 }
 
 function connect(dbName, objectStoreName, version) {
@@ -63,26 +78,15 @@ function getData(conn, objectStoreName, value) {
   });
 }
 
-
-testData = {
-  id: 1,
-  name:     'Harry Potter',
-  location: {
-    city:   'New York City',
-    state:  'New York'
-  }
-}
-
 async function encryptData(data) {
   let conn;
-  let key;
   let email = "harrypotter@gmail.com";
   try {
     conn = await connect("PictorStore", "keys", 1);
     let key = await getData(conn, "keys", email);
+    // let usableKey = await convertKey(key);
     let uint8array = new TextEncoder("utf-8").encode(JSON.stringify(data));
-    let encryptedData = await encrypt(key.privateKey, uint8array);
-    console.log(encryptedData);
+    encryptedData = await encrypt(key.publicKey, uint8array);
   } catch(exception) {
     console.error(exception);
   } finally {
@@ -99,6 +103,23 @@ function encrypt(key, data) {
     key,
     data
   )
+}
+
+async function decryptData(data) {
+  let conn;
+  let email = "harrypotter@gmail.com";
+  try {
+    conn = await connect("PictorStore", "keys", 1);
+    let key = await getData(conn, "keys", email);
+    let uint8array = await decrypt(key.privateKey, data);
+    let decryptedData = new TextDecoder("utf-8").decode(uint8array);
+    jsonblock = JSON.parse(decryptedData);
+  } catch(exception) {
+    console.error(exception);
+  } finally {
+    if(conn)
+      conn.close();
+  }
 }
 
 function decrypt(key, data) {
