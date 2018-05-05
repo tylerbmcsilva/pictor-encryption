@@ -1,14 +1,14 @@
 #!/bin/bash
+yum update -y
+
 cd /tmp/
 
 echo -e "Installing Node@10"
-curl --silent --location https://rpm.nodesource.com/setup_10.x | bash -
+sudo curl --silent --location https://rpm.nodesource.com/setup_10.x | bash -
 echo -e "Installing C++"
-yum install -y gcc-c++ make
+sudo yum install -y gcc-c++ make
 echo -e "Installing NPM"
-yum install -y nodejs npm
-echo -e "Installing NGINX"
-yum install -y nginx
+sudo yum install -y nodejs npm
 
 echo -e "Installing PM2"
 npm install -g pm2
