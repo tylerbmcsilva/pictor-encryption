@@ -6,7 +6,7 @@ const POOL = mysql.createPool({
   user:           process.env.DBUSER,
   password:       process.env.DBPASSWORD,
   database:       process.env.DBNAME,
-  ssl :           "Amazon RDS",
+  ssl:            "Amazon RDS",
   acquireTimeout: 30000,
   debug:          true
 });
