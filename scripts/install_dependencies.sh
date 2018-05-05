@@ -9,6 +9,7 @@ echo -e "Installing NPM"
 yum install -y nodejs npm
 echo -e "Installing NGINX"
 yum install -y nginx
+start nginx
 
 echo -e "Installing PM2"
 npm install -g pm2
