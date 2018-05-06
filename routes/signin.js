@@ -6,5 +6,11 @@ module.exports = router;
 
 
 router.get('/signin', async function(req, res) {
-  res.redirect('/user');
+  try {
+    res.render('signin', {
+      layout: 'blank'
+    });
+  } catch (error) {
+    console.error(error);
+  }
 });
