@@ -26,7 +26,7 @@ async function sendRegisterForm(e) {
 
   // Encrypt payload with server public key
   // POST data from form
-  postDataToUrl(e, payload);
+  postDataToUrl(e, '/api/user/new', payload);
 }
 
 function exportRSAKeyToPEM(key) {
@@ -71,8 +71,8 @@ function formatAsPem(str) {
     return finalString;
 }
 
-function postDataToUrl(e, data) {
-  axios.post('/api/user/new', data)
+function postDataToUrl(e, url, data) {
+  axios.post(url, data)
     .catch(function(err) {
       // SILENTLY FAIL
       return;
