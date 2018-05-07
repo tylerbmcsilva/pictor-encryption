@@ -1,22 +1,22 @@
-// test data - temporary
-const testEmail = "harrypotter@gmail.com";
-const testData = {
-  id: 1,
-  name:     'Harry Potter',
-  location: {
-    city:   'New York City',
-    state:  'New York'
-  }
-}
-
-// argument used to search IndexedDB record
-let id = testEmail;
+// // test data - temporary
+// const testEmail = "harrypotter@gmail.com";
+// const testData = {
+//   id: 1,
+//   name:     'Harry Potter',
+//   location: {
+//     city:   'New York City',
+//     state:  'New York'
+//   }
+// }
+//
+// // argument used to search IndexedDB record
+// let id = testEmail;
 
 // to store encrypted and decrypted data
 let encryptedData;
 let jsonBlock;
 
-async function createAndStoreKeys() {
+async function createAndStoreKeys(id) {
   let keyPair = await keyGenRSA();
   let conn;
   try {
