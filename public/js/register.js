@@ -8,8 +8,8 @@ let pem;
 document.getElementById('registerbutton').addEventListener('click', sendRegisterForm);
 
 async function sendRegisterForm(e) {
-  let firstName =  document.getElementById('email').value;
-  let lastName =  document.getElementById('email').value;
+  let firstName =  document.getElementById('first_name').value;
+  let lastName =  document.getElementById('last_name').value;
   let email =  document.getElementById('email').value;
   await createAndStoreKeys(email);
   await getDataFromIndexedDB(email);
