@@ -1,0 +1,28 @@
+/* USED FOR OVERRIDES */
+
+.full-height {
+  min-height: 100vh;
+}
+
+.half-height {
+  min-height: 50vh;
+}
+
+.home-bg-image {
+  background-image: url('/images/arthur-poulin-96074-unsplash.jpg');
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.home-center-block {
+  margin: 0 auto;
+}
+
+.sidenav-trigger {
+  position: fixed;
+}
+
+nav {
+  padding: 0 1em;
+}

@@ -1,4 +1,3 @@
-const { database }  = require('../models');
 const { Router }    = require('express');
 
 
@@ -11,7 +10,9 @@ module.exports = router;
 */
 router.get('/', async function(req, res) {
   try {
-    res.render('index');
+    res.render('home_page', {
+      layout: 'blank'
+    });
   } catch (error) {
     console.error(error);
   }

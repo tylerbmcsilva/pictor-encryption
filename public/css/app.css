@@ -1,0 +1,44 @@
+/* USED FOR OVERRIDES */
+
+header, main, footer {
+  padding-left: 300px;
+}
+
+@media only screen and (max-width : 992px) {
+  header, main, footer {
+    padding-left: 0;
+  }
+}
+
+.full-height {
+  min-height: 100vh;
+}
+
+.half-height {
+  min-height: 50vh;
+}
+
+#preloader {
+  margin: 0 auto;
+}
+
+#pictor-app pre {
+  display: block;
+  width: 100%;
+}
+
+.margin5 {
+  margin: .5em;
+}
+
+.sidenav-trigger {
+  position: fixed;
+}
+
+.center-block {
+  margin: 0 auto;
+}
+
+.img-circle {
+  border-radius: 50%;
+}
