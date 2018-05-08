@@ -2,8 +2,21 @@ const PAGE_TYPES = ['feed', 'post', 'user'];
 
 
 function main(window, document) {
-  let dataSourceURL = `${window.location.origin}/api${window.location.pathname}`;
+  /************ FOR ENCRYPTION TEST ***************/
+  "use strict";
+  var generateKeyPairButton = document.getElementById("generateKeyPair");
+  //var generateCipherKeyButton = document.getElementById("generateCipherKey");
+  var generateStoreServerButton = document.getElementById("genStoreServerKey");
+  var retrieveServerPublicButton = document.getElementById("retrieveServerKey");
+  var generateCipherKeyButton = document.getElementById("generateCipherKey");
+  generateKeyPairButton.addEventListener("click", keyGenRSA); // Alice's key pair
+  generateCipherKeyButton.addEventListener("click", keyGenAES); // Alice's cipher key
+  generateStoreServerButton.addEventListener("click", genStoreSKP); // Server's key pair and store
+  retrieveServerPublicButton.addEventListener("click", retSPK);
+  /************************************************/
 
+  let dataSourceURL = `${window.location.origin}/api${window.location.pathname}`;
+  console.log(dataSourceURL)
   getDataFromUrl(dataSourceURL)
     .then(function(data) {
       if(data)
@@ -91,6 +104,9 @@ function getPage(pageName) {
       break;
     case 'user':
       return UserPage;
+      break;
+    case 'testEncryption':
+      return TestEncryptionPage;
       break;
     default:
       console.error(`UNKNOWN PAGE "${pageName}"`, data);
