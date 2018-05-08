@@ -23,7 +23,7 @@ app.engine('.hbs',
   })
 );
 app.set('view engine', '.hbs');
-app.set('port', process.env.PORT || 12345);
+app.set('port', 3000);
 
 /*
   Set up Body Parser

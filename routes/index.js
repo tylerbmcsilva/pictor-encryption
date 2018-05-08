@@ -5,8 +5,9 @@ const router = new Router();
 module.exports = router;
 
 
-router.use(require('./api'));
+router.use('/api', require('./api'));
 router.use(require('./app'));
+router.use(require('./signin'));
 router.use(require('./home'));
 
 

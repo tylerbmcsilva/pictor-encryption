@@ -1,13 +1,12 @@
-const database  = require('../config/config');
 const mysql         = require('mysql');
 
 
 const POOL = mysql.createPool({
-  host:           database.dbhost,
-  user:           database.dbuser,
-  password:       database.dbpassword,
-  database:       database.dbname,
-  ssl :           "Amazon RDS",
+  host:           process.env.DBHOST,
+  user:           process.env.DBUSER,
+  password:       process.env.DBPASSWORD,
+  database:       process.env.DBNAME,
+  ssl:            "Amazon RDS",
   acquireTimeout: 30000,
   debug:          true
 });

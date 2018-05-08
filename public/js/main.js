@@ -29,16 +29,19 @@ function main(window, document) {
       // **********************
       return data;
     }).then(function(data) {
-      // **********************
-      // EVENTUALLY REMOVE
-      // **********************
-      document.getElementsByClassName('main-page')[0].innerHTML += `<pre>${JSON.stringify(data)}</pre>`;
-      // **********************
-      // EVENTUALLY REMOVE
-      // **********************
+      if(data) {
+        // **********************
+        // EVENTUALLY REMOVE
+        // **********************
+          document.getElementsByTagName('main')[0].innerHTML += `<pre>${JSON.stringify(data)}</pre>`;
+        // **********************
+        // EVENTUALLY REMOVE
+        // **********************
 
-      // Loads the data from the server onto the page
-      populateDataFromServer(window.location.pathname, data);
+        // Loads the data from the server onto the page
+        populateDataFromServer(window.location.pathname, data);
+      }
+
       return;
 
     }).finally(function() {
@@ -67,6 +70,7 @@ function populateDataFromServer(path, data){
 
 
 function getDataFromUrl(url) {
+  console.log(`REQUESTING FROM ${url}`);
   return axios.get(url)
     .then(function(r){
       if(r.status === 404)
