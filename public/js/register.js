@@ -1,32 +1,34 @@
 // on load, receive server public key
 // let serverKey = ...;
 
-let key;
-let pem;
+let USER_KEY;
+let USER_KEY_TO_PEM;
 
 // Function to grab info from form
-document.getElementById('registerbutton').addEventListener('click', sendRegisterForm);
+document.getElementById("registerbutton").addEventListener("click", sendRegisterForm);
 
 async function sendRegisterForm(e) {
-  let firstName =  document.getElementById('first_name').value;
-  let lastName =  document.getElementById('last_name').value;
-  let email =  document.getElementById('email').value;
+  e.preventDefault();
+
+  let firstName =  document.getElementById("first_name").value;
+  let lastName =  document.getElementById("last_name").value;
+  let email =  document.getElementById("email").value;
   await createAndStoreKeys(email);
   await getDataFromIndexedDB(email);
-  await exportRSAKeyToPEM(key.publicKey);
-  console.log("PEM");
-  console.log(pem);
+  await exportRSAKeyToPEM(USER_KEY.publicKey);
+  console.log("PEM formatted USER_KEY");
+  console.log(USER_KEY_TO_PEM);
 
   let payload = {
     first_name: firstName,
     last_name: lastName,
     email: email,
-    key: pem
+    key: USER_KEY_TO_PEM
   };
 
   // Encrypt payload with server public key
   // POST data from form
-  postDataToUrl(e, '/api/user/new', payload);
+  postDataToUrl("/api/user/new", payload);
 }
 
 function exportRSAKeyToPEM(key) {
@@ -34,24 +36,24 @@ function exportRSAKeyToPEM(key) {
       "spki",
       key
   ).then(function(keydata) {
-    pem = spkiToPEM(keydata);
+    USER_KEY_TO_PEM = spkiToPEM(keydata);
   }).catch(function(err){
     console.error(err);
   });
 }
 
 function spkiToPEM(keydata){
-    var keydataS = arrayBufferToString(keydata);
-    var keydataB64 = window.btoa(keydataS);
-    var keydataB64Pem = formatAsPem(keydataB64);
+    let keydataS = arrayBufferToString(keydata);
+    let keydataB64 = window.btoa(keydataS);
+    let keydataB64Pem = formatAsPem(keydataB64);
     return keydataB64Pem;
 }
 
-function arrayBufferToString( buffer ) {
-    var binary = '';
-    var bytes = new Uint8Array( buffer );
-    var len = bytes.byteLength;
-    for (var i = 0; i < len; i++) {
+function arrayBufferToString(buffer) {
+    let binary = "";
+    let bytes = new Uint8Array(buffer);
+    let len = bytes.byteLength;
+    for (let i = 0; i < len; i++) {
         binary += String.fromCharCode( bytes[ i ] );
     }
     return binary;
@@ -59,33 +61,32 @@ function arrayBufferToString( buffer ) {
 
 
 function formatAsPem(str) {
-    var finalString = '-----BEGIN PUBLIC KEY-----\n';
+    let finalString = "-----BEGIN PUBLIC KEY-----\n";
 
     while(str.length > 0) {
-        finalString += str.substring(0, 64) + '\n';
+        finalString += str.substring(0, 64) + "\n";
         str = str.substring(64);
     }
 
-    finalString = finalString + "-----END PUBLIC KEY-----";
+    finalString += "-----END PUBLIC KEY-----";
 
     return finalString;
 }
 
-function postDataToUrl(e, url, data) {
+function postDataToUrl(url, data) {
   axios.post(url, data)
     .catch(function(err) {
       // SILENTLY FAIL
       return;
     });
-    e.preventDefault();
 }
 
 // Function to grab key from indexedDB
 async function getDataFromIndexedDB(id) {
   let conn;
   try {
-    conn = await connect("PictorStore", "keys", 1);
-    key = await getData(conn, "keys", id);
+    conn = await connectIndexedDB("PictorStore", "keys", 1);
+    USER_KEY = await getDataIndexedDB(conn, "keys", id);
   } catch(exception) {
     console.log(exception);
   } finally {
