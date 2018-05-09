@@ -1,22 +1,22 @@
-// test data - temporary
-const testEmail = "harrypotter@gmail.com";
-const testData = {
-  id: 1,
-  name:     'Harry Potter',
-  location: {
-    city:   'New York City',
-    state:  'New York'
-  }
-}
-
-// argument used to search IndexedDB record
-let id = testEmail;
+// // test data - temporary
+// const testEmail = "harrypotter@gmail.com";
+// const testData = {
+//   id: 1,
+//   name:     'Harry Potter',
+//   location: {
+//     city:   'New York City',
+//     state:  'New York'
+//   }
+// }
+//
+// // argument used to search IndexedDB record
+// let id = testEmail;
 
 // to store encrypted and decrypted data
 let encryptedData;
 let jsonBlock;
 
-async function createAndStoreKeys() {
+async function createAndStoreKeys(id) {
   let keyPair = await keyGenRSA();
   let cipherKey = await keyGenAES();
   let conn;
@@ -62,32 +62,32 @@ function keyGenRSA() {
     ["encrypt", "decrypt"]
   )
   .then((keys) => {
-    //return keys; //original usage
-    /******* FOR TESTING ENCRYPTION ***************/
-    /*********************************************/
-    // source: https://github.com/engelke/fluent2016/blob/master/Solutions/4/lab4.js
-    // Export the public key portion
-    window.crypto.subtle.exportKey("spki", keys.publicKey
-  ).then((spkiBuffer)=> {
-      var spkiBytes = new Uint8Array(spkiBuffer);
-      var spkiString = byteArrayToBase64(spkiBytes);
-      var spkiBox = document.getElementById("publickey");
-      spkiBox.value = spkiString;
-    }).catch(function(err) {
-      alert("Could not export public key: " + err.message);
-    });
-    // Export the private key part, in parallel to the public key
-    window.crypto.subtle.exportKey("pkcs8", keys.privateKey
-  ).then((pkcs8Buffer)=> {
-      var pkcs8Bytes = new Uint8Array(pkcs8Buffer);
-      var pkcs8String = byteArrayToBase64(pkcs8Bytes);
-      var pkcs8Box = document.getElementById("privatekey");
-      pkcs8Box.value = pkcs8String;
-    }).catch((err)=> {
-      alert("Could not export private key: " + err.message);
-    });
-  }).catch((err)=> {
-    alert("Could not generate key pair: " + err.message);
+    return keys; //original usage
+  //   /******* FOR TESTING ENCRYPTION ***************/
+  //   /*********************************************/
+  //   // source: https://github.com/engelke/fluent2016/blob/master/Solutions/4/lab4.js
+  //   // Export the public key portion
+  //   window.crypto.subtle.exportKey("spki", keys.publicKey
+  // ).then((spkiBuffer)=> {
+  //     var spkiBytes = new Uint8Array(spkiBuffer);
+  //     var spkiString = byteArrayToBase64(spkiBytes);
+  //     var spkiBox = document.getElementById("publickey");
+  //     spkiBox.value = spkiString;
+  //   }).catch(function(err) {
+  //     alert("Could not export public key: " + err.message);
+  //   });
+  //   // Export the private key part, in parallel to the public key
+  //   window.crypto.subtle.exportKey("pkcs8", keys.privateKey
+  // ).then((pkcs8Buffer)=> {
+  //     var pkcs8Bytes = new Uint8Array(pkcs8Buffer);
+  //     var pkcs8String = byteArrayToBase64(pkcs8Bytes);
+  //     var pkcs8Box = document.getElementById("privatekey");
+  //     pkcs8Box.value = pkcs8String;
+  //   }).catch((err)=> {
+  //     alert("Could not export private key: " + err.message);
+  //   });
+  // }).catch((err)=> {
+  //   alert("Could not generate key pair: " + err.message);
   });
   /*******************************************/
 }
@@ -99,21 +99,21 @@ function keyGenAES(){
     true,
     ["encrypt", "decrypt"]
   ).then((key)=>{
-    //return key; //original
-    /******* FOR TESTING ENCRYPTION ***************/
-    /*********************************************/
-    // Export to ArrayBuffer
-    return window.crypto.subtle.exportKey(
-      "raw",
-      key
-    );
-  }).then(function(buf){
-    // Cast to a byte array, place in Key field
-    var byteArray = new Uint8Array(buf);
-    var keyField = document.getElementById("cipherKey");
-    keyField.value = byteArrayToHexString(byteArray);
+    return key; //original
+  //   /******* FOR TESTING ENCRYPTION ***************/
+  //   /*********************************************/
+  //   // Export to ArrayBuffer
+  //   return window.crypto.subtle.exportKey(
+  //     "raw",
+  //     key
+  //   );
+  // }).then(function(buf){
+  //   // Cast to a byte array, place in Key field
+  //   var byteArray = new Uint8Array(buf);
+  //   var keyField = document.getElementById("cipherKey");
+  //   keyField.value = byteArrayToHexString(byteArray);
   });
-  /*******************************************/
+    /*******************************************/
 }
 
 // for testing generation and storage of servers key Pair
