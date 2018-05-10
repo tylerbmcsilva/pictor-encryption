@@ -3,16 +3,16 @@ const PAGE_TYPES = ['feed', 'post', 'user'];
 
 function main(window, document) {
   /************ FOR ENCRYPTION TEST ***************/
-  "use strict";
-  var generateKeyPairButton = document.getElementById("generateKeyPair");
-  //var generateCipherKeyButton = document.getElementById("generateCipherKey");
-  var generateStoreServerButton = document.getElementById("genStoreServerKey");
-  var retrieveServerPublicButton = document.getElementById("retrieveServerKey");
-  var generateCipherKeyButton = document.getElementById("generateCipherKey");
-  generateKeyPairButton.addEventListener("click", keyGenRSA); // Alice's key pair
-  generateCipherKeyButton.addEventListener("click", keyGenAES); // Alice's cipher key
-  generateStoreServerButton.addEventListener("click", genStoreSKP); // Server's key pair and store
-  retrieveServerPublicButton.addEventListener("click", retSPK);
+  // "use strict";
+  // var generateKeyPairButton = document.getElementById("generateKeyPair");
+  // //var generateCipherKeyButton = document.getElementById("generateCipherKey");
+  // var generateStoreServerButton = document.getElementById("genStoreServerKey");
+  // var retrieveServerPublicButton = document.getElementById("retrieveServerKey");
+  // var generateCipherKeyButton = document.getElementById("generateCipherKey");
+  // generateKeyPairButton.addEventListener("click", keyGenRSA); // Alice's key pair
+  // generateCipherKeyButton.addEventListener("click", keyGenAES); // Alice's cipher key
+  // generateStoreServerButton.addEventListener("click", genStoreSKP); // Server's key pair and store
+  // retrieveServerPublicButton.addEventListener("click", retSPK);
   /************************************************/
 
   let dataSourceURL = `${window.location.origin}/api${window.location.pathname}`;
