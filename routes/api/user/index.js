@@ -27,3 +27,8 @@ router.get('/user/:id', function(req, res) {
     }
   });
 })
+
+
+router.post('/user/new', function(req, res) {
+  console.log(req.body);
+})
