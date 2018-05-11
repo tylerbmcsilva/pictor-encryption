@@ -1,4 +1,5 @@
 const PAGE_TYPES = ['feed', 'post', 'user'];
+const AUTHENTICATED = true;
 
 
 function main(window, document) {
@@ -139,16 +140,52 @@ function PostPage(data){
 
 
 function UserPage(data){
-  return Page([
+  let mapping = [
     {
       id:   'user-name',
-      data:   data.name
+      data: `${data.basic.name.first} ${data.basic.name.last}`
     },
     {
       id:   'user-location',
-      data: `${data.location.city}, ${data.location.state}`
+      data: `${data.basic.location.city}, ${data.basic.location.state}`
+    },
+    {
+      id:   'user-email',
+      data: data.basic.email
     }
-  ]);
+  ];
+
+  if(AUTHENTICATED){
+    let mappingEncrypted = [
+      {
+        id:   'user-phone',
+        data: data.encrypted.phone
+      },
+      {
+        id:   'user-gender',
+        data: data.encrypted.gender
+      },
+      {
+        id:   'user-dob',
+        data: data.encrypted.dob
+      },
+      {
+        id:   'user-language',
+        data: data.encrypted.language
+      },
+      {
+        id:   'user-school',
+        data: data.encrypted.school
+      },
+      {
+        id:   'user-work',
+        data: data.encrypted.work
+      }
+    ];
+    mapping = mapping.concat(mappingEncrypted);
+  }
+
+  return Page(mapping);
 }
 
 
