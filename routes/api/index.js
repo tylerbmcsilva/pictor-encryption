@@ -6,5 +6,4 @@ module.exports  = router;
 
 
 router.use(require('./user'));
-router.use(require('./genAndStoreSKP')); 
-router.use(require('./getSPK'));
+router.use(require('./server'));

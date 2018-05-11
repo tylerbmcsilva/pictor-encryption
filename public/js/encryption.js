@@ -118,7 +118,7 @@ function keyGenAES(){
 
 // for testing generation and storage of servers key Pair
 function genStoreSKP() {
-  return axios.get("/api/genAndStoreSKP")
+  return axios.post("/api/server/create-store-keys")
     .then(function(r){
       if(r.status === 404)
         return {};
@@ -134,7 +134,7 @@ function genStoreSKP() {
 
 // for retrieval of servers public key
 function retSPK() {
-  return axios.get("/api/getSPK")
+  return axios.get("/api/server/public-key")
     .then(function(r){
       if(r.status === 404)
         return{};

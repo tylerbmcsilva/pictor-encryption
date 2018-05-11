@@ -1,6 +1,5 @@
 // on load, receive server public key
 // let serverKey = ...;
-
 let USER_KEY;
 let USER_KEY_TO_PEM;
 
@@ -10,12 +9,14 @@ document.getElementById("registerbutton").addEventListener("click", sendRegister
 async function sendRegisterForm(e) {
   e.preventDefault();
 
-  let firstName =  document.getElementById("first_name").value;
-  let lastName =  document.getElementById("last_name").value;
-  let email =  document.getElementById("email").value;
+  let firstName = document.getElementById("first_name").value;
+  let lastName  = document.getElementById("last_name").value;
+  let email     = document.getElementById("email").value;
+
   await createAndStoreKeys(email);
   await getDataFromIndexedDB(email);
   await exportRSAKeyToPEM(USER_KEY.publicKey);
+
   console.log("PEM formatted USER_KEY");
   console.log(USER_KEY_TO_PEM);
 
@@ -42,20 +43,25 @@ function exportRSAKeyToPEM(key) {
   });
 }
 
+
 function spkiToPEM(keydata){
-    let keydataS = arrayBufferToString(keydata);
-    let keydataB64 = window.btoa(keydataS);
+    let keydataS      = arrayBufferToString(keydata);
+    let keydataB64    = window.btoa(keydataS);
     let keydataB64Pem = formatAsPem(keydataB64);
+
     return keydataB64Pem;
 }
+
 
 function arrayBufferToString(buffer) {
     let binary = "";
     let bytes = new Uint8Array(buffer);
     let len = bytes.byteLength;
+
     for (let i = 0; i < len; i++) {
-        binary += String.fromCharCode( bytes[ i ] );
+      binary += String.fromCharCode( bytes[i] );
     }
+
     return binary;
 }
 
@@ -64,8 +70,8 @@ function formatAsPem(str) {
     let finalString = "-----BEGIN PUBLIC KEY-----\n";
 
     while(str.length > 0) {
-        finalString += str.substring(0, 64) + "\n";
-        str = str.substring(64);
+      finalString += str.substring(0, 64) + "\n";
+      str = str.substring(64);
     }
 
     finalString += "-----END PUBLIC KEY-----";
@@ -74,7 +80,7 @@ function formatAsPem(str) {
 }
 
 function postDataToUrl(url, data) {
-  axios.post(url, data)
+  return axios.post(url, data)
     .catch(function(err) {
       // SILENTLY FAIL
       return;
@@ -85,8 +91,8 @@ function postDataToUrl(url, data) {
 async function getDataFromIndexedDB(id) {
   let conn;
   try {
-    conn = await connectIndexedDB("PictorStore", "keys", 1);
-    USER_KEY = await getDataIndexedDB(conn, "keys", id);
+    conn      = await connectIndexedDB("PictorStore", "keys", 1);
+    USER_KEY  = await getDataIndexedDB(conn, "keys", id);
   } catch(exception) {
     console.log(exception);
   } finally {
