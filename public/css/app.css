@@ -18,10 +18,6 @@ header, main, footer {
   min-height: 50vh;
 }
 
-#preloader {
-  margin: 0 auto;
-}
-
 #pictor-app pre {
   display: block;
   width: 100%;

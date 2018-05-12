@@ -1,23 +1,12 @@
-const { getConnection } = require('../pool');
-const Promise           = require('bluebird');
+const DB = require('../database');
 
 
 async function getServerPublicKey() {
   try {
-    // const connection    = await promisify(getConnection)();
-    // console.log(connection);
-    // const [ publicKey ] = await connection.query("SELECT `public_key` FROM `server` WHERE id=1");
-
-    Promise.using(getConnection(), function(connection) {
-        return connection.query('SELECT `public_key` FROM `server` WHERE id=1').then((rows) => {
-          return rows[0];
-        }).catch(function(error) {
-          console.log(error);
-        });
-    })
-
+    const [ publicKey ] = await DB.query("SELECT `public_key` FROM `server` WHERE id=1");
     return publicKey;
   } catch (error) {
+    console.error(error);
     throw error;
   }
 }
@@ -25,9 +14,7 @@ async function getServerPublicKey() {
 
 async function storeServerKeys({ publicKey, privateKey }) {
   try {
-    const connection  = await promisify(getConnection)();
-    const response    = await connection.query(`INSERT INTO \`server\` (\`public_key\`, \`private_key\`) VALUES (${publicKey},${privateKey})`);
-
+    const response = await DB.query(`INSERT INTO \`server\` (\`public_key\`, \`private_key\`) VALUES (${publicKey},${privateKey})`);
     return response;
   } catch (error) {
     throw error;

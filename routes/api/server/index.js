@@ -8,14 +8,13 @@ module.exports  = router;
 
 router.get('/server/public-key', async function(req, res) {
   try {
-    console.log('ENDPOINT HIT!');
     const publicKey = await Encryption.getServerPublicKey();
     res.json({
       publicKey
     });
   } catch (error) {
     console.error(error);
-    res.send(500);
+    res.sendStatus(500);
   }
 });
 
@@ -29,6 +28,6 @@ router.post('/server/create-store-keys', async function(req, res) {
     res.json({ message: 'Success' });
   } catch (error) {
     console.error(error);
-    res.send(500);
+    res.sendStatus(500);
   }
 });

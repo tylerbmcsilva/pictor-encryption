@@ -5,8 +5,6 @@
 // Various tools to convert string formats to and from
 // byte arrays (that is, Uint8Array), since the Web Crypto
 // API likes byte arrays, and web pages like strings.
-
-
 function byteArrayToHexString(byteArray) {
     var hexString = '';
     var nextHexByte;
@@ -20,6 +18,7 @@ function byteArrayToHexString(byteArray) {
     return hexString;
 }
 
+
 function hexStringToByteArray(hexString) {
     if (hexString.length % 2 !== 0) {
         throw "Must have an even number of hex digits to convert to bytes";
@@ -32,6 +31,7 @@ function hexStringToByteArray(hexString) {
     return byteArray;
 }
 
+
 function byteArrayToBase64(byteArray){
     var binaryString = "";
     for (var i=0; i<byteArray.byteLength; i++){
@@ -41,6 +41,7 @@ function byteArrayToBase64(byteArray){
     return base64String;
 }
 
+
 function base64ToByteArray(base64String){
     var binaryString = window.atob(base64String);
     var byteArray = new Uint8Array(binaryString.length);
@@ -49,6 +50,7 @@ function base64ToByteArray(base64String){
     }
     return byteArray;
 }
+
 
 function byteArrayToString(byteArray){
     if ("TextDecoder" in window) {
@@ -64,6 +66,7 @@ function byteArrayToString(byteArray){
     return result;
 }
 
+
 function stringToByteArray(s){
     if ("TextEncoder" in window) {
        encoder = new window.TextEncoder;
@@ -76,4 +79,18 @@ function stringToByteArray(s){
         result[i] = s.charCodeAt(i);
     }
     return result;
+}
+
+
+function showePreloader() {
+  let plw = document.getElementById('preloader-wrapper');
+  plw.style.opacity = 1;
+  plw.style.zIndex = 9999;
+}
+
+
+function hidePreloader(d) {
+  let plw = document.getElementById('preloader-wrapper');
+  plw.style.opacity = 0;
+  plw.style.zIndex = -1;
 }

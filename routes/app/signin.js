@@ -15,6 +15,7 @@ router.get('/signin', async function(req, res) {
   }
 });
 
+
 router.post('/signin', function(req, res) {
   let user = req.body['user'];
   // 1. lookup user in DB
@@ -22,6 +23,7 @@ router.post('/signin', function(req, res) {
   console.log(user);
   res.send("SERVER SENDS ENCRYPTED SECRET");
 });
+
 
 router.post('/signin/verify', function(req, res) {
   let response = req.body['response'];

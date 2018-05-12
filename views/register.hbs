@@ -1,32 +1,36 @@
-<header class="z-depth-2">
-  <nav class="indigo darken-3">
-    <div class="nav-wrapper">
-      <a href="#!" class="brand-logo"><i class="material-icons">lock_outline</i>PICTOR</a>
-      <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-      <ul class="right hide-on-med-and-down">
-        <li><a href="/register">Register</a></li>
-        <li><a href="/signin">Sign In</a></li>
-      </ul>
-    </div>
-  </nav>
-  <ul class="sidenav" id="mobile-demo">
-    <li><a href="/register">Register</a></li>
-    <li><a href="/signin">Sign-In</a></li>
-  </ul>
-</header>
-
+{{> _preloader}}
 <main class="full-height">
-  <div class="section white">
-   <div class="row container">
-    <h2 class="header">Register</h2>
-    <div class="form container">
-      <form id="login_form">
-        <input type="text" name="first_name" id="first_name" placeholder="First Name" required>
-        <input type="text" name="last_name" id="last_name" placeholder="Last Name" required>
-        <input type="text" name="email" id="email" placeholder="Email" required>
-        <button id="registerbutton" name="register" type="button">Register</button>
-      </form>
-    </div>
+   <div class="row">
+     <div class="col s12 m4 offset-m4">
+       <div class="card">
+         <div class="card-image indigo darken-3 center-align">
+           <div class="pad5">
+             <a href="/" class="white-text"><i class="material-icons">lock_outline</i><br>PICTOR</a>
+           </div>
+
+         </div>
+         <form id="register_form">
+           <div class="card-content">
+             <span class="card-title">Register</span>
+             <div class="input-field">
+               <input class="validate" type="text" name="first_name" id="first_name" autocomplete="given-name" required>
+               <label for="first_name">First Name</label>
+             </div>
+             <div class="input-field">
+               <input class="validate" type="text" name="last_name" id="last_name" autocomplete="family-name" required>
+               <label for="last_name">Last Name</label>
+             </div>
+             <div class="input-field">
+               <input class="validate" type="email" name="email" id="email" autocomplete="email" required>
+               <label for="email">Email</label>
+             </div>
+           </div>
+           <div class="card-action">
+             <button id="registerbutton" name="register" type="submit" class="waves-effect waves-light btn indigo darken-3">Register</button>
+           </div>
+         </form>
+       </div>
+     </div>
   </div>
 </main>
 

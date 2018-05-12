@@ -152,6 +152,17 @@ function UserPage(data){
 }
 
 
+function showePreloader(d) {
+  let pl = d.getElementById('preloader');
+  pl.classList.add('active');
+  pl.classList.remove('hide');
+
+  let plw = d.getElementById('preloader-wrapper');
+  plw.classList.add('full-height');
+  plw.classList.remove('hide');
+}
+
+
 function hidePreloader(d) {
   let pl = d.getElementById('preloader');
   pl.classList.remove('active');
