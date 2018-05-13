@@ -32,7 +32,7 @@ function main(window, document) {
         // **********************
         // EVENTUALLY REMOVE
         // **********************
-          document.getElementsByTagName('main')[0].innerHTML += `<pre>${JSON.stringify(data)}</pre>`;
+          // document.getElementsByTagName('main')[0].innerHTML += `<pre>${JSON.stringify(data)}</pre>`;
         // **********************
         // EVENTUALLY REMOVE
         // **********************
@@ -138,7 +138,7 @@ function PostPage(data){
 
 
 function UserPage(data){
-  let mapping = [
+  return Page([
     {
       id:   'user-name',
       data: `${data.basic.name.first} ${data.basic.name.last}`
@@ -150,54 +150,32 @@ function UserPage(data){
     {
       id:   'user-email',
       data: data.basic.email
+    },
+    {
+      id:   'user-phone',
+      data: data.encrypted.phone
+    },
+    {
+      id:   'user-gender',
+      data: data.encrypted.gender
+    },
+    {
+      id:   'user-dob',
+      data: data.encrypted.dob
+    },
+    {
+      id:   'user-language',
+      data: data.encrypted.language
+    },
+    {
+      id:   'user-school',
+      data: data.encrypted.school
+    },
+    {
+      id:   'user-work',
+      data: data.encrypted.work
     }
-  ];
-
-  if(data.authenticated){
-    createEncryptedPageElements();
-    let mappingEncrypted = [
-      {
-        id:   'user-phone',
-        data: data.encrypted.phone
-      },
-      {
-        id:   'user-gender',
-        data: data.encrypted.gender
-      },
-      {
-        id:   'user-dob',
-        data: data.encrypted.dob
-      },
-      {
-        id:   'user-language',
-        data: data.encrypted.language
-      },
-      {
-        id:   'user-school',
-        data: data.encrypted.school
-      },
-      {
-        id:   'user-work',
-        data: data.encrypted.work
-      }
-    ];
-    mapping = mapping.concat(mappingEncrypted);
-  }
-
-  return Page(mapping);
-}
-
-function createEncryptedPageElements() {
-  document.getElementById('user-full-info').innerHTML +=
-  `<ul class="collection with-header">\n
-      <li class="collection-header"><h4>Additional Information</h4></li>\n
-      <li class="collection-item" id="user-phone">USER PHONE</li>\n
-      <li class="collection-item" id="user-gender">USER GENDER</li>\n
-      <li class="collection-item" id="user-dob">USER DOB</li>\n
-      <li class="collection-item" id="user-language">USER LANGUAGE</li>\n
-      <li class="collection-item" id="user-school">USER SCHOOL</li>\n
-      <li class="collection-item" id="user-work">USER WORKE</li>\n
-    </ul>\n`;
+  ]);
 }
 
 

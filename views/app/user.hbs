@@ -1,22 +1,80 @@
 <section class="section">
-  <div class="row" id="user-basic-info">
-    <div class="col s12 m7">
+  <div class="row">
+    <div class="card-panel grey lighten-5 z-depth-1">
       <h2 class="header" id="user-name">USER NAME</h2>
-      <div class="card horizontal">
-        <div class="card-image">
-          <img src="https://i.imgur.com/FyWI0.jpg">
+      <div class="row valign-wrapper">
+        <div class="col s2">
+          <img src="https://i.imgur.com/FyWI0.jpg" class="responsive-img">
         </div>
-        <div class="card-stacked">
+        <div class="col s10">
           <div class="card-content" id="user-basic-info">
-            <p id="user-location">USER LOCATION</p>
-            <p id="user-email">USER EMAIL</p>
+            <table>
+              <tbody>
+                <tr>
+                  <td>Location</td>
+                  <td id="user-location">USER LOCATION</td>
+                </tr>
+                <tr>
+                  <td>Email</td>
+                  <td id="user-email">USER EMAIL</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
     </div>
   </div>
-</section>
-<section class="section">
-  <div class="row" id="user-full-info">
+
+  <div class="card">
+    <div class="card-tabs">
+      <ul class="tabs tabs-fixed-width">
+        <li class="tab"><a class="active" href="#about">About</a></li>
+        <li class="tab"><a href="#posts">Posts</a></li>
+        <li class="tab"><a href="#friends">Friends</a></li>
+        <li class="tab"><a href="#settings">Settings</a></li>
+      </ul>
+    </div>
+    <div class="card-content">
+      <div id="about">
+        <table>
+          <tbody>
+            <tr>
+              <td>Phone</td>
+              <td id="user-phone">USER PHONE</td>
+            </tr>
+            <tr>
+              <td>Gender</td>
+              <td id="user-gender">USER GENDER</td>
+            </tr>
+            <tr>
+              <td>Birthday</td>
+              <td id="user-dob">USER DOB</td>
+            </tr>
+            <tr>
+              <td>Language</td>
+              <td id="user-language">USER LANGUAGE</td>
+            </tr>
+            <tr>
+              <td>School</td>
+              <td id="user-school">USER SCHOOL</td>
+            </tr>
+            <tr>
+              <td>Work</td>
+              <td id="user-work">USER WORKE</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div id="posts">
+        Posts
+      </div>
+      <div id="friends">
+        Friends
+      </div>
+      <div id="settings">
+        Settings
+      </div>
+    </div>
   </div>
 </section>
