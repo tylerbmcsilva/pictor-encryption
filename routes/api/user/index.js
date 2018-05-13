@@ -20,6 +20,7 @@ router.get('/user', function(req, res) {
 router.get('/user/:id', function(req, res) {
   res.json({
     id: 1,
+    authenticated: true,
     basic: {
       name: {
         first:  'Dominic',

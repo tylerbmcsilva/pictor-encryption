@@ -1,6 +1,4 @@
 const PAGE_TYPES = ['feed', 'post', 'user'];
-const AUTHENTICATED = true;
-
 
 function main(window, document) {
   /************ FOR ENCRYPTION TEST ***************/
@@ -155,7 +153,8 @@ function UserPage(data){
     }
   ];
 
-  if(AUTHENTICATED){
+  if(data.authenticated){
+    createEncryptedPageElements();
     let mappingEncrypted = [
       {
         id:   'user-phone',
@@ -186,6 +185,19 @@ function UserPage(data){
   }
 
   return Page(mapping);
+}
+
+function createEncryptedPageElements() {
+  document.getElementById('user-full-info').innerHTML +=
+  `<ul class="collection with-header">\n
+      <li class="collection-header"><h4>Additional Information</h4></li>\n
+      <li class="collection-item" id="user-phone">USER PHONE</li>\n
+      <li class="collection-item" id="user-gender">USER GENDER</li>\n
+      <li class="collection-item" id="user-dob">USER DOB</li>\n
+      <li class="collection-item" id="user-language">USER LANGUAGE</li>\n
+      <li class="collection-item" id="user-school">USER SCHOOL</li>\n
+      <li class="collection-item" id="user-work">USER WORKE</li>\n
+    </ul>\n`;
 }
 
 
