@@ -114,18 +114,26 @@ function generateServerKeyPair() {
 // **********************
 // EVENTUALLY REMOVE SEND IN PAYLOAD
 // **********************
-function getServerPublicKey() {
-  return axios.get("/api/server/public-key").then(function(r) {
-    if (r.status === 404)
-      return {};
-    else
-      return r.data.public_key;
-    }
-  ).catch(function(err) {
-    // SILENTLY FAIL
-    // console.log(err);
-    return;
-  });
+async function getServerPublicKey() {
+  try {
+    let res = await axios.get("/api/server/public-key");
+    if (res.status === 404)
+      throw error;
+
+    let publicKeyByteArray = stringToByteArray(res.data.publicKey);
+    console.log(publicKeyByteArray);
+
+    let publicKey = await window.crypto.subtle.importKey( "spki",
+      publicKeyByteArray,
+      { name: "RSA-OAEP", hash: {name: "SHA-256"} },
+      false,
+      ["encrypt"]
+    );
+    console.log(publicKey);
+    return publicKey;
+  } catch (error) {
+    console.log(error, error.name, error.message);
+  };
 }
 
 
@@ -210,14 +218,14 @@ async function decryptJSON(data, id) {
 
 
 function encryptUsingRSA(key, data) {
-  return window.crypto.subtle.encryptUsingRSA({
+  return window.crypto.subtle.encrypt({
     name: "RSA-OAEP"
   }, key, data);
 }
 
 
 function decryptUsingRSA(key, data) {
-  return window.crypto.subtle.decryptUsingRSA({
+  return window.crypto.subtle.decrypt({
     name: "RSA-OAEP"
   }, key, data);
 }

@@ -2,6 +2,9 @@ const NodeRSA = require('node-rsa');
 const server  = require('./server');
 
 
+const KEYS = generateKeyPair(2048, 65537);
+
+
 function generateKeyPair(bits, exponent) {
   let key = new NodeRSA();
 
@@ -18,6 +21,7 @@ function generateKeyPair(bits, exponent) {
 
 
 module.exports = {
+  KEYS,
   generateKeyPair,
   ...server
 }

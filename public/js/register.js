@@ -2,7 +2,7 @@
 
 async function main(window, document) {
   const SERVER_KEY = await getServerPublicKey();
-  console.log(SERVER_KEY);
+  console.log(`SERVER: ${SERVER_KEY}`);
   // Function to grab info from form
   document.getElementById("register_form").addEventListener("submit", handleRegisterSubmit);
 
@@ -30,12 +30,14 @@ async function main(window, document) {
     console.log("PEM formatted USER_KEY");
     console.log(pem);
 
-    let payload = {
+    let data = {
       first_name: firstName,
       last_name:  lastName,
       email:      email,
       key:        pem
     };
+    let payload = await encryptUsingRSA(SERVER_KEY, data);
+
 
     // Encrypt payload with server public key
     // POST data from form
