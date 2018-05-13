@@ -22,7 +22,7 @@ async function handleEditLocationSubmit(event) {
     // Encrypt payload with server public key
     // POST data from form
     postDataToUrl("/api/user/update", payload);
-    window.location.pathname = "/user/5432";
+    window.location.pathname = `${window.location.pathname}`;
 }
 
 async function handleEditAboutSubmit(event) {
@@ -52,7 +52,7 @@ async function handleEditAboutSubmit(event) {
     // Encrypt payload with server public key
     // POST data from form
     postDataToUrl("/api/user/update", payload);
-    window.location.pathname = "/user/5432";
+    // window.location.pathname = "/user/5432";
 }
 
 function getCurrentLocationData() {
