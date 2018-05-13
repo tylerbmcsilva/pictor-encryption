@@ -14,7 +14,32 @@
                   <tr>
                     <td>Location</td>
                     <td id="user-location">USER LOCATION</td>
-                    <td><a class="waves-effect waves-teal btn-flat">Edit</a></td>
+                    <td>
+                      <a class="waves-effect waves-teal btn-flat  modal-trigger" href="#modal_location" id="edit_location">Edit</a>
+                      <!-- Modal Structure -->
+                      <div id="modal_location" class="modal">
+                        <div class="modal-content">
+
+                          <form id="edit_location_form">
+                            <div class="card-content">
+                              <span class="card-title">Edit Location</span>
+                              <div class="input-field">
+                                <input class="validate" type="text" name="city" id="city">
+                                <label class="active" for="city">City</label>
+                              </div>
+                              <div class="input-field">
+                                <input class="validate" type="text" name="state" id="state">
+                                <label for="state">State</label>
+                              </div>
+                            </div>
+                            <div class="card-action">
+                              <button id="editlocationbutton" name="edit_location" type="submit" class="waves-effect waves-light btn indigo darken-3">Edit</button>
+                            </div>
+                          </form>
+
+                        </div>
+                      </div>
+                    </td>
                   </tr>
                   <tr>
                     <td>Email</td>
@@ -51,8 +76,8 @@
               <td id="user-gender">USER GENDER</td>
             </tr>
             <tr>
-              <td>Birthday</td>
-              <td id="user-dob">USER DOB</td>
+              <td>Birthdate</td>
+              <td id="user-birthdate">USER BIRTHDATE</td>
             </tr>
             <tr>
               <td>Language</td>
@@ -64,10 +89,53 @@
             </tr>
             <tr>
               <td>Work</td>
-              <td id="user-work">USER WORKE</td>
+              <td id="user-work">USER WORK</td>
             </tr>
             <tr>
-              <td><a class="waves-effect waves-teal btn-flat">Edit</a></td>
+              <td>
+                <a class="waves-effect waves-teal btn-flat modal-trigger" href="#modal_about" id="edit_about">Edit</a>
+
+                <!-- Modal Structure -->
+                <div id="modal_about" class="modal">
+                  <div class="modal-content">
+
+                    <form id="edit_about_form">
+                      <div class="card-content">
+                        <span class="card-title">Edit About</span>
+                        <div class="input-field">
+                          <input class="validate" type="text" name="phone" id="phone">
+                          <label for="phone">Phone</label>
+                        </div>
+                        <div class="input-field">
+                          <input class="validate" type="text" name="gender" id="gender">
+                          <label for="gender">Gender</label>
+                        </div>
+                        <div class="input-field">
+                          <input class="datepicker" type="text" name="birthdate" id="birthdate">
+                          <label for="birthdate">Birthdate</label>
+                        </div>
+                        <div class="input-field">
+                          <input class="validate" type="text" name="language" id="language">
+                          <label for="language">Language</label>
+                        </div>
+                        <div class="input-field">
+                          <input class="validate" type="text" name="school" id="school">
+                          <label for="school">School</label>
+                        </div>
+                        <div class="input-field">
+                          <input class="validate" type="text" name="work" id="work">
+                          <label for="work">Work</label>
+                        </div>
+                      </div>
+                      <div class="card-action">
+                        <button id="editaboutbutton" name="edit_about" type="submit" class="waves-effect waves-light btn indigo darken-3">Edit</button>
+                      </div>
+                    </form>
+
+                  </div>
+                </div>
+
+              </td>
             </tr>
           </tbody>
         </table>
@@ -84,3 +152,5 @@
     </div>
   </div>
 </section>
+
+<script src="/js/user.js"></script>

@@ -34,7 +34,7 @@ router.get('/user/:id', function(req, res) {
     encrypted: {
       phone:    '415-867-5309',
       gender:   'Male',
-      dob: 'July 2, 1985',
+      birthdate: 'Jul 02, 1985',
       language: 'English',
       school: 'Stanford',
       work:   'Myspace'
@@ -44,5 +44,11 @@ router.get('/user/:id', function(req, res) {
 
 
 router.post('/user/new', function(req, res) {
+  console.log(req.body);
+})
+
+
+router.post('/user/update', function(req, res) {
+  // update DB with data
   console.log(req.body);
 })

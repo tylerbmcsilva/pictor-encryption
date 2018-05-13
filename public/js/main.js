@@ -160,8 +160,8 @@ function UserPage(data){
       data: data.encrypted.gender
     },
     {
-      id:   'user-dob',
-      data: data.encrypted.dob
+      id:   'user-birthdate',
+      data: data.encrypted.birthdate
     },
     {
       id:   'user-language',
