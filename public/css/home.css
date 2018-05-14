@@ -27,20 +27,6 @@ nav {
   padding: 0 1em;
 }
 
-/* The sticky class is added to the navbar with JS when it reaches its scroll position */
-
-.sticky {
-  position: fixed;
-  top: 0;
-  width: 100%;
-}
-
-/* Add some top padding to the page content to prevent sudden quick movement (as the navigation bar gets a new position at the top of the page (position:fixed and top:0) */
-
-.sticky+.content {
-  padding-top: 60px;
-}
-
 textarea:focus {
   border-bottom: none !important;
   box-shadow: none !important;
@@ -61,6 +47,9 @@ input {
 
 .modal {
   border-radius: 25px;
+  width: 50% !important;
+  height: 90% !important;
+  overflow: hidden !important;
 }
 
 .modal-close {
@@ -69,27 +58,4 @@ input {
 
 .modal-close.modal-trigger{
   font-size: 100%;
-}
-
-
-.full-height {
-  height: 60%;
-  min-height: 700px !important;
-}
-
-.img-bricks {
-    height: 30%;
-    width: 100%;
-}
-
-.section {
-  opacity: 0;
-  transform;
-  translateY(50px);
-  transition: all 1s ease-out;
-}
-
-.section.fade-in {
-  opacity: 1;
-  transform: translateY(0);
 }

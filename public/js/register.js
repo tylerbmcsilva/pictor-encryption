@@ -14,6 +14,7 @@ async function sendRegisterForm(e) {
   let lastName =  document.getElementById("last_name").value;
   let email =  document.getElementById("email_register").value;
   await createAndStoreKeys(email);
+  
   await getDataFromIndexedDB(email);
   await exportRSAKeyToPEM(USER_KEY.publicKey);
   console.log("PEM formatted USER_KEY");
