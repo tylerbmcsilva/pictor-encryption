@@ -1,7 +1,156 @@
 <section class="section">
   <div class="row">
-    <h1>USER PAGE</h1>
-    <h3 id="user-name"></h3>
-    <h3 id="user-location"></h3>
+    <div class="card-panel grey lighten-5 z-depth-1">
+      <h2 class="header" id="user-name">USER NAME</h2>
+      <div class="row valign-wrapper">
+        <div class="col s2">
+          <img src="https://i.imgur.com/FyWI0.jpg" class="responsive-img">
+        </div>
+        <div class="col s10">
+          <div class="card-content" id="user-basic-info">
+            <div class="col s6">
+              <table>
+                <tbody>
+                  <tr>
+                    <td>Location</td>
+                    <td id="user-location">USER LOCATION</td>
+                    <td>
+                      <a class="waves-effect waves-teal btn-flat  modal-trigger" href="#modal_location" id="edit_location">Edit</a>
+                      <!-- Modal Structure -->
+                      <div id="modal_location" class="modal">
+                        <div class="modal-content">
+
+                          <form id="edit_location_form">
+                            <div class="card-content">
+                              <span class="card-title">Edit Location</span>
+                              <div class="input-field">
+                                <input class="validate" type="text" name="city" id="city">
+                                <label class="active" for="city">City</label>
+                              </div>
+                              <div class="input-field">
+                                <input class="validate" type="text" name="state" id="state">
+                                <label for="state">State</label>
+                              </div>
+                            </div>
+                            <div class="card-action">
+                              <button id="editlocationbutton" name="edit_location" type="submit" class="waves-effect waves-light btn indigo darken-3">Edit</button>
+                            </div>
+                          </form>
+
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Email</td>
+                    <td id="user-email">USER EMAIL</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-tabs">
+      <ul class="tabs tabs-fixed-width">
+        <li class="tab"><a class="active" href="#about">About</a></li>
+        <li class="tab"><a href="#posts">Posts</a></li>
+        <li class="tab"><a href="#friends">Friends</a></li>
+        <li class="tab"><a href="#settings">Settings</a></li>
+      </ul>
+    </div>
+    <div class="card-content">
+      <div id="about">
+        <table>
+          <tbody>
+            <tr>
+              <td>Phone</td>
+              <td id="user-phone">USER PHONE</td>
+            </tr>
+            <tr>
+              <td>Gender</td>
+              <td id="user-gender">USER GENDER</td>
+            </tr>
+            <tr>
+              <td>Birthdate</td>
+              <td id="user-birthdate">USER BIRTHDATE</td>
+            </tr>
+            <tr>
+              <td>Language</td>
+              <td id="user-language">USER LANGUAGE</td>
+            </tr>
+            <tr>
+              <td>School</td>
+              <td id="user-school">USER SCHOOL</td>
+            </tr>
+            <tr>
+              <td>Work</td>
+              <td id="user-work">USER WORK</td>
+            </tr>
+            <tr>
+              <td>
+                <a class="waves-effect waves-teal btn-flat modal-trigger" href="#modal_about" id="edit_about">Edit</a>
+
+                <!-- Modal Structure -->
+                <div id="modal_about" class="modal">
+                  <div class="modal-content">
+
+                    <form id="edit_about_form">
+                      <div class="card-content">
+                        <span class="card-title">Edit About</span>
+                        <div class="input-field">
+                          <input class="validate" type="text" name="phone" id="phone">
+                          <label for="phone">Phone</label>
+                        </div>
+                        <div class="input-field">
+                          <input class="validate" type="text" name="gender" id="gender">
+                          <label for="gender">Gender</label>
+                        </div>
+                        <div class="input-field">
+                          <input class="datepicker" type="text" name="birthdate" id="birthdate">
+                          <label for="birthdate">Birthdate</label>
+                        </div>
+                        <div class="input-field">
+                          <input class="validate" type="text" name="language" id="language">
+                          <label for="language">Language</label>
+                        </div>
+                        <div class="input-field">
+                          <input class="validate" type="text" name="school" id="school">
+                          <label for="school">School</label>
+                        </div>
+                        <div class="input-field">
+                          <input class="validate" type="text" name="work" id="work">
+                          <label for="work">Work</label>
+                        </div>
+                      </div>
+                      <div class="card-action">
+                        <button id="editaboutbutton" name="edit_about" type="submit" class="waves-effect waves-light btn indigo darken-3">Edit</button>
+                      </div>
+                    </form>
+
+                  </div>
+                </div>
+
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div id="posts">
+        Posts
+      </div>
+      <div id="friends">
+        Friends
+      </div>
+      <div id="settings">
+        Settings
+      </div>
+    </div>
   </div>
 </section>
+
+<script src="/js/user.js"></script>
