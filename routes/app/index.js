@@ -6,3 +6,4 @@ module.exports  = router;
 
 
 router.use(require('./user'));
+router.use(require('./feed'));
