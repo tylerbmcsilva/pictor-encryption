@@ -12,13 +12,14 @@ async function sendRegisterForm(e) {
 
   let firstName =  document.getElementById("first_name").value;
   let lastName =  document.getElementById("last_name").value;
-  let email =  document.getElementById("email").value;
+  let email =  document.getElementById("email_register").value;
   await createAndStoreKeys(email);
   await getDataFromIndexedDB(email);
   await exportRSAKeyToPEM(USER_KEY.publicKey);
   console.log("PEM formatted USER_KEY");
   console.log(USER_KEY_TO_PEM);
-
+  console.log("Email");
+  console.log(email);
   let payload = {
     first_name: firstName,
     last_name: lastName,

@@ -1,4 +1,4 @@
-
+//let USER_KEY;
 let SERVER_RESPONSE;
 let SECRET;
 
@@ -8,7 +8,7 @@ document.getElementById("loginbutton").addEventListener("click", sendSigninForm)
 async function sendSigninForm(e) {
   e.preventDefault();
 
-  let user = document.getElementById("email").value;
+  let user = document.getElementById("email_login").value;
   await getDataFromIndexedDB(user);
 
   let payload = {
