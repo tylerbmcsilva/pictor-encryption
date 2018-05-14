@@ -194,5 +194,5 @@ function hidePreloader(d) {
   document.addEventListener('DOMContentLoaded', main(window, document));
   M.AutoInit();
   var elems = document.querySelectorAll('.modal');
-  var instances = M.Modal.init(elems, options);
+  var instances = M.Modal.init(elems);
 }();

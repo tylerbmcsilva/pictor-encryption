@@ -1,4 +1,3 @@
-//let USER_KEY;
 let SERVER_RESPONSE;
 let SECRET;
 
@@ -10,7 +9,7 @@ async function sendSigninForm(e) {
 
   let user = document.getElementById("email_login").value;
   await getDataFromIndexedDB(user);
-
+  console.log(user);
   let payload = {
     user: user
   };
