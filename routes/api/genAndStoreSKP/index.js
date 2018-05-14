@@ -12,7 +12,7 @@ router.get('/api/genAndStoreSKP', async function(req, res) {
   key.generateKeyPair(2048, 65537);
   let pemPubK = await key.exportKey('public');
   let pemPrivK = await key.exportKey('private');
-
+  console.log(POOL); 
   // store in database
   POOL.query("INSERT INTO `server` (`public_key`, `private_key`) VALUES (?,?)",
             [pemPubK, pemPrivK], (err, result)=>{

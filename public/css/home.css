@@ -28,13 +28,68 @@ nav {
 }
 
 /* The sticky class is added to the navbar with JS when it reaches its scroll position */
+
 .sticky {
- position: fixed;
- top: 0;
- width: 100%
+  position: fixed;
+  top: 0;
+  width: 100%;
 }
 
 /* Add some top padding to the page content to prevent sudden quick movement (as the navigation bar gets a new position at the top of the page (position:fixed and top:0) */
-.sticky + .content {
- padding-top: 60px;
+
+.sticky+.content {
+  padding-top: 60px;
+}
+
+textarea:focus {
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+input {
+  border-radius: 10px;
+}
+
+.modal-footer {
+  text-align: center;
+}
+
+.btn {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.modal {
+  border-radius: 25px;
+}
+
+.modal-close {
+  font-size: 150%;
+}
+
+.modal-close.modal-trigger{
+  font-size: 100%;
+}
+
+
+.full-height {
+  height: 60%;
+  min-height: 700px !important;
+}
+
+.img-bricks {
+    height: 30%;
+    width: 100%;
+}
+
+.section {
+  opacity: 0;
+  transform;
+  translateY(50px);
+  transition: all 1s ease-out;
+}
+
+.section.fade-in {
+  opacity: 1;
+  transform: translateY(0);
 }

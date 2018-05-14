@@ -4,27 +4,29 @@
       <a href="#!" class="brand-logo"><i class="material-icons">lock_outline</i>PICTOR</a>
       <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
       <ul class="right hide-on-med-and-down">
-        <li><a class="waves-effect waves-light btn modal-trigger" href="#modal1">Sign-In</a></li>
+        <li><a class="indigo darken-4 waves-effect waves-light btn modal-trigger" href="#signup">Sign up</a></li>
+        <li><a class="indigo lighten-3 black-text waves-effect waves-light btn modal-trigger" href="#login">Log In</a></li>
       </ul>
     </div>
   </nav>
   <ul class="sidenav" id="mobile-demo">
-    <li><a href="/register">Register</a></li>
-    <li><a href="/signin">Sign-In</a></li>
+    <li><a class="sidenav-close modal-trigger" href="#signup">Sign Up</a></li>
+    <li><a class="sidenav-close modal-trigger" href="#login">Log In</a></li>
   </ul>
 </header>
 
 <main class="full-height">
-  <div class="home-bg-image half-height center-align valign-wrapper">
+  <div class="home-bg-image full-height center-align valign-wrapper" id="bg-im">
     <h1 class="center-align home-center-block white-text">Peace of mind</h1>
   </div>
-  <div class="section white">
+
+  <div id="section02" class="section white">
    <div class="row container">
-     <h2 class="header">This is a section</h2>
+     <h2 class="header">Your data stays yours</h2>
      <p class="grey-text text-darken-3 lighten-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
    </div>
   </div>
-  <div class="section white">
+  <div id ="section03" class="section white">
    <div class="row container">
      <h2 class="header">Here's another section</h2>
      <p class="grey-text text-darken-3 lighten-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
@@ -58,19 +60,54 @@
 
 
 
-<!-- Sign In Modal -->
-<div id="modal1" class="modal">
+<!-- Log In Modal -->
+<div id="login" class="modal">
   <div class="modal-content">
+    <h2 class="right-align">
+      <a class="modal-close btn-large btn-floating btn-flat indigo lighten-2 white-text" href="#!" id="close">&times;</a>
+    </h2>
+    <h3 class="header center indigo-text text-lighten-2">Account Login</h3>
   <form class="modal-content animate" action="/action_page.php">
-    <a class="btn-large btn-flat modal-close" href="#!">&times;</a>
     <div class="container">
-      <label for="uname"><b>Username</b></label>
-      <input type="text" placeholder="Enter Username" name="uname" required>
-
-      <label for="psw"><b>Password</b></label>
-      <input type="password" placeholder="Enter Password" name="psw" required>
+      <br>
+      <label for="email"><b>Email</b></label>
+      <input class="grey lighten-1" type="text" name="email" id="email" required>
+      <button class="btn btn-login indigo lighten-2" id="loginbutton" name="login" type="submit">Welcome Back</button>
+      <a class="modal-close modal-trigger" href="#signup" id="close">Don't have an account? Sign Up</a>
     </div>
-    <button type="submit">Login</button>
+  </form>
+  </div>
+</div>
+
+<!-- Sign Up Modal -->
+<div id="signup" class="modal">
+  <div class="modal-content indigo darken-2">
+    <div class="modal-content">
+      <h2 class="right-align">
+        <a class="modal-close btn-large btn-floating btn-flat grey lighten-3 indigo-text lighten-2" href="#!" id="close">&times;</a>
+      </h2>
+      <h3 class="header center white-text text-lighten-2">Sign Up</h3>
+  <form class="modal-content animate" action="/action_page.php">
+    <div class="container">
+      <label for="fname"><b>First Name</b></label>
+      <input class="indigo darken-3"  type="text" name="first_name" id="first_name" required>
+      <br>
+      <label for="lname"><b>Last Name</b></label>
+      <input class="indigo darken-3"  type="text" name="lat_name" id="last_name" required>
+      <br>
+      <label for="email"><b>Email</b></label>
+      <input class="indigo darken-3" type="text" name="email" id="email" required>
+      <button class="btn btn-login grey lighten-3 indigo-text lighent-2"  id="registerbutton" name="register" type="submit">So It Begins</button>
+      <a class="modal-close modal-trigger" href="#login" id="close">Got an account? Log In</a>
+    </div>
   </form>
 </div>
 </div>
+
+
+<!-- Page element functions -->
+<script src="/js/home_page.js"></script>
+<script src="/js/encryption.js"></script>
+<script src="/js/utils.js"></script>
+<script src="/js/signin.js"></script>
+<script src="/js/register.js"></script>
