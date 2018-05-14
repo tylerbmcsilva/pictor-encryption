@@ -1,6 +1,5 @@
 const PAGE_TYPES = ['feed', 'post', 'user'];
 
-
 function main(window, document) {
   /************ FOR ENCRYPTION TEST ***************/
   // "use strict";
@@ -33,7 +32,7 @@ function main(window, document) {
         // **********************
         // EVENTUALLY REMOVE
         // **********************
-          document.getElementsByTagName('main')[0].innerHTML += `<pre>${JSON.stringify(data)}</pre>`;
+          // document.getElementsByTagName('main')[0].innerHTML += `<pre>${JSON.stringify(data)}</pre>`;
         // **********************
         // EVENTUALLY REMOVE
         // **********************
@@ -142,11 +141,39 @@ function UserPage(data){
   return Page([
     {
       id:   'user-name',
-      data:   data.name
+      data: `${data.basic.name.first} ${data.basic.name.last}`
     },
     {
       id:   'user-location',
-      data: `${data.location.city}, ${data.location.state}`
+      data: `${data.basic.location.city}, ${data.basic.location.state}`
+    },
+    {
+      id:   'user-email',
+      data: data.basic.email
+    },
+    {
+      id:   'user-phone',
+      data: data.encrypted.phone
+    },
+    {
+      id:   'user-gender',
+      data: data.encrypted.gender
+    },
+    {
+      id:   'user-birthdate',
+      data: data.encrypted.birthdate
+    },
+    {
+      id:   'user-language',
+      data: data.encrypted.language
+    },
+    {
+      id:   'user-school',
+      data: data.encrypted.school
+    },
+    {
+      id:   'user-work',
+      data: data.encrypted.work
     }
   ]);
 }
