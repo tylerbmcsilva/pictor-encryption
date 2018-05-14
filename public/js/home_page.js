@@ -27,7 +27,7 @@ $(document).ready(function() {
   var controller = new ScrollMagic.Controller();
   // build a scene for section02
   var ourScene = new ScrollMagic.Scene({
-      triggerElement: '#section02'
+      triggerElement: '#section02',
     })
     .setClassToggle('#section02', 'fade-in') // add class to project01
     /*.addIndicators({
