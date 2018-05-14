@@ -2,7 +2,6 @@
 
 async function main(window, document) {
   const SERVER_KEY = await getServerPublicKey();
-  console.log(`SERVER: ${SERVER_KEY}`);
   // Function to grab info from form
   document.getElementById("register_form").addEventListener("submit", handleRegisterSubmit);
 
@@ -11,9 +10,10 @@ async function main(window, document) {
     event.preventDefault();
     showePreloader();
 
-    let firstName = document.getElementById("first_name").value;
-    let lastName  = document.getElementById("last_name").value;
-    let email     = document.getElementById("email").value;
+    const firstName = document.getElementById('first_name').value;
+    const lastName  = document.getElementById('last_name').value;
+    const email     = document.getElementById('email').value;
+    const location  = document.getElementById('location').value;
 
     if(validateFormEntries(firstName, lastName, email) === false) {
       hidePreloader();
@@ -34,14 +34,16 @@ async function main(window, document) {
       first_name: firstName,
       last_name:  lastName,
       email:      email,
-      key:        pem
+      location:   location,
+      public_key: pem
     };
-    let payload = await encryptUsingRSA(SERVER_KEY, data);
+
+    // let payload = await encryptUsingRSA(SERVER_KEY, stringToByteArray(data));
 
 
     // Encrypt payload with server public key
     // POST data from form
-    postDataToUrl("/api/user/new", payload);
+    postDataToUrl("/api/user/new", data);
     window.location.pathname = "/user";
   }
 

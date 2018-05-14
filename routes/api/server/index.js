@@ -1,5 +1,5 @@
-const { KEYS }  = require('../../../models/encryption');
-const { Router }  = require('express');
+const { KEYS, getServerPublicKey }  = require('../../../models/encryption');
+const { Router }                    = require('express');
 
 
 const router    = new Router();
@@ -8,11 +8,10 @@ module.exports  = router;
 
 router.get('/server/public-key', async function(req, res) {
   try {
-    // const publicKey = await Encryption.getServerPublicKey();
-    const publicKey = KEYS.publicKey.replace(/(-{5}.+-{5})|(\n+)/gm, '');
-    console.log(publicKey);
+    // const response = await getServerPublicKey();
+
     res.json({
-      publicKey
+      publicKey: KEYS.publicKey //response.public_key
     });
   } catch (error) {
     console.error(error);

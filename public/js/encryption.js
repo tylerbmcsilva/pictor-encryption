@@ -116,20 +116,21 @@ function generateServerKeyPair() {
 // **********************
 async function getServerPublicKey() {
   try {
-    let res = await axios.get("/api/server/public-key");
+    const res = await axios.get("/api/server/public-key");
     if (res.status === 404)
       throw error;
 
-    let publicKeyByteArray = stringToByteArray(res.data.publicKey);
-    console.log(publicKeyByteArray);
+    const SPK = res.data.publicKey.replace(/(-{5}.+-{5})|(\n+)/gm, '');
 
-    let publicKey = await window.crypto.subtle.importKey( "spki",
+    const publicKeyByteArray = base64ToByteArray(SPK);
+
+    let publicKey = await window.crypto.subtle.importKey( 'spki',
       publicKeyByteArray,
-      { name: "RSA-OAEP", hash: {name: "SHA-256"} },
-      false,
-      ["encrypt"]
+      { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-1'},
+      true,
+      ['verify']
     );
-    console.log(publicKey);
+
     return publicKey;
   } catch (error) {
     console.log(error, error.name, error.message);
@@ -137,8 +138,8 @@ async function getServerPublicKey() {
 }
 
 
-function connectIndexedDB(dbName, objectStoreName, version) {
-  return new Promise((resolve, reject) => {
+async function connectIndexedDB(dbName, objectStoreName, version) {
+  return await new Promise((resolve, reject) => {
     const request = window.indexedDB.open(dbName, version);
     request.onupgradeneeded = () => {
       let db = request.result;
@@ -153,8 +154,8 @@ function connectIndexedDB(dbName, objectStoreName, version) {
 }
 
 
-function storeDataIndexedDB(conn, objectStoreName, data) {
-  return new Promise((resolve, reject) => {
+async function storeDataIndexedDB(conn, objectStoreName, data) {
+  return await new Promise((resolve, reject) => {
     const tx = conn.transaction(objectStoreName, "readwrite");
     const store = tx.objectStore(objectStoreName);
     const request = store.put(data);
@@ -164,10 +165,10 @@ function storeDataIndexedDB(conn, objectStoreName, data) {
 }
 
 
-function getDataIndexedDB(conn, objectStoreName, value) {
-  return new Promise((resolve, reject) => {
-    const tx = conn.transaction(objectStoreName, "readonly");
-    const store = tx.objectStore(objectStoreName);
+async function getDataIndexedDB(conn, objectStoreName, value) {
+  return await new Promise((resolve, reject) => {
+    const tx      = conn.transaction(objectStoreName, "readonly");
+    const store   = tx.objectStore(objectStoreName);
     const request = store.get(value);
     request.onsuccess = () => resolve(request.result);
     request.error = () => reject(request.error);
@@ -217,15 +218,25 @@ async function decryptJSON(data, id) {
 }
 
 
-function encryptUsingRSA(key, data) {
-  return window.crypto.subtle.encrypt({
+async function encryptUsingRSA(key, data) {
+  console.log('decrypting')
+  return await window.crypto.subtle.encrypt({
     name: "RSA-OAEP"
   }, key, data);
 }
 
 
-function decryptUsingRSA(key, data) {
-  return window.crypto.subtle.decrypt({
-    name: "RSA-OAEP"
-  }, key, data);
+async function decryptUsingRSA(key, data) {
+  console.log('decrypting')
+  try {
+    let r = await window.crypto.subtle.decrypt({
+      name: "RSA-OAEP"
+    }, key, data);
+    return r;
+  } catch (e) {
+    console.log(e.toString());
+    console.log(e.stack);
+    throw e;
+  }
+
 }
