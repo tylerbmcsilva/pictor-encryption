@@ -1,5 +1,4 @@
 
-let USER_KEY = null;
 let SERVER_RESPONSE;
 let SECRET;
 
