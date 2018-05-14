@@ -124,16 +124,19 @@ async function getServerPublicKey() {
 
     const publicKeyByteArray = base64ToByteArray(SPK);
 
-    let publicKey = await window.crypto.subtle.importKey( 'spki',
+    let publicKey = await window.crypto.subtle.importKey('raw',
       publicKeyByteArray,
-      { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-1'},
-      true,
-      ['verify']
+      {
+        name: "RSA-OAEP",
+        hash: { name: "SHA-256" },
+      },
+      false,
+      ['verify', 'encrypt']
     );
 
     return publicKey;
   } catch (error) {
-    console.log(error, error.name, error.message);
+    console.error(error);
   };
 }
 
@@ -181,9 +184,9 @@ async function encryptJSON(data, id) {
   let conn;
 
   try {
-    conn = await connect("PictorStore", "keys", 1);
+    conn = await connectIndexedDB("PictorStore", "keys", 1);
 
-    let key = await getData(conn, "keys", id);
+    let key = await getDataIndexedDB(conn, "keys", id);
     let uint8array = new TextEncoder("utf-8").encode(JSON.stringify(data));
     let encData = await encryptUsingRSA(key.publicKey, uint8array);
 
@@ -202,13 +205,13 @@ async function decryptJSON(data, id) {
   let conn;
 
   try {
-    conn = await connect("PictorStore", "keys", 1);
+    conn = await connectIndexedDB("PictorStore", "keys", 1);
 
-    let key = await getData(conn, "keys", id);
-    let uint8array = await decryptUsingRSA(key.privateKey, data);
+    let keys = await getDataIndexedDB(conn, "keys", id);
+    let uint8array = await decryptUsingRSA(keys.privateKey, stringToByteArray(data));
     let decryptedData = new TextDecoder("utf-8").decode(uint8array);
 
-    return JSON.parse(decryptedData);
+    return decryptedData;
   } catch (exception) {
     console.error(exception);
   } finally {
@@ -219,9 +222,12 @@ async function decryptJSON(data, id) {
 
 
 async function encryptUsingRSA(key, data) {
-  console.log('decrypting')
+  console.log('encrypting')
   return await window.crypto.subtle.encrypt({
-    name: "RSA-OAEP"
+    name: "RSA-OAEP",
+    hash: {
+      name: "SHA-256"
+    }
   }, key, data);
 }
 
@@ -230,13 +236,60 @@ async function decryptUsingRSA(key, data) {
   console.log('decrypting')
   try {
     let r = await window.crypto.subtle.decrypt({
-      name: "RSA-OAEP"
+      name: "RSA-OAEP",
+      hash: {
+        name: "SHA-256"
+      }
     }, key, data);
     return r;
   } catch (e) {
-    console.log(e.toString());
-    console.log(e.stack);
-    throw e;
+    console.error(e);
   }
+}
 
+async function exportRSAKeyToPEM(key) {
+  return await window.crypto.subtle.exportKey(
+      'spki',
+      key
+  ).then(function(keydata) {
+    return spkiToPEM(keydata);
+  }).catch(function(err){
+    console.error(err);
+  });
+}
+
+
+function spkiToPEM(keydata){
+  let keydataS      = arrayBufferToString(keydata);
+  let keydataB64    = window.btoa(keydataS);
+  let keydataB64Pem = formatAsPem(keydataB64);
+  return keydataB64Pem;
+}
+
+
+function formatAsPem(str) {
+  let finalString = "-----BEGIN PUBLIC KEY-----\n";
+  while(str.length > 0) {
+    finalString += str.substring(0, 64) + "\n";
+    str = str.substring(64);
+  }
+  finalString += "-----END PUBLIC KEY-----";
+
+  return finalString;
+}
+
+
+function arrayBufferToString(buffer) {
+  let binary = "";
+  let bytes = new Uint8Array(buffer);
+  let length = bytes.byteLength;
+  for (let i = 0; i < length; i++) {
+      binary += String.fromCharCode( bytes[ i ] );
+  }
+  return binary;
+}
+
+
+async function sendPayloadToServer(url, payload) {
+  const serverKey = await getServerPublicKey();
 }

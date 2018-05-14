@@ -3,27 +3,28 @@ const PAGE_TYPES = ['feed', 'post', 'user'];
 
 async function main(window, document) {
   try {
+    // Get Keys from IndexedDB
     const indexedDBConn = await connectIndexedDB('PictorStore', 'keys', 1);
     const keys          = await getDataIndexedDB(indexedDBConn, 'keys', 'test@test.com');
     indexedDBConn.close();
-    console.log('got dem keys');
     console.log(keys.privateKey);
 
+    // Request data from the server
     const dataSourceURL = `${window.location.origin}/api${window.location.pathname}`;
-    const { data }      = await getDataFromUrl(dataSourceURL);
-    console.log('got dem data');
+    const { data }      = await getDataFromUrl(dataSourceURL, keys.publicKey);
     console.log(data);
     if(data === {})
       throw Error('No Data');
 
-    const decryptedData = await decryptUsingRSA( keys.privateKey, stringToByteArray(data) );
-    console.log('decrypted bish')
-    // document.getElementsByTagName('main')[0].innerHTML += `<pre>${JSON.stringify(decryptedData)}</pre>`;
+    // Decrypt the data from the server
+    const decryptedData = await decryptJSON( data, 'test@test.com');
+    console.log(decryptedData);
+    document.getElementsByTagName('main')[0].innerHTML += `<pre>${JSON.stringify(data)}</pre>`;
 
-    populateDataFromServer(window.location.pathname, decryptedData);
+    populateDataFromServer(window.location.pathname, data);
 
   } catch (e) {
-    console.log(e);
+    console.error(e);
   } finally {
     setTimeout(function() {
       hidePreloader(document);
@@ -41,10 +42,14 @@ function populateDataFromServer(path, data){
 }
 
 
-async function getDataFromUrl(url) {
-  return axios.get(url)
+async function getDataFromUrl(url, key) {
+  return axios.get(url, {
+    headers: {
+      'User-P-K': key
+    }
+  })
     .catch( function (error) {
-      console.log(error);
+      console.error(error);
       throw error;
     });
 }
@@ -73,11 +78,33 @@ function getPage(pageName) {
       return TestEncryptionPage;
       break;
     default:
-      console.error(`UNKNOWN PAGE "${pageName}"`, data);
+      console.error(`UNKNOWN PAGE "${pageName}"`);
       return;
   }
 }
 
+
+// mapping argument looks like this:
+//   [ { id: 'id-to-map-to', data: 'data-to-put-in-id'} ]
+function Page(mapping) {
+  let i;
+  for (i = 0; i < mapping.length; i++) {
+    document.getElementById(mapping[i].id).innerHTML = mapping[i].data;
+  }
+  return;
+}
+
+
+function FeedPage(data){
+  console.log('FEED', data);
+  return;
+}
+
+
+function PostPage(data){
+  console.log('POST', data);
+  return;
+}
 
 // mapping argument looks like this:
 //   [ { id: 'id-to-map-to', data: 'data-to-put-in-id'} ]
@@ -106,11 +133,39 @@ function UserPage(data){
   return Page([
     {
       id:   'user-name',
-      data:   data.name
+      data: `${data.basic.name.first} ${data.basic.name.last}`
     },
     {
       id:   'user-location',
-      data: `${data.location.city}, ${data.location.state}`
+      data: `${data.basic.location.city}, ${data.basic.location.state}`
+    },
+    {
+      id:   'user-email',
+      data: data.basic.email
+    },
+    {
+      id:   'user-phone',
+      data: data.encrypted.phone
+    },
+    {
+      id:   'user-gender',
+      data: data.encrypted.gender
+    },
+    {
+      id:   'user-birthdate',
+      data: data.encrypted.birthdate
+    },
+    {
+      id:   'user-language',
+      data: data.encrypted.language
+    },
+    {
+      id:   'user-school',
+      data: data.encrypted.school
+    },
+    {
+      id:   'user-work',
+      data: data.encrypted.work
     }
   ]);
 }

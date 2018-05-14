@@ -32,10 +32,21 @@ async function encryptUsingPublicKey({ key, data }) {
   return encrypted.toString('utf8');
 }
 
+async function decryptUsingPublicKey({ key, data }) {
+  const KEY = new NodeRSA();
+
+  KEY.importKey(key, 'pkcs8-public-pem');
+
+  const decrypted = await KEY.decrypt(data);
+
+  return decrypted.toString('utf8');
+}
+
 
 module.exports = {
   KEYS,
   encryptUsingPublicKey,
+  decryptUsingPublicKey,
   generateKeyPair,
   ...server
 }

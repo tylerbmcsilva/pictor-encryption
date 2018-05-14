@@ -1,7 +1,7 @@
 const DB = require('../database');
 
 
-async function createNewUser({ first_name, last_name, email, location, public_key }) {
+async function create({ first_name, last_name, email, location, public_key }) {
   try {
     const user = await DB.query('INSERT INTO `user` SET ?', {
         first_name,
@@ -18,9 +18,9 @@ async function createNewUser({ first_name, last_name, email, location, public_ke
 }
 
 
-async function getUserById({ id }) {
+async function update(id, updates) {
   try {
-    const [ user ] = await DB.query(`SELECT * FROM \`user\` WHERE \`id\` in (${id})`);
+    const user = await DB.query('UPDATE `user` SET ? WHERE ?', [updates, { id }]);
     return user;
   } catch (error) {
     console.error(error);
@@ -29,7 +29,29 @@ async function getUserById({ id }) {
 }
 
 
-async function getAllUsers() {
+async function remove({ id }) {
+  try {
+    const user = await DB.query('DELETE FROM `user` WHERE ?', { id });
+    return user;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+
+async function findOne({ id }) {
+  try {
+    const [ user ] = await DB.query('SELECT * FROM `user` WHERE ?', { id });
+    return user;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+
+async function findAll() {
   try {
     const users = await DB.query('SELECT * FROM `user`');
     return users;
@@ -41,7 +63,9 @@ async function getAllUsers() {
 
 
 module.exports = {
-  createNewUser,
-  getAllUsers,
-  getUserById
+  create,
+  update,
+  remove,
+  findAll,
+  findOne,
 }

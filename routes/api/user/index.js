@@ -8,12 +8,16 @@ module.exports  = router;
 
 
 router.get('/user', async function(req, res) {
-  const users = await User.getAllUsers();
+  const users = await User.findAll();
   res.json(users);
 })
 
 
-router.get('/user/:id', function(req, res) {
+router.get('/user/:id', async function(req, res) {
+  const user  = await User.findOne({ id: req.params.id });
+  // const encrypted = await Encryption.encryptUsingPublicKey({ key: user.public_key, data: user });
+  // console.log(encrypted);
+  // res.json(user);
   res.json({
     id: 1,
     basic: {
@@ -41,7 +45,7 @@ router.get('/user/:id', function(req, res) {
 
 router.post('/user/new', async function(req, res) {
   const { first_name, last_name, email, location, public_key } = req.body;
-  const response = await User.createNewUser({ first_name, last_name, email, location, public_key });
+  const response = await User.create({ first_name, last_name, email, location, public_key });
   res.json(response);
 })
 
