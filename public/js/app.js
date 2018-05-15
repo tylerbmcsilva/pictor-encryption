@@ -3,22 +3,22 @@ const PAGE_TYPES = ['feed', 'post', 'user'];
 
 async function main(window, document) {
   try {
-    // Get Keys from IndexedDB
-    const indexedDBConn = await connectIndexedDB('PictorStore', 'keys', 1);
-    const keys          = await getDataIndexedDB(indexedDBConn, 'keys', 'test@test.com');
-    indexedDBConn.close();
-    console.log(keys.privateKey);
+    // // Get Keys from IndexedDB
+    // const indexedDBConn = await connectIndexedDB('PictorStore', 'keys', 1);
+    // const keys          = await getDataIndexedDB(indexedDBConn, 'keys', 'test@test.com');
+    // indexedDBConn.close();
+    // console.log(keys.privateKey);
 
     // Request data from the server
     const dataSourceURL = `${window.location.origin}/api${window.location.pathname}`;
-    const { data }      = await getDataFromUrl(dataSourceURL, keys.publicKey);
+    const { data }      = await getDataFromUrl(dataSourceURL);
     console.log(data);
     if(data === {})
       throw Error('No Data');
 
     // Decrypt the data from the server
-    const decryptedData = await decryptJSON( data, 'test@test.com');
-    console.log(decryptedData);
+    // const decryptedData = await decryptJSON( data, 'test@test.com');
+    // console.log(decryptedData);
     // document.getElementsByTagName('main')[0].innerHTML += `<pre>${JSON.stringify(data)}</pre>`;
 
     populateDataFromServer(window.location.pathname, data);
