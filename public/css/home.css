@@ -27,6 +27,10 @@ nav {
   padding: 0 1em;
 }
 
+
+.pad5 {
+  padding: .5em;
+
 textarea:focus {
   border-bottom: none !important;
   box-shadow: none !important;
@@ -45,17 +49,17 @@ input {
   border-radius: 10px;
 }
 
-.modal {
-  border-radius: 25px;
-  width: 50% !important;
-  height: 90% !important;
-  overflow: hidden !important;
-}
-
 .modal-close {
   font-size: 150%;
 }
 
 .modal-close.modal-trigger{
   font-size: 100%;
+
+}
+
+#signup,
+#register {
+  width: 95% !important;
+  max-width: 400px;
 }
