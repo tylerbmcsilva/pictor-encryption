@@ -83,29 +83,6 @@ function getPage(pageName) {
   }
 }
 
-
-// mapping argument looks like this:
-//   [ { id: 'id-to-map-to', data: 'data-to-put-in-id'} ]
-function Page(mapping) {
-  let i;
-  for (i = 0; i < mapping.length; i++) {
-    document.getElementById(mapping[i].id).innerHTML = mapping[i].data;
-  }
-  return;
-}
-
-
-function FeedPage(data){
-  console.log('FEED', data);
-  return;
-}
-
-
-function PostPage(data){
-  console.log('POST', data);
-  return;
-}
-
 // mapping argument looks like this:
 //   [ { id: 'id-to-map-to', data: 'data-to-put-in-id'} ]
 function Page(mapping) {
@@ -178,53 +155,6 @@ function FeedPage(data){
 }
 
 
-function PostPage(data){
-  console.log('POST', data);
-  return;
-}
-
-
-function UserPage(data){
-  return Page([
-    {
-      id:   'user-name',
-      data: `${data.basic.name.first} ${data.basic.name.last}`
-    },
-    {
-      id:   'user-location',
-      data: `${data.basic.location.city}, ${data.basic.location.state}`
-    },
-    {
-      id:   'user-email',
-      data: data.basic.email
-    },
-    {
-      id:   'user-phone',
-      data: data.encrypted.phone
-    },
-    {
-      id:   'user-gender',
-      data: data.encrypted.gender
-    },
-    {
-      id:   'user-birthdate',
-      data: data.encrypted.birthdate
-    },
-    {
-      id:   'user-language',
-      data: data.encrypted.language
-    },
-    {
-      id:   'user-school',
-      data: data.encrypted.school
-    },
-    {
-      id:   'user-work',
-      data: data.encrypted.work
-    }
-  ]);
-}
-
 /*
 See function FeedPage for mappings
 0 = user id
@@ -256,7 +186,6 @@ function createFeedHTML(mapping) {
     }
   });
 }
-
 
 
 function PostPage(data){

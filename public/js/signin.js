@@ -1,5 +1,3 @@
-let SERVER_RESPONSE;
-let SECRET;
 
 // Function to grab info from form
 document.getElementById("login").addEventListener("submit", handleSignInSubmit);
