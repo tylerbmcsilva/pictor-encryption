@@ -1,4 +1,3 @@
-"use strict";
 
 async function main(window, document) {
   const SERVER_KEY = await getServerPublicKey();

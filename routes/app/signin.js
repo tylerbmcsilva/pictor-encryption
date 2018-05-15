@@ -21,7 +21,7 @@ router.post('/signin', function(req, res) {
   // 1. lookup user in DB
   // 2. generate secret and encrypt with user public key
   console.log(user);
-  res.redirect("SERVER SENDS ENCRYPTED SECRET");
+  res.send("SERVER SENDS ENCRYPTED SECRET");
 });
 
 
