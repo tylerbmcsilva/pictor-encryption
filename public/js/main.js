@@ -118,16 +118,71 @@ function getPage(pageName) {
 //   [ { id: 'id-to-map-to', data: 'data-to-put-in-id'} ]
 function Page(mapping) {
   let i;
-  for (i = 0; i < mapping.length; i++) {
-    document.getElementById(mapping[i].id).innerHTML = mapping[i].data;
+  if (Array.isArray(mapping[0])) {
+    mapping.forEach(function(arr) {
+      for (i = 0; i < arr.length; i++) {
+        try {
+          document.getElementById(arr[i].id).innerHTML += arr[i].data;
+        }
+        catch(err) {  // do nothing if element with id is not found
+          continue;
+        }
+      }
+    });
+  } else {
+    for (i = 0; i < mapping.length; i++) {
+      document.getElementById(mapping[i].id).innerHTML = mapping[i].data;
+    }
   }
+
   return;
 }
 
 
 function FeedPage(data){
-  console.log('FEED', data);
-  return;
+  let mapping = [];
+
+  let i;
+  for (i = 0; i < data.length; i++) {
+    let post = ([
+      {
+        id:   'post-user-' + i,
+        data: data[i].user_id
+      },
+      {
+        id:   'post-title-' + i,
+        data: data[i].title
+      },
+      {
+        id:   'post-body-' + i,
+        data:  data[i].body
+      },
+      {
+        id:   'post-date-' + i,
+        data:  data[i].date
+      },
+      {
+        id:   'post-url-' + i,
+        data:  data[i].url
+      },
+      {
+        id:   'post-type-' + i,
+        data:  data[i].post_type
+      },
+      {
+        id:   'post-encrypted-' + i,
+        data:  data[i].encrypted
+      },
+      {
+        id:   'post-id',
+        data: data[i].id
+      }
+    ]);
+    mapping.push(post);
+  }
+  createFeedHTML(mapping);
+
+  return Page(mapping);
 }
 
 
@@ -176,6 +231,38 @@ function UserPage(data){
       data: data.encrypted.work
     }
   ]);
+}
+
+/*
+See function FeedPage for mappings
+0 = user id
+1 = post title
+2 = post body
+3 = post date
+4 = post url
+5 = post type
+6 = encrypted flag
+7 = post-id
+*/
+function createFeedHTML(mapping) {
+  let start = document.getElementById('feed_start');
+  mapping.forEach(function(post) {
+    start.innerHTML +=
+     `<li class="collection-item" id="post-${post[7].data}">
+        <span class="title">User #
+          <a href="user/${post[0].data}" id="${post[0].id}"></a>
+        </span>
+        </br>
+        <a href="${post[4].data}" class="left" id="${post[1].id}"></a>
+        <span class="right" id="${post[3].id}">
+        </span>
+        </br>
+        <p id="${post[2].id}"></p>
+      `;
+    if (post[6].data) {
+      document.getElementById(`post-${post[7].data}`).innerHTML += `<i class="material-icons">lock_outline</i>`
+    }
+  });
 }
 
 
