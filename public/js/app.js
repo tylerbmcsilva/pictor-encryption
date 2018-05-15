@@ -28,7 +28,7 @@ async function main(window, document) {
   } finally {
     setTimeout(function() {
       hidePreloader(document);
-    }, 2000);
+    }, 1500);
   }
 }
 
