@@ -8,13 +8,13 @@ module.exports  = router;
 
 
 router.get('/user', async function(req, res) {
-  const users = await User.findAll();
-  res.json(users);
+  // const users = await User.findAll();
+  res.json([]);
 })
 
 
 router.get('/user/:id', async function(req, res) {
-  const user  = await User.findOne({ id: req.params.id });
+  // const user  = await User.findOne({ id: req.params.id });
   // const encrypted = await Encryption.encryptUsingPublicKey({ key: user.public_key, data: user });
   // console.log(encrypted);
   // res.json(user);
