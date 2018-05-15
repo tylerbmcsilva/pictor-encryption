@@ -1,35 +1,61 @@
 const PAGE_TYPES = ['feed', 'post', 'user'];
 
+function main(window, document) {
+  /************ FOR ENCRYPTION TEST ***************/
+  // "use strict";
+  // var generateKeyPairButton = document.getElementById("generateKeyPair");
+  // //var generateCipherKeyButton = document.getElementById("generateCipherKey");
+  // var generateStoreServerButton = document.getElementById("genStoreServerKey");
+  // var retrieveServerPublicButton = document.getElementById("retrieveServerKey");
+  // var generateCipherKeyButton = document.getElementById("generateCipherKey");
+  // generateKeyPairButton.addEventListener("click", keyGenRSA); // Alice's key pair
+  // generateCipherKeyButton.addEventListener("click", keyGenAES); // Alice's cipher key
+  // generateStoreServerButton.addEventListener("click", genStoreSKP); // Server's key pair and store
+  // retrieveServerPublicButton.addEventListener("click", retSPK);
+  /************************************************/
 
-async function main(window, document) {
-  try {
-    // Get Keys from IndexedDB
-    const indexedDBConn = await connectIndexedDB('PictorStore', 'keys', 1);
-    const keys          = await getDataIndexedDB(indexedDBConn, 'keys', 'test@test.com');
-    indexedDBConn.close();
-    console.log(keys.privateKey);
+  let dataSourceURL = `${window.location.origin}/api${window.location.pathname}`;
+  console.log(dataSourceURL)
+  getDataFromUrl(dataSourceURL)
+    .then(function(data) {
+      if(data)
+        return data;
+      else
+        throw Error('No Data');
+    }).then(function(data) {
+      // **********************
+      // DECRYPT HERE
+      // **********************
+      return data;
+    }).then(function(data) {
+      if(data) {
+        // **********************
+        // EVENTUALLY REMOVE
+        // **********************
+          // document.getElementsByTagName('main')[0].innerHTML += `<pre>${JSON.stringify(data)}</pre>`;
+        // **********************
+        // EVENTUALLY REMOVE
+        // **********************
 
-    // Request data from the server
-    const dataSourceURL = `${window.location.origin}/api${window.location.pathname}`;
-    const { data }      = await getDataFromUrl(dataSourceURL, keys.publicKey);
-    console.log(data);
-    if(data === {})
-      throw Error('No Data');
+        // Loads the data from the server onto the page
+        populateDataFromServer(window.location.pathname, data);
+      }
 
-    // Decrypt the data from the server
-    const decryptedData = await decryptJSON( data, 'test@test.com');
-    console.log(decryptedData);
-    // document.getElementsByTagName('main')[0].innerHTML += `<pre>${JSON.stringify(data)}</pre>`;
+      return;
 
-    populateDataFromServer(window.location.pathname, data);
+    }).finally(function() {
+      // Hide preloader after 2 seconds
+      setTimeout(function() {
+        hidePreloader(document);
+      }, 2000);
 
-  } catch (e) {
-    console.error(e);
-  } finally {
-    setTimeout(function() {
-      hidePreloader(document);
-    }, 2000);
-  }
+    }).catch(function(error) {
+      if(error.message === 'No Data')
+        return;
+      else {
+        throw error;
+      }
+    });
 }
 
 
@@ -42,15 +68,19 @@ function populateDataFromServer(path, data){
 }
 
 
-async function getDataFromUrl(url, key) {
-  return axios.get(url, {
-    headers: {
-      'User-P-K': key
-    }
-  })
-    .catch( function (error) {
-      console.error(error);
-      throw error;
+function getDataFromUrl(url) {
+  console.log(`REQUESTING FROM ${url}`);
+  return axios.get(url)
+    .then(function(r){
+      if(r.status === 404)
+        return {};
+      else
+        return r.data;
+    })
+    .catch(function(err){
+      // SILENTLY FAIL
+      // console.log(err);
+      return;
     });
 }
 
@@ -78,33 +108,11 @@ function getPage(pageName) {
       return TestEncryptionPage;
       break;
     default:
-      console.error(`UNKNOWN PAGE "${pageName}"`);
+      console.error(`UNKNOWN PAGE "${pageName}"`, data);
       return;
   }
 }
 
-
-// mapping argument looks like this:
-//   [ { id: 'id-to-map-to', data: 'data-to-put-in-id'} ]
-function Page(mapping) {
-  let i;
-  for (i = 0; i < mapping.length; i++) {
-    document.getElementById(mapping[i].id).innerHTML = mapping[i].data;
-  }
-  return;
-}
-
-
-function FeedPage(data){
-  console.log('FEED', data);
-  return;
-}
-
-
-function PostPage(data){
-  console.log('POST', data);
-  return;
-}
 
 // mapping argument looks like this:
 //   [ { id: 'id-to-map-to', data: 'data-to-put-in-id'} ]
@@ -258,55 +266,20 @@ function createFeedHTML(mapping) {
 }
 
 
+function hidePreloader(d) {
+  let pl = d.getElementById('preloader');
+  pl.classList.remove('active');
+  pl.classList.add('hide');
 
-function PostPage(data){
-  console.log('POST', data);
-  return;
+  let plw = d.getElementById('preloader-wrapper');
+  plw.classList.remove('full-height');
+  plw.classList.add('hide');
 }
 
-
-function UserPage(data){
-  return Page([
-    {
-      id:   'user-name',
-      data: `${data.basic.name.first} ${data.basic.name.last}`
-    },
-    {
-      id:   'user-location',
-      data: `${data.basic.location.city}, ${data.basic.location.state}`
-    },
-    {
-      id:   'user-email',
-      data: data.basic.email
-    },
-    {
-      id:   'user-phone',
-      data: data.encrypted.phone
-    },
-    {
-      id:   'user-gender',
-      data: data.encrypted.gender
-    },
-    {
-      id:   'user-birthdate',
-      data: data.encrypted.birthdate
-    },
-    {
-      id:   'user-language',
-      data: data.encrypted.language
-    },
-    {
-      id:   'user-school',
-      data: data.encrypted.school
-    },
-    {
-      id:   'user-work',
-      data: data.encrypted.work
-    }
-  ]);
-}
 
 !function() {
   document.addEventListener('DOMContentLoaded', main(window, document));
   M.AutoInit();
+  var elems = document.querySelectorAll('.modal');
+  var instances = M.Modal.init(elems);
 }();
