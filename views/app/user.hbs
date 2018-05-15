@@ -1,6 +1,6 @@
-<section class="section">
-  <div class="row">
-    <div class="card-panel grey lighten-5 z-depth-1">
+<section class="section blue-grey lighten-5 full-height">
+  <div class="container">
+    <div class="white lighten-5 z-depth-1 pad5">
       <h2 class="header" id="user-name">USER NAME</h2>
       <div class="row valign-wrapper">
         <div class="col s2">
@@ -8,7 +8,7 @@
         </div>
         <div class="col s10">
           <div class="card-content" id="user-basic-info">
-            <div class="col s6">
+
               <table>
                 <tbody>
                   <tr>
@@ -33,7 +33,7 @@
                               </div>
                             </div>
                             <div class="card-action">
-                              <button id="editlocationbutton" name="edit_location" type="submit" class="waves-effect waves-light btn indigo darken-3">Edit</button>
+                              <button id="editlocationbutton" name="edit_location" type="submit" class="waves-effect waves-light btn indigo darken-3">Save</button>
                             </div>
                           </form>
 
@@ -47,107 +47,107 @@
                   </tr>
                 </tbody>
               </table>
-            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="card">
-    <div class="card-tabs">
-      <ul class="tabs tabs-fixed-width">
-        <li class="tab"><a class="active" href="#about">About</a></li>
-        <li class="tab"><a href="#posts">Posts</a></li>
-        <li class="tab"><a href="#friends">Friends</a></li>
-        <li class="tab"><a href="#settings">Settings</a></li>
-      </ul>
-    </div>
-    <div class="card-content">
-      <div id="about">
-        <table>
-          <tbody>
-            <tr>
-              <td>Phone</td>
-              <td id="user-phone">USER PHONE</td>
-            </tr>
-            <tr>
-              <td>Gender</td>
-              <td id="user-gender">USER GENDER</td>
-            </tr>
-            <tr>
-              <td>Birthdate</td>
-              <td id="user-birthdate">USER BIRTHDATE</td>
-            </tr>
-            <tr>
-              <td>Language</td>
-              <td id="user-language">USER LANGUAGE</td>
-            </tr>
-            <tr>
-              <td>School</td>
-              <td id="user-school">USER SCHOOL</td>
-            </tr>
-            <tr>
-              <td>Work</td>
-              <td id="user-work">USER WORK</td>
-            </tr>
-            <tr>
-              <td>
-                <a class="waves-effect waves-teal btn-flat modal-trigger" href="#modal_about" id="edit_about">Edit</a>
 
-                <!-- Modal Structure -->
-                <div id="modal_about" class="modal">
-                  <div class="modal-content">
+    <div class="card">
+      <div class="card-tabs indigo">
+        <ul class="tabs tabs-fixed-width tabs-transparent">
+          <li class="tab white-text"><a class="white-text active" href="#about">About</a></li>
+          <li class="tab white-text"><a class="white-text" href="#posts">Posts</a></li>
+          <li class="tab white-text"><a class="white-text" href="#friends">Friends</a></li>
+          <li class="tab white-text"><a class="white-text" href="#settings">Settings</a></li>
+        </ul>
+      </div>
+      <div class="card-content">
+        <div id="about">
+          <table>
+            <tbody>
+              <tr>
+                <td>Phone</td>
+                <td id="user-phone">USER PHONE</td>
+              </tr>
+              <tr>
+                <td>Gender</td>
+                <td id="user-gender">USER GENDER</td>
+              </tr>
+              <tr>
+                <td>Birthdate</td>
+                <td id="user-birthdate">USER BIRTHDATE</td>
+              </tr>
+              <tr>
+                <td>Language</td>
+                <td id="user-language">USER LANGUAGE</td>
+              </tr>
+              <tr>
+                <td>School</td>
+                <td id="user-school">USER SCHOOL</td>
+              </tr>
+              <tr>
+                <td>Work</td>
+                <td id="user-work">USER WORK</td>
+              </tr>
+              <tr>
+                <td>
+                  <a class="waves-effect waves-teal btn-flat modal-trigger" href="#modal_about" id="edit_about">Edit</a>
 
-                    <form id="edit_about_form">
-                      <div class="card-content">
-                        <span class="card-title">Edit About</span>
-                        <div class="input-field">
-                          <input class="validate" type="text" name="phone" id="phone">
-                          <label for="phone">Phone</label>
-                        </div>
-                        <div class="input-field">
-                          <input class="validate" type="text" name="gender" id="gender">
-                          <label for="gender">Gender</label>
-                        </div>
-                        <div class="input-field">
-                          <input class="datepicker" type="text" name="birthdate" id="birthdate">
-                          <label for="birthdate">Birthdate</label>
-                        </div>
-                        <div class="input-field">
-                          <input class="validate" type="text" name="language" id="language">
-                          <label for="language">Language</label>
-                        </div>
-                        <div class="input-field">
-                          <input class="validate" type="text" name="school" id="school">
-                          <label for="school">School</label>
-                        </div>
-                        <div class="input-field">
-                          <input class="validate" type="text" name="work" id="work">
-                          <label for="work">Work</label>
-                        </div>
-                      </div>
-                      <div class="card-action">
-                        <button id="editaboutbutton" name="edit_about" type="submit" class="waves-effect waves-light btn indigo darken-3">Edit</button>
-                      </div>
-                    </form>
+                  <!-- Modal Structure -->
+                  <div id="modal_about" class="modal">
+                    <div class="modal-content">
 
+                      <form id="edit_about_form">
+                        <div class="card-content">
+                          <span class="card-title">Edit About</span>
+                          <div class="input-field">
+                            <input class="validate" type="text" name="phone" id="phone">
+                            <label for="phone">Phone</label>
+                          </div>
+                          <div class="input-field">
+                            <input class="validate" type="text" name="gender" id="gender">
+                            <label for="gender">Gender</label>
+                          </div>
+                          <div class="input-field">
+                            <input class="datepicker" type="text" name="birthdate" id="birthdate">
+                            <label for="birthdate">Birthdate</label>
+                          </div>
+                          <div class="input-field">
+                            <input class="validate" type="text" name="language" id="language">
+                            <label for="language">Language</label>
+                          </div>
+                          <div class="input-field">
+                            <input class="validate" type="text" name="school" id="school">
+                            <label for="school">School</label>
+                          </div>
+                          <div class="input-field">
+                            <input class="validate" type="text" name="work" id="work">
+                            <label for="work">Work</label>
+                          </div>
+                        </div>
+                        <div class="card-action">
+                          <button id="editaboutbutton" name="edit_about" type="submit" class="waves-effect waves-light btn indigo darken-3">Save</button>
+                        </div>
+                      </form>
+
+                    </div>
                   </div>
-                </div>
 
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div id="posts">
-        Posts
-      </div>
-      <div id="friends">
-        Friends
-      </div>
-      <div id="settings">
-        Settings
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="posts">
+          Posts
+        </div>
+        <div id="friends">
+          Friends
+        </div>
+        <div id="settings">
+          Settings
+        </div>
       </div>
     </div>
   </div>

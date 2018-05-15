@@ -21,7 +21,7 @@ router.post('/signin', function(req, res) {
   // 1. lookup user in DB
   // 2. generate secret and encrypt with user public key
   console.log(user);
-  res.send("SERVER SENDS ENCRYPTED SECRET");
+  res.redirect("SERVER SENDS ENCRYPTED SECRET");
 });
 
 
@@ -30,5 +30,5 @@ router.post('/signin/verify', function(req, res) {
   // 1. decrypt response with server private key
   // 2, verify response matches secret
   console.log(response);
-  res.send("USER VERIFIED");
+  res.status(202).send("USER VERIFIED");
 });

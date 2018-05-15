@@ -19,7 +19,7 @@ async function main(window, document) {
     // Decrypt the data from the server
     const decryptedData = await decryptJSON( data, 'test@test.com');
     console.log(decryptedData);
-    document.getElementsByTagName('main')[0].innerHTML += `<pre>${JSON.stringify(data)}</pre>`;
+    // document.getElementsByTagName('main')[0].innerHTML += `<pre>${JSON.stringify(data)}</pre>`;
 
     populateDataFromServer(window.location.pathname, data);
 

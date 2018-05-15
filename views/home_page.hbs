@@ -1,8 +1,9 @@
+{{> _preloader}}
 <header class="z-depth-2" id="navbar">
   <div class="navbar-fixed">
     <nav class="indigo darken-3">
       <div class="nav-wrapper">
-        <a href="#!" class="brand-logo"><i class="material-icons">lock_outline</i>PICTOR</a>
+        <a href="/" class="brand-logo"><i class="material-icons">lock_outline</i>PICTOR</a>
         <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
         <ul class="right hide-on-med-and-down">
           <li><a class="indigo darken-4 waves-effect waves-light btn modal-trigger" href="#signup">Sign up</a></li>
@@ -65,18 +66,19 @@
 
 
 <!-- Log In Modal -->
-<div id="login" class="modal">
+<div id="login" class="modal" style="width: 95% !important;max-width: 400px;">
   <div class="modal-content">
-    <h2 class="right-align">
-      <a class="modal-close btn-large btn-floating btn-flat indigo lighten-2 white-text" href="#!" id="close">&times;</a>
-    </h2>
-    <h3 class="header center indigo-text text-lighten-2">Account Login</h3>
-    <form class="modal-content animate">
-      <div class="container">
-        <br>
-        <label for="email"><b>Email</b></label>
-        <input class="grey lighten-1" type="text" name="email" id="email_login" required>
-        <button class="btn btn-login indigo lighten-2" id="loginbutton" name="login" type="button">Welcome Back</button>
+    <div class="right-align">
+      <a class="modal-close btn-large btn-floating btn-flat white-text indigo" href="#!" id="close"><i class="material-icons white-text">clear</i></a>
+    </div>
+    <h3 class="header center indigo-text">Login</h3>
+    <form id="sign_in_form">
+      <div class="input-field">
+        <input class="validate indigo-text" type="email" name="email" id="email_login" autocomplete="email" required>
+        <label for="email" class="indigo-text">Email</label>
+      </div>
+      <button class="btn btn-login indigo" id="loginbutton" name="login" type="submit">Welcome Back</button>
+      <div class="center-align pad5">
         <a class="modal-close modal-trigger" href="#signup" id="close">Don't have an account? Sign Up</a>
       </div>
     </form>
@@ -84,32 +86,35 @@
 </div>
 
 <!-- Sign Up Modal -->
-<div id="signup" class="modal">
+<div id="signup" class="modal" style="width: 95% !important;max-width: 400px;">
   <div class="modal-content indigo darken-2">
-    <div class="modal-content">
-      <h2 class="right-align">
-        <a class="modal-close btn-large btn-floating btn-flat grey lighten-3 indigo-text lighten-2" href="#!" id="close">&times;</a>
-      </h2>
-      <h3 class="header center white-text text-lighten-2">Sign Up</h3>
-      <form class="modal-content animate">
-        <div class="container">
-          <label for="fname"><b>First Name</b></label>
-          <input class="indigo darken-3 white-text" type="text" name="first_name" id="first_name" required>
-          <br>
-          <label for="lname"><b>Last Name</b></label>
-          <input class="indigo darken-3 white-text" type="text" name="last_name" id="last_name" required>
-          <br>
-          <label for="lname"><b>Location</b></label>
-          <input class="indigo darken-3 white-text" type="text" name="location" id="location" required>
-          <br>
-          <label for="email"><b>Email</b></label>
-          <input class="indigo darken-3 white-text" type="text" name="email" id="email_register" required>
-          <button class="btn btn-login grey lighten-3 indigo-text lighten-2" id="registerbutton" name="register" type="button">So It Begins</button>
-          <a class="modal-close modal-trigger" href="#login" id="close">Got an account? Log In</a>
-        </div>
-      </form>
+    <div class="right-align">
+      <a class="modal-close btn-large btn-floating btn-flat indigo-text white" href="#!" id="close"><i class="material-icons indigo-text">clear</i></a>
     </div>
+    <div class="pad5">
+     <h3 class="header center white-text">Register</h3>
+    </div>
+    <form id="register_form">
+     <div class="input-field white-text">
+       <input class="validate white-text" type="text" name="first_name" id="first_name" autocomplete="given-name" required>
+       <label for="first_name" class="white-text">First Name</label>
+     </div>
+     <div class="input-field">
+       <input class="validate white-text" type="text" name="last_name" id="last_name" autocomplete="family-name" required>
+       <label for="last_name" class="white-text">Last Name</label>
+     </div>
+     <div class="input-field">
+       <input class="validate white-text" type="email" name="email" id="email" autocomplete="email" required>
+       <label for="email" class="white-text">Email</label>
+     </div>
+     <div class="input-field">
+       <input class="validate white-text" type="text" name="location" id="location" autocomplete="country" required>
+       <label for="location" class="white-text">Location</label>
+     </div>
+     <button id="registerbutton" name="register" type="submit" class="waves-effect waves-light btn white indigo-text">Register</button>
+    </form>
   </div>
+</div>
 
 
 

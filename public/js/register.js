@@ -44,7 +44,7 @@ async function main(window, document) {
     // Encrypt payload with server public key
     // POST data from form
     postDataToUrl("/api/user/new", data);
-    window.location.pathname = "/user";
+    window.location.pathname = "/feed";
   }
 
 
@@ -127,4 +127,5 @@ async function main(window, document) {
 !function(w,d) {
   d.addEventListener('DOMContentLoaded', main(w,d));
   hidePreloader();
+  M.AutoInit();
 }(window, document);

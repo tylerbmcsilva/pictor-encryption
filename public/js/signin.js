@@ -2,35 +2,40 @@ let SERVER_RESPONSE;
 let SECRET;
 
 // Function to grab info from form
-document.getElementById("loginbutton").addEventListener("click", sendSigninForm);
+document.getElementById("login").addEventListener("submit", handleSignInSubmit);
 
-async function sendSigninForm(e) {
+async function handleSignInSubmit(e) {
   e.preventDefault();
+  showePreloader();
 
-  let user = document.getElementById("email_login").value;
-  await getDataFromIndexedDB(user);
-  console.log(user);
+  const USER_EMAIL  = document.getElementById("email_login").value;
+  const USER_KEY    = await getDataFromIndexedDB(USER_EMAIL);
+
   let payload = {
-    user: user
+    user: USER_EMAIL
   };
   if(USER_KEY) {
-    postDataToUrl("/signin", payload);
+    let res1 = await postDataToUrl("/signin", payload);
     // 1. decrypt response with private key
     // 2. encrypt response with server key
-    payload.response = "CLIENT RE-ENCRYPTS SECRET";
-    console.log(payload);
-    postDataToUrl("/signin/verify", payload);
+    let verifyPayload = {
+      user:     USER_EMAIL,
+      response: "CLIENT RE-ENCRYPTS SECRET"
+    }
+
+    let res2 = await postDataToUrl("/signin/verify", verifyPayload);
+    if(res2.status === 202)
+      window.location.pathname = '/feed';
+    else
+      window.location.pathname = '/';
   } else {
     console.log("User key not found");
+    window.location.pathname = '/';
   }
 }
 
 async function postDataToUrl(url, data) {
-  axios.post(url, data)
-    .then(function(res) {
-      serverResponse = res.data;
-      console.log(serverResponse);
-    })
+  return axios.post(url, data)
     .catch(function(err) {
       // SILENTLY FAIL
       return;
@@ -42,7 +47,7 @@ async function getDataFromIndexedDB(id) {
   let conn;
   try {
     conn = await connectIndexedDB("PictorStore", "keys", 1);
-    USER_KEY = await getDataIndexedDB(conn, "keys", id);
+    return await getDataIndexedDB(conn, "keys", id);
   } catch(exception) {
     console.log(exception);
   } finally {

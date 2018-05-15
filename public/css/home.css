@@ -49,13 +49,6 @@ input {
   border-radius: 10px;
 }
 
-.modal {
-  border-radius: 25px;
-  width: 50% !important;
-  height: 90% !important;
-  overflow: hidden !important;
-}
-
 .modal-close {
   font-size: 150%;
 }
@@ -63,4 +56,10 @@ input {
 .modal-close.modal-trigger{
   font-size: 100%;
 
+}
+
+#signup,
+#register {
+  width: 95% !important;
+  max-width: 400px;
 }
