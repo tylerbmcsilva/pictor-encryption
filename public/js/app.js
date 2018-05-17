@@ -87,7 +87,7 @@ function getPage(pageName) {
 //   [ { id: 'id-to-map-to', data: 'data-to-put-in-id'} ]
 function Page(mapping) {
   let i;
-  if (Array.isArray(mapping[0])) {
+  if (Array.isArray(mapping[0])) {  // array of arrays is for feed
     mapping.forEach(function(arr) {
       for (i = 0; i < arr.length; i++) {
         try {
@@ -202,7 +202,7 @@ function UserPage(data){
     },
     {
       id:   'user-location',
-      data: `${data.basic.location.city}, ${data.basic.location.state}`
+      data: data.basic.location
     },
     {
       id:   'user-email',

@@ -1,17 +1,19 @@
-document.getElementById("edit_location").addEventListener("click", getCurrentLocationData);
-document.getElementById("edit_location_form").addEventListener("submit", handleEditLocationSubmit);
+document.getElementById("edit_basic").addEventListener("click", getCurrentBasicData);
+document.getElementById("edit_basic_form").addEventListener("submit", handleEditBasicSubmit);
 document.getElementById("edit_about").addEventListener("click", getCurrentAboutData);
 document.getElementById("edit_about_form").addEventListener("submit", handleEditAboutSubmit);
 
-async function handleEditLocationSubmit(event) {
+async function handleEditBasicSubmit(event) {
     event.preventDefault();
 
-    let city = document.getElementById("city").value;
-    let state = document.getElementById("state").value;
+    let firstName = document.getElementById("first_name").value;
+    let lastName = document.getElementById("last_name").value;
+    let location = document.getElementById("location").value;
 
     let data = {
-      city: city,
-      state:  state,
+      firstName: firstName,
+      lastName: lastName,
+      location: location,
       // email:      email,
       // key:        pem
     };
@@ -55,13 +57,14 @@ async function handleEditAboutSubmit(event) {
     window.location.pathname = `${window.location.pathname}`;
 }
 
-function getCurrentLocationData() {
-  let location = document.getElementById("user-location").textContent.split(", ");
-  let city = location[0];
-  let state = location[1];
+function getCurrentBasicData() {
+  let name = document.getElementById("user-name").textContent.split(" ");
+  let firstName = name[0];
+  let lastName = name[1];
 
-  document.getElementById("city").value = city;
-  document.getElementById("state").value = state;
+  document.getElementById("first_name").value = firstName;
+  document.getElementById("last_name").value = lastName;
+  document.getElementById("location").value = document.getElementById("user-location").textContent;
 
   M.updateTextFields();
 }
