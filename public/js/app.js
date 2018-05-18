@@ -198,39 +198,39 @@ function UserPage(data){
   return Page([
     {
       id:   'user-name',
-      data: `${data.basic.name.first} ${data.basic.name.last}`
+      data: `${data.first_name} ${data.last_name}`
     },
     {
       id:   'user-location',
-      data: data.basic.location
+      data: data.location
     },
     {
       id:   'user-email',
-      data: data.basic.email
-    },
-    {
-      id:   'user-phone',
-      data: data.encrypted.phone
-    },
-    {
-      id:   'user-gender',
-      data: data.encrypted.gender
-    },
-    {
-      id:   'user-birthdate',
-      data: data.encrypted.birthdate
-    },
-    {
-      id:   'user-language',
-      data: data.encrypted.language
-    },
-    {
-      id:   'user-school',
-      data: data.encrypted.school
-    },
-    {
-      id:   'user-work',
-      data: data.encrypted.work
+      data: data.email
+    // },
+    // {
+    //   id:   'user-phone',
+    //   data: data.encrypted.phone
+    // },
+    // {
+    //   id:   'user-gender',
+    //   data: data.encrypted.gender
+    // },
+    // {
+    //   id:   'user-birthdate',
+    //   data: data.encrypted.birthdate
+    // },
+    // {
+    //   id:   'user-language',
+    //   data: data.encrypted.language
+    // },
+    // {
+    //   id:   'user-school',
+    //   data: data.encrypted.school
+    // },
+    // {
+    //   id:   'user-work',
+    //   data: data.encrypted.work
     }
   ]);
 }

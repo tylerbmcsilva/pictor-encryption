@@ -14,29 +14,29 @@ router.get('/user', async function(req, res) {
 
 
 router.get('/user/:id', async function(req, res) {
-  // const user  = await User.findOne({ id: req.params.id });
+  const user  = await User.findOne({ id: req.params.id });
   // const encrypted = await Encryption.encryptUsingPublicKey({ key: user.public_key, data: user });
   // console.log(encrypted);
-  // res.json(user);
-  res.json({
-    id: 1,
-    basic: {
-      name: {
-        first:  'Dominic',
-        last:   'Mathis'
-      },
-      email:    'dmathis@gmail.com',
-      location: 'New York City, New York'
-    },
-    encrypted: {
-      phone:    '415-867-5309',
-      gender:   'Male',
-      birthdate: 'Jul 02, 1985',
-      language: 'English',
-      school: 'Stanford',
-      work:   'Myspace'
-    }
-  });
+  res.json(user);
+  // res.json({
+  //   id: user.id,
+  //   basic: {
+  //     name: {
+  //       first:  user.first_name,
+  //       last:   user.last_name
+  //     },
+  //     email:    user.email,
+  //     location: user.location
+  //   },
+  //   encrypted: {
+  //     phone:    '415-867-5309',
+  //     gender:   'Male',
+  //     birthdate: 'Jul 02, 1985',
+  //     language: 'English',
+  //     school: 'Stanford',
+  //     work:   'Myspace'
+  //   }
+  // });
 })
 
 
@@ -47,7 +47,20 @@ router.post('/user/new', async function(req, res) {
 })
 
 
-router.post('/user/update', function(req, res) {
-  // update DB with data
-  console.log(req.body);
+router.post('/user/:id/update', async function(req, res) {
+  let updates;
+  if (req.body.basic) {
+    const { first_name, last_name, email, location } = req.body;
+    updates = {
+      first_name: first_name,
+      last_name: last_name,
+      location: location
+    };
+  } else {
+    const { json_block } = req.body;
+    updates = {json_block: json_block};
+  }
+
+  const response = await User.update(req.params.id, updates);
+  res.json(response);
 })

@@ -9,12 +9,14 @@ async function handleEditBasicSubmit(event) {
     let firstName = document.getElementById("first_name").value;
     let lastName = document.getElementById("last_name").value;
     let location = document.getElementById("location").value;
+    let email = document.getElementById("user-email").textContent;
 
     let data = {
-      firstName: firstName,
-      lastName: lastName,
+      first_name: firstName,
+      last_name: lastName,
+      email:      email,
       location: location,
-      // email:      email,
+      basic: true,
       // key:        pem
     };
     let payload = data;
@@ -23,7 +25,7 @@ async function handleEditBasicSubmit(event) {
 
     // Encrypt payload with server public key
     // POST data from form
-    postDataToUrl("/api/user/update", payload);
+    postDataToUrl(`${window.location.origin}/api${window.location.pathname}/update`, payload);
     window.location.pathname = `${window.location.pathname}`;
 }
 
@@ -53,7 +55,7 @@ async function handleEditAboutSubmit(event) {
 
     // Encrypt payload with server public key
     // POST data from form
-    postDataToUrl("/api/user/update", payload);
+    postDataToUrl(`${window.location.origin}/api${window.location.pathname}/update`, payload);
     window.location.pathname = `${window.location.pathname}`;
 }
 
