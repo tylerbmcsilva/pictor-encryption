@@ -95,50 +95,50 @@ async function generateAESKey() {
 // **********************
 // EVENTUALLY REMOVE
 // **********************
-// function generateServerKeyPair() {
-//   return axios.post("/api/server/create-store-keys").then(function(r) {
-//     if (r.status === 404)
-//       throw new Error(404);
-//     else
-//       return console.log(r.data.message);
-//     }
-//   ).catch(function(err) {
-//     // SILENTLY FAIL
-//     // console.log(err);
-//     return;
-//   });
-// }
+function generateServerKeyPair() {
+  return axios.post("/api/server/create-store-keys").then(function(r) {
+    if (r.status === 404)
+      throw new Error(404);
+    else
+      return console.log(r.data.message);
+    }
+  ).catch(function(err) {
+    // SILENTLY FAIL
+    // console.log(err);
+    return;
+  });
+}
 
 
 // for retrieval of servers public key
 // **********************
 // EVENTUALLY REMOVE SEND IN PAYLOAD
-// **********************
-// async function getServerPublicKey() {
-//   try {
-//     const res = await axios.get("/api/server/public-key");
-//     if (res.status === 404)
-//       throw error;
+**********************
+async function getServerPublicKey() {
+  try {
+    const res = await axios.get("/api/server/public-key");
+    if (res.status === 404)
+      throw error;
 
-//     const SPK = res.data.publicKey.replace(/(-{5}.+-{5})|(\n+)/gm, '');
+    const SPK = res.data.publicKey.replace(/(-{5}.+-{5})|(\n+)/gm, '');
 
-//     const publicKeyByteArray = base64ToByteArray(SPK);
+    const publicKeyByteArray = base64ToByteArray(SPK);
 
-//     let publicKey = await window.crypto.subtle.importKey('raw',
-//       publicKeyByteArray,
-//       {
-//         name: "RSA-OAEP",
-//         hash: { name: "SHA-256" },
-//       },
-//       false,
-//       ['verify', 'encrypt']
-//     );
+    let publicKey = await window.crypto.subtle.importKey('raw',
+      publicKeyByteArray,
+      {
+        name: "RSA-OAEP",
+        hash: { name: "SHA-256" },
+      },
+      false,
+      ['verify', 'encrypt']
+    );
 
-//     return publicKey;
-//   } catch (error) {
-//     console.error(error);
-//   };
-// }
+    return publicKey;
+  } catch (error) {
+    console.error(error);
+  };
+}
 
 
 async function connectIndexedDB(dbName, objectStoreName, version) {
