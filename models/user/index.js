@@ -1,16 +1,24 @@
 const DB = require('../database');
+const bcrypt = require('bcrypt');
 
-
-async function create({ first_name, last_name, email, location, public_key }) {
+async function create({ first_name, last_name, email, password, location, public_key }) {
   try {
-    const user = await DB.query('INSERT INTO `user` SET ?', {
-        first_name,
-        last_name,
-        email,
-        location,
-        public_key
+    // Hash password w/ bcrypt
+    bcrypt.hash(password, 12).then(async function(hash){
+      password = hash;
+      DB.query('INSERT INTO `user` SET ?', {
+          first_name,
+          last_name,
+          email,
+          password,
+          location,
+          public_key,
+      }, function(error, results, fields){
+        if(error) throw error;
+        console.log(results);
+        return results;
+      });
     });
-    return user;
   } catch (error) {
     console.error(error);
     throw error;
@@ -67,5 +75,5 @@ module.exports = {
   update,
   remove,
   findAll,
-  findOne,
+  findOne
 }

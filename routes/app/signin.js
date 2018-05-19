@@ -1,5 +1,5 @@
+const { findOne }  = require('../../models/user');
 const { Router }    = require('express');
-
 
 const router = new Router();
 module.exports = router;
@@ -16,12 +16,16 @@ router.get('/signin', async function(req, res) {
 });
 
 
-router.post('/signin', function(req, res) {
-  let user = req.body['user'];
-  // 1. lookup user in DB
-  // 2. generate secret and encrypt with user public key
-  console.log(user);
-  res.send("SERVER SENDS ENCRYPTED SECRET");
+router.post('/signin', async function(req, res) {
+  try {
+    let user = req.body['user'];
+    // Lookup user in DB
+    const data = await findOne(user);
+
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(403);
+  }
 });
 
 

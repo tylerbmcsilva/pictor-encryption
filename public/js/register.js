@@ -13,7 +13,7 @@ async function main(window, document) {
     const lastName  = document.getElementById('last_name').value;
     const email     = document.getElementById('email').value;
     const location  = document.getElementById('location').value;
-
+    const password  = document.getElementById('passwordRegister').value;
     if(validateFormEntries(firstName, lastName, email) === false) {
       hidePreloader();
       return;
@@ -34,6 +34,7 @@ async function main(window, document) {
       last_name:  lastName,
       email:      email,
       location:   location,
+      password:   password,
       public_key: pem
     };
 

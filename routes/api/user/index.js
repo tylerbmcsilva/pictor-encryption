@@ -1,10 +1,10 @@
 const Encryption  = require('../../../models/encryption');
 const { Router }  = require('express');
 const User        = require('../../../models/user');
+const passport    = require('passport');
 
-
-const router    = new Router();
-module.exports  = router;
+const router      = new Router();
+module.exports    = router;
 
 
 router.get('/user', async function(req, res) {
@@ -44,9 +44,11 @@ router.get('/user/:id', async function(req, res) {
 
 
 router.post('/user/new', async function(req, res) {
-  const { first_name, last_name, email, location, public_key } = req.body;
-  const response = await User.create({ first_name, last_name, email, location, public_key });
-  res.json(response);
+  const { first_name, last_name, email, password,location, public_key} = req.body;
+  const response = await User.create({ first_name, last_name, email, password, location, public_key });
+  console.log(response);
+  //req.login(response.insertId, function(err){
+  //});
 })
 
 
@@ -54,3 +56,11 @@ router.post('/user/update', function(req, res) {
   // update DB with data
   console.log(req.body);
 })
+
+passport.serializeUser(function(user_id, done){
+  done(null, user_id);
+});
+
+passport.deserializeUser(function (user_id, done){
+  done(null, user_id);
+});
