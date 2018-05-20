@@ -44,12 +44,8 @@ function populateDataFromServer(path, data){
 }
 
 
-async function getDataFromUrl(url, key) {
-  return axios.get(url, {
-    headers: {
-      'User-P-K': key
-    }
-  })
+async function getDataFromUrl(url) {
+  return axios.get(url)
     .catch( function (error) {
       console.error(error);
       throw error;
