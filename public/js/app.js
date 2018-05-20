@@ -185,7 +185,7 @@ function UserPage(data){
     },
     {
       id:   'user-location',
-      data: `${basic.location.city}, ${basic.location.state}`
+      data: basic.location
     },
     {
       id:   'user-email',

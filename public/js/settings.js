@@ -1,6 +1,9 @@
 function main(window, document) {
 
   document.getElementById("edit_about_form").addEventListener("submit", handleEditAboutSubmit);
+  document.getElementById("edit_pic_form").addEventListener("submit", handleEditPicSubmit);
+  document.getElementById("photo").addEventListener("change", generatePreviewPic);
+
 
   async function handleEditAboutSubmit(event) {
     event.preventDefault();
@@ -36,6 +39,43 @@ function main(window, document) {
     // POST data from form
     postDataToUrl(`${window.location.origin}/api${window.location.pathname}/update`, payload);
     window.location.pathname = `${window.location.pathname}`;
+  }
+
+
+  async function handleEditPicSubmit(event) {
+    event.preventDefault();
+
+
+
+    let data = {
+    };
+    let payload = data;
+    // let payload = await encryptUsingRSA(SERVER_KEY, data);
+    // Encrypt payload with server public key
+
+    // POST data from form
+    postDataToUrl(`${window.location.origin}/api${window.location.pathname}/update`, payload);
+    window.location.pathname = `${window.location.pathname}`;
+  }
+
+
+  function generatePreviewPic() {
+    let preview = document.getElementById('preview');
+    let file = document.getElementById('photo').files[0];
+    let reader = new FileReader();
+
+    reader.addEventListener('load', function() {
+      let img = document.createElement('img');
+      img.src = reader.result;
+      img.class = "responsive-img";
+
+      preview.innerHTML = '';
+      preview.appendChild(img);
+    });
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   }
 
   function postDataToUrl(url, data) {

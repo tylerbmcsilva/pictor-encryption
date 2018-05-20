@@ -1,11 +1,17 @@
 <section class="section blue-grey lighten-5 full-height">
   <div class="container">
     <div class="card">
+      <div class="card-tabs indigo">
+        <ul class="tabs tabs-fixed-width tabs-transparent">
+          <li class="tab white-text"><a class="white-text active" href="#edit_info">Info</a></li>
+          <li class="tab white-text"><a class="white-text" href="#edit_pic">Picture</a></li>
+        </ul>
+      </div>
       <div class="card-content">
-        <div id="about">
+        <div id="edit_info">
           <form id="edit_about_form">
             <div class="card-content">
-              <span class="card-title">Edit Information</span>
+              <!-- <span class="card-title">Edit Information</span> -->
               <div class="input-field">
                 <input class="validate" type="text" name="first_name" id="user-firstname">
                 <label for="user-firstname">First Name</label>
@@ -48,7 +54,30 @@
             </div>
           </form>
         </div>
+        <div id="edit_pic">
+          <div class="card-content">
+            <div class="row valign-wrapper" id="preview">
+              <i class="large material-icons">face</i>
+            </div>
+            <form action="#" id="edit_pic_form">
+              <div class="file-field input-field">
+                <div class="btn waves-effect waves-light btn indigo darken-3">
+                  <span>Upload</span>
+                  <input type="file" id="photo">
+                </div>
+                <div class="file-path-wrapper">
+                  <input class="file-path validate" name="upload" type="text" id="file-upload">
+                  <label for="file-upload">Filename</label>
+                </div>
+              </div>
+              <div class="card-action">
+                <button id="editaboutbutton" name="edit_about" type="submit" class="waves-effect waves-light btn indigo darken-3">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
+    </div>
   </div>
 </section>
 
