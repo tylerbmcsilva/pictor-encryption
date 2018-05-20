@@ -113,7 +113,7 @@ function generateServerKeyPair() {
 // for retrieval of servers public key
 // **********************
 // EVENTUALLY REMOVE SEND IN PAYLOAD
-**********************
+// **********************
 async function getServerPublicKey() {
   try {
     const res = await axios.get("/api/server/public-key");
