@@ -5,15 +5,16 @@ const router    = new Router();
 module.exports  = router;
 
 
-router.get('/user', function(req, res) {
-  // const users  = await DATABASE CALL
-  // res.render('user_all', { users });
-  res.render('app/user_all');
-})
+router.get('/profile', function(req, res) {
+  res.render('app/user');
+});
 
 
-router.get('/user/:id', function(req, res) {
-  // const user  = await DATABASE CALL
-  // res.render('user', { user });
-  res.render('app/user')
-})
+router.get('/friends', function(req, res) {
+  res.render('app/user_list');
+});
+
+
+router.get('/friend/:id', function(req, res) {
+  res.render('app/user');
+});
