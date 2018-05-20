@@ -25,7 +25,8 @@ router.get('/profile', async function(req, res) {
       birthdate: 'Jul 02, 1985',
       language: 'English',
       school: 'Stanford',
-      work:   'Myspace'
+      work:   'Myspace',
+      picture:  '/images/profile/blank.png'
     }
   });
 });

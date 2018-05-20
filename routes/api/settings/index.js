@@ -26,7 +26,8 @@ router.get('/settings', async function(req, res) {
       birthdate: 'Jul 02, 1985',
       language: 'English',
       school: 'Stanford',
-      work:   'Myspace'
+      work:   'Myspace',
+      picture:  '/images/profile/blank.png'
     }
   });
 })
@@ -43,7 +44,22 @@ router.post('/settings/update', async function(req, res) {
   };
 
   console.log(updates);
+  // const response = await User.update(req.params.id, updates);
+  // res.json(response);
+})
 
+router.post('/settings/upload', async function(req, res) {
+  console.log(req);
+  // let imageFile = req.files.file;
+  //
+  // imageFile.mv(`${__dirname}/public/profile/${req.body.filename}`, function(err) {
+  //   if (err) {
+  //     return res.status(500).send(err);
+  //   }
+  //
+  //   res.json({file: `public/profile/${req.body.filename}`});
+  // });
+  // console.log(req.files);
   // const response = await User.update(req.params.id, updates);
   // res.json(response);
 })

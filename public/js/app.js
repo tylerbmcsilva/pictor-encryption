@@ -97,14 +97,21 @@ function getPage(pageName) {
 function PageMapping(mapping) {
   let i;
   for (i = 0; i < mapping.length; i++) {
-    document.getElementById(mapping[i].id).innerHTML = mapping[i].data;
+    if (mapping[i].id === 'user-picture')
+      document.getElementById(mapping[i].id).src = mapping[i].data;
+    else
+      document.getElementById(mapping[i].id).innerHTML = mapping[i].data;
   }
 }
 
 function SettingsMapping(mapping) {
   let i;
   for (i = 0; i < mapping.length; i++) {
-    document.getElementById(mapping[i].id).value = mapping[i].data;
+    if (mapping[i].id === 'user-picture') {
+      document.getElementById(mapping[i].id).src = mapping[i].data;
+    } else {
+      document.getElementById(mapping[i].id).value = mapping[i].data;
+    }
   }
   M.updateTextFields();
 }
@@ -218,10 +225,13 @@ function UserPage(data){
       {
         id:   'user-work',
         data: encrypted.work
+      },
+      {
+        id:   'user-picture',
+        data: encrypted.picture
       }
     ]);
   }
-
   return PageMapping(pageMapping);
 }
 
@@ -245,7 +255,6 @@ function SettingsPage(data){
     //   data: basic.email
     // }
   ];
-
   if(encrypted){
     Array.prototype.push.apply(pageMapping, [
       {
@@ -271,10 +280,13 @@ function SettingsPage(data){
       {
         id:   'user-work',
         data: encrypted.work
+      },
+      {
+        id:   'user-picture',
+        data: encrypted.picture
       }
     ]);
   }
-
   return SettingsMapping(pageMapping);
 }
 
