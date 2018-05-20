@@ -16,9 +16,7 @@ router.post('/signin', async function(req, res) {
       const hash = result[0].password;
       //console.log(hash);
       // check that passwords match
-      const cRes = await bcrypt.compare(password, hash).then(async function(res){
-        return res;
-      });
+      const cRes = await bcrypt.compare(password, hash)
       try {
         // if they match
         if(cRes){
@@ -29,9 +27,13 @@ router.post('/signin', async function(req, res) {
         console.error(error);
       }
     }
-    res.json([]);
+    res.json({
+      redirectUrl: '/feed'
+    })
   } catch (error) {
-    console.error(error);
+    res.status(500).json({
+      error: error.message
+    })
   }
 
 });

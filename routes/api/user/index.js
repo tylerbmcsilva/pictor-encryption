@@ -91,28 +91,28 @@ router.get('/friend/:id', async function(req, res) {
 
 
 router.post('/user/new', async function(req, res) {
-  const { first_name, last_name, email, location, public_key} = req.body;
-
-  // Get password for hashing
-  var password = req.body.password;
-
-  const user_id = await bcrypt.hash(password, 12).then(async function(hash){
-    password = hash;
-    // Store user in database
-    const result = await User.create({ first_name, last_name, email, password, location, public_key });
-    return result.insertId;
-  });
+  const { first_name, last_name, email, location, public_key, password } = req.body;
 
   try {
-    req.login(user_id, function(err){ if(err) throw err;});
-    //console.log(req.user);
-    //console.log(req.isAuthenticated());
+    const encryptedPassword = await bcrypt.hash(password, 12);
+    const { insertId } = await User.create({
+      first_name,
+      last_name,
+      email,
+      password: encryptedPassword,
+      location,
+      public_key
+    });
+    const login = await req.login(insertId);
+
+    res.json({
+      redirectUrl: '/feed'
+    })
+  } catch (error) {
+    res.status(500).json({
+      error: error.message
+    })
   }
-  catch (err){
-    throw err;
-  }
-  //res.redirect('/feed');
-  res.json([]);
 })
 
 
