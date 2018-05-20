@@ -9,27 +9,23 @@ module.exports = router;
 router.post('/signin', async function(req, res) {
   const { email, password } = req.body;
 
-  const result = await User.findPass({email, password});
   //console.log(result);
   try {
-    if(result.length>0){
-      const hash = result[0].password;
-      //console.log(hash);
-      // check that passwords match
-      const cRes = await bcrypt.compare(password, hash)
-      try {
-        // if they match
-        if(cRes){
-          // log user into passport
-          req.login(result[0].id, function(err){ if(err) throw err;});
-        }
-      }catch (error) {
-        console.error(error);
-      }
+    const result = await User.findPass({email, password});
+    if( result.length === 0 ) throw new Error('User does not exist.');
+    const user = result[0].id;
+    const hash = result[0].password;
+
+    const compareResult = await bcrypt.compare(password, hash);
+    if(compareResult){
+      console.log(user);
+      req.login(user, function(err){ if(err) throw err; });
+      res.json({
+        message: 'success'
+      });
+    } else {
+      res.status(401); // send unauthorized
     }
-    res.json({
-      redirectUrl: '/feed'
-    })
   } catch (error) {
     res.status(500).json({
       error: error.message
