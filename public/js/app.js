@@ -44,12 +44,8 @@ function populateDataFromServer(path, data){
 }
 
 
-async function getDataFromUrl(url, key) {
-  return axios.get(url, {
-    headers: {
-      'User-P-K': key
-    }
-  })
+async function getDataFromUrl(url) {
+  return axios.get(url)
     .catch( function (error) {
       console.error(error);
       throw error;
@@ -108,31 +104,54 @@ function PageAppend(id, htmlArray) {
 
 function FeedPage(data){
   let postsListFormatted = data.map( el => {
-    return createPostHTML(el);
+    return createPostFeedHTML(el);
   });
 
   PageAppend('feed_start', postsListFormatted);
+  return;
 }
 
 
-function createPostHTML(post) {
-  return `<li class="collection-item" id="post-${post.id}">
-            <span class="title">User #
-              <a href="friend/${post.user_id}" id="post-user-${post.user_id}">${post.user_id}</a>
-            </span>
-            </br>
-            <a href="${post.url}" class="left" id="post-title-${post.id}">${post.title}</a>
-            <span class="right" id="post-date-${post.id}">${post.date}</span>
-            </br>
-            <p id="post-body-${post.id}">${post.body}</p>
-          </li>
-        `;
+function createPostFeedHTML(post) {
+  return `<div class="card-panel">
+            <a href="/post/${post.id}" class="indigo-text"><h1 style="margin:0">${post.title}</h1></a>
+            <div class="row">
+              <div class="col s6">
+                <a href="/friend/${post.user_id}" class="indigo-text"><h5 class="truncate">#${post.user_id}</h5></a>
+              </div>
+              <div class="col s6">
+                <h5 class="right-align">${post.date}</h5>
+              </div>
+            </div>
+            <a href="${post.url ? post.url : '#'}" class="indigo-text ${post.url ? '' : 'hidden'}"><h5>${post.url ? post.url : ''}</h5></a>
+            <div id="post-body" class="truncate">
+              ${post.body}
+            </div>
+          </div>`;
 }
 
 
 function PostPage(data){
-  console.log('POST', data);
+  PageAppend('post_section', [ createPostHTML(data) ]);
   return;
+}
+
+function createPostHTML(post) {
+  return `<div class="card-panel">
+            <h1 style="margin:0">${post.title}</h1>
+            <div class="row">
+              <div class="col s6">
+                <a href="/friend/${post.user_id}" class="indigo-text"><h5 class="truncate">#${post.user_id}</h5></a>
+              </div>
+              <div class="col s6">
+                <h5 class="right-align">${post.date}</h5>
+              </div>
+            </div>
+            <a href="${post.url ? post.url : '#'}" class="indigo-text ${post.url ? '' : 'hidden'}"><h5>${post.url ? post.url : ''}</h5></a>
+            <div id="post-body">
+              ${post.body}
+            </div>
+          </div>`;
 }
 
 
@@ -175,7 +194,7 @@ function UserPage(data){
     },
     {
       id:   'user-location',
-      data: `${basic.location.city}, ${basic.location.state}`
+      data: basic.location
     },
     {
       id:   'user-email',

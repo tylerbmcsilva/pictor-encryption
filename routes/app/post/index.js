@@ -5,6 +5,6 @@ const router    = new Router();
 module.exports  = router;
 
 
-router.get('/feed', function(req, res) {
-  res.render('app/feed')
+router.get('/post/:id', function(req, res) {
+  res.render('app/post');
 });

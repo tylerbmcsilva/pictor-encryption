@@ -8,3 +8,4 @@ module.exports  = router;
 router.use(require('./feed'));
 router.use(require('./server'));
 router.use(require('./user'));
+router.use(require('./post'));

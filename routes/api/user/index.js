@@ -35,57 +35,78 @@ router.get('/profile', async function(req, res) {
 
 
 router.get('/friends', async function(req, res) {
-  const users = await User.findAll();
-  res.json(users);
+  try {
+    const users = await User.findAll();
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.json([{
+      id: 1,
+      basic: {
+        name: {
+          first:  'Dominic',
+          last:   'Mathis'
+        },
+        email:    'dmathis@gmail.com',
+        location: 'New York City, New York'
+      },
+      encrypted: {
+        phone:      '415-867-5309',
+        gender:     'Male',
+        birthdate:  'Jul 02, 1985',
+        language:   'English',
+        school:     'Stanford',
+        work:       'Myspace'
+      }
+    }]);
+  }
+
 });
 
 
 router.get('/friend/:id', async function(req, res) {
-  const user  = await User.findOne({ id: req.params.id });
-  if(user === undefined)
-    res.send('');
-  else {
-    console.log(user);
-    // const encrypted = await Encryption.encryptUsingPublicKey({ key: user.public_key, data: user });
-    // console.log(encrypted);
-    res.json({
-      id:     user.id,
-      basic:  {
-        name:   {
-          first:  user.first_name,
-          last:   user.last_name
+  try {
+    const user  = await User.findOne({ id: req.params.id });
+    if(user === undefined)
+      res.send('');
+    else {
+      // ENCRYPTION
+      res.json({
+        id:     user.id,
+        basic:  {
+          name:   {
+            first:  user.first_name,
+            last:   user.last_name
+          },
+          email:    user.email,
+          location: user.location
         },
-        email:    user.email,
-        location: {
-          city:   user.location.split(',')[0],
-          state:  user.location.split(',')[1]
-        }
+        encrypted: user.json_block
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    res.json({
+      id: 1,
+      basic: {
+        name: {
+          first:  'Dominic',
+          last:   'Mathis'
+        },
+        email:    'dmathis@gmail.com',
+        location: 'New York City, New York'
       },
-      encrypted: user.json_block
+      encrypted: {
+        phone:      '415-867-5309',
+        gender:     'Male',
+        birthdate:  'Jul 02, 1985',
+        language:   'English',
+        school:     'Stanford',
+        work:       'Myspace'
+      }
     });
   }
-  // res.json({
-  //   id: 1,
-  //   basic: {
-  //     name: {
-  //       first:  'Dominic',
-  //       last:   'Mathis'
-  //     },
-  //     email:    'dmathis@gmail.com',
-  //     location: {
-  //       city:   'New York City',
-  //       state:  'New York'
-  //     }
-  //   },
-  //   encrypted: {
-  //     phone:    '415-867-5309',
-  //     gender:   'Male',
-  //     birthdate: 'Jul 02, 1985',
-  //     language: 'English',
-  //     school: 'Stanford',
-  //     work:   'Myspace'
-  //   }
-  // });
+
 })
 
 
@@ -93,7 +114,7 @@ router.post('/user/new', async function(req, res) {
   const { first_name, last_name, email, location, public_key } = req.body;
   const response = await User.create({ first_name, last_name, email, location, public_key });
   res.json(response);
-})
+});
 
 
 router.post('/user/update', function(req, res) {
