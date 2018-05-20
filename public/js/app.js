@@ -237,12 +237,8 @@ function SettingsPage(data){
       data: basic.name.last
     },
     {
-      id:   'user-city',
-      data: basic.location.city
-    },
-    {
-      id:   'user-state',
-      data: basic.location.state
+      id:   'user-location',
+      data: basic.location
     },
     // {
     //   id:   'user-email',

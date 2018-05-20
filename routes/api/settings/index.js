@@ -18,10 +18,7 @@ router.get('/settings', async function(req, res) {
         last:   'Mathis'
       },
       email:    'dmathis@gmail.com',
-      location: {
-        city:   'New York City',
-        state:  'New York'
-      }
+      location: 'New York City, New York'
     },
     encrypted: {
       phone:    '415-867-5309',

@@ -6,8 +6,7 @@ function main(window, document) {
     event.preventDefault();
     let firstName = document.getElementById("user-firstname").value;
     let lastName = document.getElementById("user-lastname").value;
-    let city = document.getElementById("user-city").value;
-    let state = document.getElementById("user-state").value;
+    let location = document.getElementById("user-location").value;
     let phone = document.getElementById("user-phone").value;
     let gender = document.getElementById("user-gender").value;
     let birthdate = document.getElementById("user-birthdate").value;
@@ -18,7 +17,7 @@ function main(window, document) {
     let data = {
       first_name: firstName,
       last_name: lastName,
-      location: `${city}, ${state}`,
+      location: location,
       json_block: {
         phone: phone,
         gender: gender,
