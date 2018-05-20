@@ -37,28 +37,37 @@ router.get('/profile', async function(req, res) {
 router.get('/friends', async function(req, res) {
   try {
     const users = await User.findAll();
-    res.json(users);
+    if(users.length === 0) {
+      // ****************************************
+      // IF NOTHING, SEND TEST DATA FOR NOW
+      // ****************************************
+      res.json([{
+        id: 1,
+        basic: {
+          name: {
+            first:  'Dominic',
+            last:   'Mathis'
+          },
+          email:    'dmathis@gmail.com',
+          location: 'New York City, New York'
+        },
+        encrypted: {
+          phone:      '415-867-5309',
+          gender:     'Male',
+          birthdate:  'Jul 02, 1985',
+          language:   'English',
+          school:     'Stanford',
+          work:       'Myspace'
+        }
+      }]);
+    } else {
+      res.json(users);
+    }
   } catch (error) {
     console.error(error);
-    res.json([{
-      id: 1,
-      basic: {
-        name: {
-          first:  'Dominic',
-          last:   'Mathis'
-        },
-        email:    'dmathis@gmail.com',
-        location: 'New York City, New York'
-      },
-      encrypted: {
-        phone:      '415-867-5309',
-        gender:     'Male',
-        birthdate:  'Jul 02, 1985',
-        language:   'English',
-        school:     'Stanford',
-        work:       'Myspace'
-      }
-    }]);
+    res.status(500).json({
+      error: error.message
+    })
   }
 
 });
@@ -67,10 +76,31 @@ router.get('/friends', async function(req, res) {
 router.get('/friend/:id', async function(req, res) {
   try {
     const user  = await User.findOne({ id: req.params.id });
-    if(user === undefined)
-      res.send('');
-    else {
-      // ENCRYPTION
+    if(user === undefined) {
+      // ****************************************
+      // IF NOTHING, SEND TEST DATA FOR NOW
+      // ****************************************
+      res.json({
+        id: 1,
+        basic: {
+          name: {
+            first:  'Dominic',
+            last:   'Mathis'
+          },
+          email:    'dmathis@gmail.com',
+          location: 'New York City, New York'
+        },
+        encrypted: {
+          phone:      '415-867-5309',
+          gender:     'Male',
+          birthdate:  'Jul 02, 1985',
+          language:   'English',
+          school:     'Stanford',
+          work:       'Myspace'
+        }
+      });
+    } else {
+      // ENCRYPTION HERE
       res.json({
         id:     user.id,
         basic:  {
@@ -86,25 +116,9 @@ router.get('/friend/:id', async function(req, res) {
     }
   } catch (error) {
     console.error(error);
-    res.json({
-      id: 1,
-      basic: {
-        name: {
-          first:  'Dominic',
-          last:   'Mathis'
-        },
-        email:    'dmathis@gmail.com',
-        location: 'New York City, New York'
-      },
-      encrypted: {
-        phone:      '415-867-5309',
-        gender:     'Male',
-        birthdate:  'Jul 02, 1985',
-        language:   'English',
-        school:     'Stanford',
-        work:       'Myspace'
-      }
-    });
+    res.status(500).json({
+      error: error.message
+    })
   }
 
 })
@@ -112,7 +126,17 @@ router.get('/friend/:id', async function(req, res) {
 
 router.post('/user/new', async function(req, res) {
   const { first_name, last_name, email, location, public_key } = req.body;
-  const response = await User.create({ first_name, last_name, email, location, public_key });
+  try {
+    const response = await User.create({ first_name, last_name, email, location, public_key });
+    res.json({
+      id: response.insertId
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message
+    });
+  }
+
   res.json(response);
 });
 
