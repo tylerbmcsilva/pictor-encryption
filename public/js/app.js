@@ -1,4 +1,4 @@
-const PAGE_TYPES = ['feed', 'post', 'user'];
+const PAGE_TYPES = ['feed', 'post', 'friend', 'friends', 'profile'];
 
 
 async function main(window, document) {
@@ -13,8 +13,10 @@ async function main(window, document) {
     const dataSourceURL = `${window.location.origin}/api${window.location.pathname}`;
     const { data }      = await getDataFromUrl(dataSourceURL);
     console.log(data);
-    if(data === {})
-      throw Error('No Data');
+    if(data === '') {
+      window.location.replace(`${window.location.origin}/not-found`);
+      return;
+    }
 
     // Decrypt the data from the server
     // const decryptedData = await decryptJSON( data, 'test@test.com');
@@ -71,7 +73,11 @@ function getPage(pageName) {
     case 'post':
       return PostPage;
       break;
-    case 'user':
+    case 'friends':
+      return FriendsPage;
+      break;
+    case 'profile':
+    case 'friend':
       return UserPage;
       break;
     case 'testEncryption':
@@ -85,106 +91,42 @@ function getPage(pageName) {
 
 // mapping argument looks like this:
 //   [ { id: 'id-to-map-to', data: 'data-to-put-in-id'} ]
-function Page(mapping) {
+function PageMapping(mapping) {
   let i;
-  if (Array.isArray(mapping[0])) {  // array of arrays is for feed
-    mapping.forEach(function(arr) {
-      for (i = 0; i < arr.length; i++) {
-        try {
-          document.getElementById(arr[i].id).innerHTML += arr[i].data;
-        }
-        catch(err) {  // do nothing if element with id is not found
-          continue;
-        }
-      }
-    });
-  } else {
-    for (i = 0; i < mapping.length; i++) {
-      document.getElementById(mapping[i].id).innerHTML = mapping[i].data;
-    }
+  for (i = 0; i < mapping.length; i++) {
+    document.getElementById(mapping[i].id).innerHTML = mapping[i].data;
   }
+}
 
+function PageAppend(id, htmlArray) {
+  htmlArray.forEach(function(el) {
+    document.getElementById(id).innerHTML += el;
+  });
   return;
 }
 
 
 function FeedPage(data){
-  let mapping = [];
+  let postsListFormatted = data.map( el => {
+    return createPostHTML(el);
+  });
 
-  let i;
-  for (i = 0; i < data.length; i++) {
-    let post = ([
-      {
-        id:   'post-user-' + i,
-        data: data[i].user_id
-      },
-      {
-        id:   'post-title-' + i,
-        data: data[i].title
-      },
-      {
-        id:   'post-body-' + i,
-        data:  data[i].body
-      },
-      {
-        id:   'post-date-' + i,
-        data:  data[i].date
-      },
-      {
-        id:   'post-url-' + i,
-        data:  data[i].url
-      },
-      {
-        id:   'post-type-' + i,
-        data:  data[i].post_type
-      },
-      {
-        id:   'post-encrypted-' + i,
-        data:  data[i].encrypted
-      },
-      {
-        id:   'post-id',
-        data: data[i].id
-      }
-    ]);
-    mapping.push(post);
-  }
-  createFeedHTML(mapping);
-
-  return Page(mapping);
+  PageAppend('feed_start', postsListFormatted);
 }
 
 
-/*
-See function FeedPage for mappings
-0 = user id
-1 = post title
-2 = post body
-3 = post date
-4 = post url
-5 = post type
-6 = encrypted flag
-7 = post-id
-*/
-function createFeedHTML(mapping) {
-  let start = document.getElementById('feed_start');
-  mapping.forEach(function(post) {
-    start.innerHTML +=
-     `<li class="collection-item" id="post-${post[7].data}">
-        <span class="title">User #
-          <a href="user/${post[0].data}" id="${post[0].id}"></a>
-        </span>
-        </br>
-        <a href="${post[4].data}" class="left" id="${post[1].id}"></a>
-        <span class="right" id="${post[3].id}">
-        </span>
-        </br>
-        <p id="${post[2].id}"></p>
-      `;
-    if (post[6].data) {
-      document.getElementById(`post-${post[7].data}`).innerHTML += `<i class="material-icons">lock_outline</i>`
-    }
-  });
+function createPostHTML(post) {
+  return `<li class="collection-item" id="post-${post.id}">
+            <span class="title">User #
+              <a href="friend/${post.user_id}" id="post-user-${post.user_id}">${post.user_id}</a>
+            </span>
+            </br>
+            <a href="${post.url}" class="left" id="post-title-${post.id}">${post.title}</a>
+            <span class="right" id="post-date-${post.id}">${post.date}</span>
+            </br>
+            <p id="post-body-${post.id}">${post.body}</p>
+          </li>
+        `;
 }
 
 
@@ -194,45 +136,83 @@ function PostPage(data){
 }
 
 
+function FriendsPage(data) {
+  const friendsFormatted = data.map( el => {
+    let friend = {
+        id:     el.id,
+        name:   `${el.first_name} ${el.last_name}`,
+        photo:  'https://i.imgur.com/FyWI0.jpg'
+      };
+    return createFriendCard(friend);
+  });
+  PageAppend('friends_list', friendsFormatted);
+  return;
+}
+
+
+function createFriendCard(friend) {
+  return `<div class="col s12 m4 l3">
+            <div class="card">
+              <div class="card-image">
+                <img src="${friend.photo}">
+                <span class="card-title">${friend.name}</span>
+              </div>
+              <div class="card-action">
+                <a href="/friend/${friend.id}">Vist Profile</a>
+              </div>
+            </div>
+          </div>`;
+}
+
+
 function UserPage(data){
-  return Page([
+  const { basic, encrypted } = data;
+
+  let pageMapping = [
     {
       id:   'user-name',
-      data: `${data.first_name} ${data.last_name}`
+      data: `${basic.name.first} ${basic.name.last}`
     },
     {
       id:   'user-location',
-      data: data.location
+      data: `${basic.location.city}, ${basic.location.state}`
     },
     {
       id:   'user-email',
-      data: data.email
-    // },
-    // {
-    //   id:   'user-phone',
-    //   data: data.encrypted.phone
-    // },
-    // {
-    //   id:   'user-gender',
-    //   data: data.encrypted.gender
-    // },
-    // {
-    //   id:   'user-birthdate',
-    //   data: data.encrypted.birthdate
-    // },
-    // {
-    //   id:   'user-language',
-    //   data: data.encrypted.language
-    // },
-    // {
-    //   id:   'user-school',
-    //   data: data.encrypted.school
-    // },
-    // {
-    //   id:   'user-work',
-    //   data: data.encrypted.work
+      data: basic.email
     }
-  ]);
+  ];
+
+  if(encrypted){
+    Array.prototype.push.apply(pageMapping, [
+      {
+        id:   'user-phone',
+        data: encrypted.phone
+      },
+      {
+        id:   'user-gender',
+        data: encrypted.gender
+      },
+      {
+        id:   'user-birthdate',
+        data: encrypted.birthdate
+      },
+      {
+        id:   'user-language',
+        data: encrypted.language
+      },
+      {
+        id:   'user-school',
+        data: encrypted.school
+      },
+      {
+        id:   'user-work',
+        data: encrypted.work
+      }
+    ]);
+  }
+
+  return PageMapping(pageMapping);
 }
 
 !function() {

@@ -5,6 +5,12 @@ const router = new Router();
 module.exports = router;
 
 
+router.use((req, res, next) => {
+  console.log(`${req.method}: ${req.url}`);
+  next();
+})
+
+
 router.use('/api', require('./api'));
 router.use(require('./app'));
 router.use(require('./home'));
