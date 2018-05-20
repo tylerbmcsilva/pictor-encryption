@@ -96,20 +96,20 @@ router.post('/user/new', async function(req, res) {
 })
 
 
-router.post('/user/:id/update', async function(req, res) {
-  let updates;
-  if (req.body.basic) {
-    const { first_name, last_name, email, location } = req.body;
-    updates = {
-      first_name: first_name,
-      last_name: last_name,
-      location: location
-    };
-  } else {
-    const { json_block } = req.body;
-    updates = {json_block: json_block};
-  }
-
-  const response = await User.update(req.params.id, updates);
-  res.json(response);
-})
+// router.post('/user/:id/update', async function(req, res) {
+//   let updates;
+//   if (req.body.basic) {
+//     const { first_name, last_name, email, location } = req.body;
+//     updates = {
+//       first_name: first_name,
+//       last_name: last_name,
+//       location: location
+//     };
+//   } else {
+//     const { json_block } = req.body;
+//     updates = {json_block: json_block};
+//   }
+//
+//   const response = await User.update(req.params.id, updates);
+//   res.json(response);
+// })

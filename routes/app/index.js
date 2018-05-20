@@ -9,6 +9,7 @@ router.use(require('./register'));
 router.use(require('./signin'));
 router.use(require('./user'));
 router.use(require('./feed'));
+router.use(require('./settings'));
 
 
 router.get('/not-found', function(req, res) {

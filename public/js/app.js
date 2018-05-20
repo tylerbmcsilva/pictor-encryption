@@ -1,4 +1,4 @@
-const PAGE_TYPES = ['feed', 'post', 'friend', 'friends', 'profile'];
+const PAGE_TYPES = ['feed', 'post', 'friend', 'friends', 'profile', 'settings'];
 
 
 async function main(window, document) {
@@ -80,6 +80,9 @@ function getPage(pageName) {
     case 'friend':
       return UserPage;
       break;
+    case 'settings':
+      return SettingsPage;
+      break;
     case 'testEncryption':
       return TestEncryptionPage;
       break;
@@ -96,6 +99,14 @@ function PageMapping(mapping) {
   for (i = 0; i < mapping.length; i++) {
     document.getElementById(mapping[i].id).innerHTML = mapping[i].data;
   }
+}
+
+function SettingsMapping(mapping) {
+  let i;
+  for (i = 0; i < mapping.length; i++) {
+    document.getElementById(mapping[i].id).value = mapping[i].data;
+  }
+  M.updateTextFields();
 }
 
 function PageAppend(id, htmlArray) {
@@ -167,7 +178,6 @@ function createFriendCard(friend) {
 
 function UserPage(data){
   const { basic, encrypted } = data;
-
   let pageMapping = [
     {
       id:   'user-name',
@@ -213,6 +223,63 @@ function UserPage(data){
   }
 
   return PageMapping(pageMapping);
+}
+
+function SettingsPage(data){
+  const { basic, encrypted } = data;
+  let pageMapping = [
+    {
+      id:   'user-firstname',
+      data: basic.name.first
+    },
+    {
+      id:   'user-lastname',
+      data: basic.name.last
+    },
+    {
+      id:   'user-city',
+      data: basic.location.city
+    },
+    {
+      id:   'user-state',
+      data: basic.location.state
+    },
+    // {
+    //   id:   'user-email',
+    //   data: basic.email
+    // }
+  ];
+
+  if(encrypted){
+    Array.prototype.push.apply(pageMapping, [
+      {
+        id:   'user-phone',
+        data: encrypted.phone
+      },
+      {
+        id:   'user-gender',
+        data: encrypted.gender
+      },
+      {
+        id:   'user-birthdate',
+        data: encrypted.birthdate
+      },
+      {
+        id:   'user-language',
+        data: encrypted.language
+      },
+      {
+        id:   'user-school',
+        data: encrypted.school
+      },
+      {
+        id:   'user-work',
+        data: encrypted.work
+      }
+    ]);
+  }
+
+  return SettingsMapping(pageMapping);
 }
 
 !function() {
