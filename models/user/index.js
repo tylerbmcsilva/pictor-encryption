@@ -5,12 +5,12 @@ async function create({ first_name, last_name, email, password, location, public
   try {
     // Hash password w/ bcrypt
     const user = await DB.query('INSERT INTO `user` SET ?', {
-      first_name,
-      last_name,
-      email,
-      password,
-      location,
-      public_key,
+        first_name,
+        last_name,
+        email,
+        password,
+        location,
+        public_key,
       });
       return user;
   } catch (error) {
