@@ -13,8 +13,8 @@ async function main(window, document) {
     const lastName  = document.getElementById('last_name').value;
     const email     = document.getElementById('email').value;
     const location  = document.getElementById('location').value;
-
-    if(validateFormEntries(firstName, lastName, email) === false) {
+    const password  = document.getElementById('password_register').value;
+    if(validateFormEntries(firstName, lastName, email, password) === false) {
       hidePreloader();
       return;
     }
@@ -26,14 +26,15 @@ async function main(window, document) {
     // Export key in PEM format
     let pem = await exportRSAKeyToPEM(keys.pair.publicKey);
 
-    console.log("PEM formatted USER_KEY");
-    console.log(pem);
+    //console.log("PEM formatted USER_KEY");
+    //console.log(pem);
 
     let data = {
       first_name: firstName,
       last_name:  lastName,
       email:      email,
       location:   location,
+      password:   password,
       public_key: pem
     };
 
@@ -42,13 +43,13 @@ async function main(window, document) {
 
     // Encrypt payload with server public key
     // POST data from form
-    postDataToUrl("/api/user/new", data);
+    const response = await postDataToUrl("/api/user/new", data);
     window.location.pathname = "/feed";
   }
 
 
-  function validateFormEntries(firstName, lastName, email) {
-    if(firstName && lastName && email)
+  function validateFormEntries(firstName, lastName, email, password) {
+    if(firstName && lastName && email && password)
       return true;
     else
       return false;

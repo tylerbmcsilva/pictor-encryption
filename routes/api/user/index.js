@@ -1,10 +1,11 @@
 const Encryption  = require('../../../models/encryption');
 const { Router }  = require('express');
 const User        = require('../../../models/user');
+const passport    = require('passport');
+const bcrypt = require('bcrypt');
 
-
-const router    = new Router();
-module.exports  = router;
+const router      = new Router();
+module.exports    = router;
 
 
 router.get('/profile', async function(req, res) {
@@ -125,19 +126,28 @@ router.get('/friend/:id', async function(req, res) {
 
 
 router.post('/user/new', async function(req, res) {
-  const { first_name, last_name, email, location, public_key } = req.body;
+  const { first_name, last_name, email, location, public_key, password } = req.body;
+
   try {
-    const response = await User.create({ first_name, last_name, email, location, public_key });
-    res.json({
-      id: response.insertId
+    const encryptedPassword = await bcrypt.hash(password, 12);
+    const { insertId } = await User.create({
+      first_name,
+      last_name,
+      email,
+      password: encryptedPassword,
+      location,
+      public_key
     });
+    console.log(insertId);
+    req.login(insertId, function(err){ if(err) throw err; });
+    res.json({
+      redirectUrl: '/feed'
+    })
   } catch (error) {
     res.status(500).json({
       error: error.message
-    });
+    })
   }
-
-  res.json(response);
 });
 
 
@@ -145,3 +155,11 @@ router.post('/user/update', function(req, res) {
   // update DB with data
   console.log(req.body);
 })
+
+passport.serializeUser(function(user_id, done){
+  done(null, user_id);
+});
+
+passport.deserializeUser(function (user_id, done){
+  done(null, user_id);
+});

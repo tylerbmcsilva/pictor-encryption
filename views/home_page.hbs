@@ -77,6 +77,10 @@
         <input class="validate indigo-text" type="email" name="email" id="email_login" autocomplete="email" required>
         <label for="email_login" class="indigo-text">Email</label>
       </div>
+      <div class="input-field">
+        <input class="validate indigo-text" type="password" name="password_login" id="password_login" autocomplete="password" required>
+        <label for="password_login" class="white-text">Password</label>
+      </div>
       <button class="btn btn-login indigo" id="loginbutton" name="login" type="submit">Welcome Back</button>
       <div class="center-align pad5">
         <a class="modal-close modal-trigger" href="#signup" id="close">Don't have an account? Sign Up</a>
@@ -111,7 +115,14 @@
        <input class="validate white-text" type="text" name="location" id="location" autocomplete="country" required>
        <label for="location" class="white-text">Location</label>
      </div>
+     <div class="input-field">
+       <input class="validate white-text" type="password" name="password_register" id="password_register" autocomplete="password" required>
+       <label for="password_register" class="white-text">Password</label>
+     </div>
      <button id="registerbutton" name="register" type="submit" class="waves-effect waves-light btn white indigo-text">Register</button>
+     <div class="center-align pad5">
+       <a class="modal-close modal-trigger" href="#login" id="close">Already have an account? Log In</a>
+     </div>
     </form>
   </div>
 </div>
