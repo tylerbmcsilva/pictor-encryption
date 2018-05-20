@@ -17,3 +17,11 @@ async function handleSignInSubmit(e) {
   let res1 = await postDataToUrl("/signin", payload);
   window.location.pathname = "/feed";
 }
+
+function postDataToUrl(url, data) {
+  return axios.post(url, data)
+    .catch(function(err) {
+      // SILENTLY FAIL
+      return;
+    });
+}

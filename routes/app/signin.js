@@ -11,14 +11,14 @@ router.post('/signin', async function(req, res) {
 
   const result = await User.findPass({email, password});
   const hash = result[0].password;
-  console.log(hash);
+  //console.log(hash);
   let compareResult = false;
 
   try {
     // check that passwords match
     const cRes = await bcrypt.compare(password, hash).then(async function(res){
-      console.log(res);
-      console.log(result[0].id)
+      //console.log(res);
+      //console.log(result[0].id)
       return res;
     });
 

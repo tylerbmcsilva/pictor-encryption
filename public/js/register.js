@@ -14,7 +14,7 @@ async function main(window, document) {
     const email     = document.getElementById('email').value;
     const location  = document.getElementById('location').value;
     const password  = document.getElementById('password_register').value;
-    if(validateFormEntries(firstName, lastName, email) === false) {
+    if(validateFormEntries(firstName, lastName, email, password) === false) {
       hidePreloader();
       return;
     }
@@ -48,8 +48,8 @@ async function main(window, document) {
   }
 
 
-  function validateFormEntries(firstName, lastName, email) {
-    if(firstName && lastName && email)
+  function validateFormEntries(firstName, lastName, email, password) {
+    if(firstName && lastName && email && password)
       return true;
     else
       return false;
