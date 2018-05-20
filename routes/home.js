@@ -17,3 +17,9 @@ router.get('/', async function(req, res) {
     console.error(error);
   }
 });
+
+router.get('/logout', function(req, res){
+  req.logout();
+  req.session.destroy();
+  res.redirect('/');; 
+})

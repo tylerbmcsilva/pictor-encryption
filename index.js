@@ -5,9 +5,10 @@ const bodyParser  = require('body-parser');
 const express     = require('express');
 const exphbs      = require('express-handlebars');
 const router      = require('./routes/index');
-
-const passport    = require('passport');
 const session     = require('express-session');
+const passport    = require('passport');
+const sessionStore = require('./models/sessions')
+
 /*
   Set up server
 */
@@ -27,7 +28,10 @@ app.engine('.hbs',
 app.set('view engine', '.hbs');
 app.set('port', 3000);
 
-app.use(require('cookie-parser')());
+/*
+  Set up Cookie Parser
+*/
+app.use(require('cookie-parser')('chocolate chip please'));
 /*
   Set up Body Parser
 */
@@ -44,9 +48,11 @@ app.use(express.static('public'));
   Set up session for cookies
 */
 app.use(session({
-  secret: 'chocolate chip please ', //needs changed later
+  key: 'lets work with cookies',
+  secret: 'chocolate chip please', //needs changed later
+  store: sessionStore,
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: false
   //cookie: { secure: true }
 }))
 

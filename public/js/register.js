@@ -13,7 +13,7 @@ async function main(window, document) {
     const lastName  = document.getElementById('last_name').value;
     const email     = document.getElementById('email').value;
     const location  = document.getElementById('location').value;
-    const password  = document.getElementById('passwordRegister').value;
+    const password  = document.getElementById('password_register').value;
     if(validateFormEntries(firstName, lastName, email) === false) {
       hidePreloader();
       return;
@@ -26,8 +26,8 @@ async function main(window, document) {
     // Export key in PEM format
     let pem = await exportRSAKeyToPEM(keys.pair.publicKey);
 
-    console.log("PEM formatted USER_KEY");
-    console.log(pem);
+    //console.log("PEM formatted USER_KEY");
+    //console.log(pem);
 
     let data = {
       first_name: firstName,
@@ -43,7 +43,7 @@ async function main(window, document) {
 
     // Encrypt payload with server public key
     // POST data from form
-    postDataToUrl("/api/user/new", data);
+    const response = await postDataToUrl("/api/user/new", data);
     window.location.pathname = "/feed";
   }
 

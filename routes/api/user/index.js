@@ -2,6 +2,7 @@ const Encryption  = require('../../../models/encryption');
 const { Router }  = require('express');
 const User        = require('../../../models/user');
 const passport    = require('passport');
+const bcrypt = require('bcrypt');
 
 const router      = new Router();
 module.exports    = router;
@@ -44,11 +45,28 @@ router.get('/user/:id', async function(req, res) {
 
 
 router.post('/user/new', async function(req, res) {
-  const { first_name, last_name, email, password,location, public_key} = req.body;
-  const response = await User.create({ first_name, last_name, email, password, location, public_key });
-  console.log(response);
-  //req.login(response.insertId, function(err){
-  //});
+  const { first_name, last_name, email, location, public_key} = req.body;
+
+  // Get password for hashing
+  var password = req.body.password;
+
+  const user_id = await bcrypt.hash(password, 12).then(async function(hash){
+    password = hash;
+    // Store user in database
+    const result = await User.create({ first_name, last_name, email, password, location, public_key });
+    return result.insertId;
+  });
+
+  try {
+    req.login(user_id, function(err){ if(err) throw err;});
+    //console.log(req.user);
+    //console.log(req.isAuthenticated());
+  }
+  catch (err){
+    throw err;
+  }
+  //res.redirect('/feed');
+  res.json([]);
 })
 
 
