@@ -1,15 +1,22 @@
-const { Router }  = require('express');
+const { Router }    = require('express');
+const { authUser }  = require('../../../models/user');
 
 
 const router    = new Router();
 module.exports  = router;
 
 
-router.get('/post/:id', function(req, res) {
-  res.render('app/post');
-});
+router.use('/post', authUser());
 
 
 router.get('/post/new', function(req, res) {
-  res.render('app/new_post');
+  // TODO: Load user's id
+  res.render('app/new_post', {
+    user_id: '1'
+  });
+});
+
+
+router.get('/post/:id', function(req, res) {
+  res.render('app/post');
 });

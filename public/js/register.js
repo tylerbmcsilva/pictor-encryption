@@ -1,6 +1,6 @@
 
 async function main(window, document) {
-  const SERVER_KEY = await getServerPublicKey();
+  // const SERVER_KEY = await getServerPublicKey();
   // Function to grab info from form
   document.getElementById("register_form").addEventListener("submit", handleRegisterSubmit);
 

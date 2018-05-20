@@ -6,7 +6,7 @@ const option = {
   port:             3306,
   user:             process.env.DBUSER,
   password:         process.env.DBPASSWORD,
-  database:         proccess.env.DPNAME,
+  database:         process.env.DBNAME,
   ssl:              'Amazon RDS',
 };
 

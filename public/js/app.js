@@ -9,6 +9,10 @@ async function main(window, document) {
     // indexedDBConn.close();
     // console.log(keys.privateKey);
 
+    // TODO: Figure out a way to handle other pages we don't want to load data on
+    if(window.location.pathname === '/post/new')
+      return;
+
     // Request data from the server
     const dataSourceURL = `${window.location.origin}/api${window.location.pathname}`;
     const { data }      = await getDataFromUrl(dataSourceURL);
@@ -114,7 +118,7 @@ function FeedPage(data){
 
 function createPostFeedHTML(post) {
   return `<div class="card-panel">
-            <a href="/post/${post.id}" class="indigo-text"><h1 style="margin:0">${post.title}</h1></a>
+            <a href="/post/${post.id}" class="indigo-text"><h3 style="margin:0">${post.title}</h3></a>
             <div class="row">
               <div class="col s6">
                 <a href="/friend/${post.user_id}" class="indigo-text"><h5 class="truncate">#${post.user_id}</h5></a>
@@ -123,7 +127,7 @@ function createPostFeedHTML(post) {
                 <h5 class="right-align">${post.date}</h5>
               </div>
             </div>
-            <a href="${post.url ? post.url : '#'}" class="indigo-text ${post.url ? '' : 'hidden'}"><h5>${post.url ? post.url : ''}</h5></a>
+            <a href="${post.url ? post.url : '#'}" class="indigo-text ${post.url ? '' : 'hide'}"><h5>${post.url ? post.url : ''}</h5></a>
             <div id="post-body" class="truncate">
               ${post.body}
             </div>
@@ -138,7 +142,7 @@ function PostPage(data){
 
 function createPostHTML(post) {
   return `<div class="card-panel">
-            <h1 style="margin:0">${post.title}</h1>
+            <h3 style="margin:0">${post.title}</h3>
             <div class="row">
               <div class="col s6">
                 <a href="/friend/${post.user_id}" class="indigo-text"><h5 class="truncate">#${post.user_id}</h5></a>
@@ -147,7 +151,7 @@ function createPostHTML(post) {
                 <h5 class="right-align">${post.date}</h5>
               </div>
             </div>
-            <a href="${post.url ? post.url : '#'}" class="indigo-text ${post.url ? '' : 'hidden'}"><h5>${post.url ? post.url : ''}</h5></a>
+            <a href="${post.url ? post.url : '#'}" class="indigo-text ${post.url ? '' : 'hide'}"><h5>${post.url ? post.url : ''}</h5></a>
             <div id="post-body">
               ${post.body}
             </div>

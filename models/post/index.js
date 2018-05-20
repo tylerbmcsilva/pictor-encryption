@@ -54,7 +54,7 @@ async function findOne({ id }) {
 
 async function findAll() {
   try {
-    const posts = await DB.query('SELECT * FROM `post`');
+    const posts = await DB.query('SELECT * FROM `post` ORDER BY `date` DESC');
     return posts;
   } catch (error) {
     console.error(error);

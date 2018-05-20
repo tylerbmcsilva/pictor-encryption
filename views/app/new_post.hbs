@@ -1,26 +1,34 @@
 <section class="section">
-  <div class="row">
+  <div class="row pad5">
     <h1 class="center-align">New Post!</h1>
-    <div class="col s12 card-panel">
-      <form id="new_post">
-       <div class="input-field white-text">
-         <input class="validate white-text" type="text" name="first_name" id="first_name" autocomplete="given-name" required>
-         <label for="first_name" class="white-text">Title</label>
-       </div>
-       <div class="input-field">
-         <input class="validate white-text" type="text" name="last_name" id="last_name" autocomplete="family-name" required>
-         <label for="last_name" class="white-text">Last Name</label>
-       </div>
-       <div class="input-field">
-         <input class="validate white-text" type="email" name="email" id="email" autocomplete="email" required>
-         <label for="email" class="white-text">Email</label>
-       </div>
-       <div class="input-field">
-         <input class="validate white-text" type="text" name="location" id="location" autocomplete="country" required>
-         <label for="location" class="white-text">Location</label>
-       </div>
-       <button id="create" name="create" type="submit" class="waves-effect waves-light btn white indigo-text">Create</button>
+    <div class="col s12 m6 offset-m3 card-panel">
+      <form id="new_post" class="pad5">
+        <div class="input-field hide">
+          <input type="text" id="user-id" name="" value="{{user_id}}">{{user_id}}</input>
+        </div>
+        <div class="input-field indigo-text">
+          <input class="validate indigo-text" type="text" name="post-title" id="post-title" required>
+          <label for="post-title" class="indigo-text">Title</label>
+        </div>
+        <div class="input-field indigo-text">
+          <select class="indigo-text" id="post-type">
+            <option value="text" class="indigo-text">Text</option>
+            <option value="link" class="indigo-text">Link</option>
+          </select>
+          <label>Post Type</label>
+        </div>
+        <div class="input-field">
+          <input class="validate indigo-text" type="text" name="post-url" id="post-url">
+          <label for="post-url" class="indigo-text">URL (optional)</label>
+        </div>
+        <div class="input-field">
+          <textarea id="post-body" class="materialize-textarea"></textarea>
+          <label for="post-body" class="indigo-text">Post Body (optional)</label>
+        </div>
+        <button id="create-post" name="create" type="submit" class="waves-effect waves-light btn white indigo-text">Create</button>
       </form>
     </div>
   </div>
 </section>
+
+<script src="/js/post.js" charset="utf-8"></script>
