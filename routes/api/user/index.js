@@ -103,8 +103,8 @@ router.post('/user/new', async function(req, res) {
       location,
       public_key
     });
-    const login = await req.login(insertId);
-
+    console.log(insertId); 
+    req.login(insertId, function(err){ if(err) throw err; });
     res.json({
       redirectUrl: '/feed'
     })
