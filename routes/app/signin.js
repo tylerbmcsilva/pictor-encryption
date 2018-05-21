@@ -1,34 +1,48 @@
+const User  = require('../../models/user');
 const { Router }    = require('express');
-
+const passport     = require('passport');
+const bcrypt = require('bcrypt');
 
 const router = new Router();
 module.exports = router;
 
+router.post('/signin', async function(req, res) {
+  const { email, password } = req.body;
 
-router.get('/signin', async function(req, res) {
+  //console.log(result);
   try {
-    res.render('signin', {
-      layout: 'blank'
-    });
+    const result = await User.findPass({email, password});
+    if( result.length === 0 ) throw new Error('User does not exist.');
+    const user = result[0].id;
+    const hash = result[0].password;
+
+    const compareResult = await bcrypt.compare(password, hash);
+    if(compareResult){
+      console.log(user);
+      req.login(user, function(err){ if(err) throw err; });
+      res.json({
+        message: 'success'
+      });
+    } else {
+      res.status(401); // send unauthorized
+    }
   } catch (error) {
-    console.error(error);
+    res.status(500).json({
+      error: error.message
+    })
   }
+
 });
 
+router.post('/user/update', function(req, res) {
+  // update DB with data
+  console.log(req.body);
+})
 
-router.post('/signin', function(req, res) {
-  let user = req.body['user'];
-  // 1. lookup user in DB
-  // 2. generate secret and encrypt with user public key
-  console.log(user);
-  res.send("SERVER SENDS ENCRYPTED SECRET");
+passport.serializeUser(function(user_id, done){
+  done(null, user_id);
 });
 
-
-router.post('/signin/verify', function(req, res) {
-  let response = req.body['response'];
-  // 1. decrypt response with server private key
-  // 2, verify response matches secret
-  console.log(response);
-  res.status(202).send("USER VERIFIED");
+passport.deserializeUser(function (user_id, done){
+  done(null, user_id);
 });

@@ -12,6 +12,7 @@ CREATE TABLE `user` (
     `first_name` varchar(255) NOT NULL,
     `last_name` varchar(255) NOT NULL,
     `email` varchar(320) NOT NULL,
+    `password` binary(60) NOT NULL, 
     `location` varchar(255) NOT NULL,
     `public_key` varchar(2048) NOT NULL,
     `json_block` json,

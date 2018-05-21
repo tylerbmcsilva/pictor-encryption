@@ -7,49 +7,21 @@ async function handleSignInSubmit(e) {
   showePreloader();
 
   const USER_EMAIL  = document.getElementById("email_login").value;
-  const USER_KEY    = await getDataFromIndexedDB(USER_EMAIL);
+  const PASSWORD = document.getElementById("password_login").value;
+  //const USER_KEY    = await getDataFromIndexedDB(USER_EMAIL);
 
   let payload = {
-    user: USER_EMAIL
+    email: USER_EMAIL,
+    password: PASSWORD
   };
-  if(USER_KEY) {
-    let res1 = await postDataToUrl("/signin", payload);
-    // 1. decrypt response with private key
-    // 2. encrypt response with server key
-    let verifyPayload = {
-      user:     USER_EMAIL,
-      response: "CLIENT RE-ENCRYPTS SECRET"
-    }
-
-    let res2 = await postDataToUrl("/signin/verify", verifyPayload);
-    if(res2.status === 202)
-      window.location.pathname = '/feed';
-    else
-      window.location.pathname = '/';
-  } else {
-    console.log("User key not found");
-    window.location.pathname = '/';
-  }
+  let res1 = await postDataToUrl("/signin", payload);
+  window.location.pathname = "/feed";
 }
 
-async function postDataToUrl(url, data) {
+function postDataToUrl(url, data) {
   return axios.post(url, data)
     .catch(function(err) {
       // SILENTLY FAIL
       return;
     });
-}
-
-// Function to grab key from indexedDB
-async function getDataFromIndexedDB(id) {
-  let conn;
-  try {
-    conn = await connectIndexedDB("PictorStore", "keys", 1);
-    return await getDataIndexedDB(conn, "keys", id);
-  } catch(exception) {
-    console.log(exception);
-  } finally {
-    if(conn)
-      conn.close();
-  }
 }

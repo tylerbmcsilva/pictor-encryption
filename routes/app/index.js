@@ -1,4 +1,4 @@
-const { Router }  = require('express');
+const { Router }    = require('express');
 
 
 const router    = new Router();
@@ -9,6 +9,7 @@ router.use(require('./register'));
 router.use(require('./signin'));
 router.use(require('./user'));
 router.use(require('./feed'));
+router.use(require('./post'));
 router.use(require('./settings'));
 
 

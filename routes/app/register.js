@@ -1,4 +1,4 @@
-const { KEYS }    = require('../../models/encryption');
+// const { KEYS }    = require('../../models/encryption');
 const { Router }  = require('express');
 
 
@@ -7,11 +7,11 @@ module.exports = router;
 
 
 // Set Server Public Key
-router.use(function(req, res, next) {
-  let s = KEYS.publicKey.replace(/(-{5}.+-{5})|(\n+)/gm, '');
-  res.set('XSPK', s);
-  next();
-});
+// router.use(function(req, res, next) {
+//   let s = KEYS.publicKey.replace(/(-{5}.+-{5})|(\n+)/gm, '');
+//   res.set('XSPK', s);
+//   next();
+// });
 
 
 router.get('/register', async function(req, res) {
