@@ -15,7 +15,7 @@ router.get('/server/public-key', async function(req, res) {
     });
   } catch (error) {
     console.error(error);
-    res.sendStatus(500);
+    res.status(500);
   }
 });
 
@@ -29,6 +29,6 @@ router.post('/server/create-store-keys', async function(req, res) {
     res.json({ message: 'Success' });
   } catch (error) {
     console.error(error);
-    res.sendStatus(500);
+    res.status(500);
   }
 });

@@ -8,7 +8,7 @@ const POOL = mysql.createPool({
   password:         process.env.DBPASSWORD,
   database:         process.env.DBNAME,
   ssl:              'Amazon RDS',
-  acquireTimeout:   60000,
+  acquireTimeout:   15000,
   debug:            false
 });
 
@@ -30,13 +30,14 @@ POOL.getConnection((err, connection) => {
     if (connection)
       connection.release();
 
-    return;
+    return connection;
   }
   console.log('Database Connected!');
 });
 
 
-POOL.query = util.promisify(POOL.query);
+POOL.query          = util.promisify(POOL.query);
+POOL.getConnection  = util.promisify(POOL.getConnection);
 
 
 module.exports = POOL;
