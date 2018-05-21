@@ -56,7 +56,7 @@ function main(window, document) {
     // Encrypt payload with server public key
     // POST data from form
     postDataToUrl(`${window.location.origin}/api${window.location.pathname}/upload`, payload);
-    // window.location.pathname = `${window.location.pathname}`;
+    window.location.pathname = `${window.location.pathname}`;
   }
 
 

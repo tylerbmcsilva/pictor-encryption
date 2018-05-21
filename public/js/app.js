@@ -97,19 +97,23 @@ function getPage(pageName) {
 function PageMapping(mapping) {
   let i;
   for (i = 0; i < mapping.length; i++) {
-    if (mapping[i].id === 'user-picture')
+    if (mapping[i].id === 'user-picture' && mapping[i].data ) {
       document.getElementById(mapping[i].id).src = mapping[i].data;
-    else
+    }
+    else if (mapping[i].data){
       document.getElementById(mapping[i].id).innerHTML = mapping[i].data;
+    }
   }
 }
 
 function SettingsMapping(mapping) {
   let i;
   for (i = 0; i < mapping.length; i++) {
-    if (mapping[i].id === 'user-picture') {
+    if (mapping[i].id === 'user-picture' && mapping[i].data ) {
       document.getElementById(mapping[i].id).src = mapping[i].data;
-    } else {
+    }
+    else if (mapping[i].data){
+      // console.log(mapping[i].id);
       document.getElementById(mapping[i].id).value = mapping[i].data;
     }
   }
@@ -182,7 +186,7 @@ function FriendsPage(data) {
     let friend = {
         id:     el.id,
         name:   `${el.first_name} ${el.last_name}`,
-        photo:  'https://i.imgur.com/FyWI0.jpg'
+        photo:  '/images/profile/blank.png'
       };
     return createFriendCard(friend);
   });
@@ -222,7 +226,6 @@ function UserPage(data){
       data: basic.email
     }
   ];
-
   if(encrypted){
     Array.prototype.push.apply(pageMapping, [
       {
