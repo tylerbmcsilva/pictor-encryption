@@ -1,7 +1,8 @@
-const User  = require('../../models/user');
-const { Router }    = require('express');
-const passport     = require('passport');
-const bcrypt = require('bcrypt');
+const Logger        = require('../../models/logger');
+const User        = require('../../models/user');
+const { Router }  = require('express');
+const passport    = require('passport');
+const bcrypt      = require('bcrypt');
 
 const router = new Router();
 module.exports = router;
@@ -9,7 +10,6 @@ module.exports = router;
 router.post('/signin', async function(req, res) {
   const { email, password } = req.body;
 
-  //console.log(result);
   try {
     const result = await User.findPass({email, password});
     if( result.length === 0 ) throw new Error('User does not exist.');
@@ -18,7 +18,7 @@ router.post('/signin', async function(req, res) {
 
     const compareResult = await bcrypt.compare(password, hash);
     if(compareResult){
-      console.log(user);
+      Logger.debug(user);
       req.login(user, function(err){ if(err) throw err; });
       res.json({
         message: 'success'
@@ -27,6 +27,7 @@ router.post('/signin', async function(req, res) {
       res.status(401); // send unauthorized
     }
   } catch (error) {
+    Logger.error(error);
     res.status(500).json({
       error: error.message
     })
@@ -36,7 +37,7 @@ router.post('/signin', async function(req, res) {
 
 router.post('/user/update', function(req, res) {
   // update DB with data
-  console.log(req.body);
+  Logger.debug(req.body);
 })
 
 passport.serializeUser(function(user_id, done){

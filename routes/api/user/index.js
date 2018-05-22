@@ -1,4 +1,5 @@
 const Encryption  = require('../../../models/encryption');
+const Logger      = require('../../../models/logger');
 const { Router }  = require('express');
 const User        = require('../../../models/user');
 const passport    = require('passport');
@@ -56,7 +57,7 @@ router.get('/friends', async function(req, res) {
       res.json(users);
     }
   } catch (error) {
-    console.error(error);
+    Logger.error(error);
     res.status(500).json({
       error: error.message
     })
@@ -107,7 +108,7 @@ router.get('/friend/:id', async function(req, res) {
       });
     }
   } catch (error) {
-    console.error(error);
+    Logger.error(error);
     res.status(500).json({
       error: error.message
     })
@@ -129,7 +130,7 @@ router.post('/user/new', async function(req, res) {
       location,
       public_key
     });
-    console.log(insertId);
+    Logger.debug(insertId);
     req.login(insertId, function(err){ if(err) throw err; });
     res.json({
       redirectUrl: '/feed'

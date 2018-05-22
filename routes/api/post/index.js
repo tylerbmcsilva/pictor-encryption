@@ -1,4 +1,5 @@
 const Encryption  = require('../../../models/encryption');
+const Logger      = require('../../../models/logger');
 const { Router }  = require('express');
 const Post        = require('../../../models/post');
 
@@ -28,7 +29,7 @@ router.get('/post/:id', async function(req, res) {
       res.json(post);
     }
   } catch (error) {
-    console.error(error);
+    Logger.error(error);
     res.status(500).json({
       error: error.message
     });

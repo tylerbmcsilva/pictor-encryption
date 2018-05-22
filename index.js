@@ -1,18 +1,48 @@
 /*
   Required packages
 */
-const bodyParser  = require('body-parser');
-const express     = require('express');
-const exphbs      = require('express-handlebars');
-const router      = require('./routes/index');
-const session     = require('express-session');
-const passport    = require('passport');
-const sessionStore = require('./models/sessions')
+const bodyParser      = require('body-parser');
+const express         = require('express');
+const exphbs          = require('express-handlebars');
+const router          = require('./routes/index');
+const session         = require('express-session');
+const passport        = require('passport');
+const sessionStore    = require('./models/sessions');
+const Logger          = require('./models/logger');
+const winston         = require('winston');
+const expressWinston  = require('express-winston');
 
 /*
   Set up server
 */
 const app = express();
+
+/*
+  Set up clean logging
+*/
+app.use(expressWinston.logger({
+      transports: [
+        new winston.transports.Console({
+          json:     true,
+          colorize: true
+        }),
+        new winston.transports.File({
+          json:     true,
+          filename: 'pictor.log'
+        })
+      ],
+      expressFormat:  true,
+      meta:           false,
+      msg:            'HTTP {{req.method}} {{req.url}}',
+      ignoreRoute:    function(req, res) {
+        const { url } = req;
+        if( url.includes('/js') || url.includes('/cs') || url.includes('/images') ){
+          return true;
+        } else {
+          return false;
+        }
+      }
+    }));
 
 /*
   Set up view engine
@@ -74,5 +104,5 @@ app.use(require('./routes'));
   Start server
 */
 app.listen(app.get('port'), async function() {
-  console.log(`Express started on port: ${app.get('port')}; press Ctrl-C to terminate.`);
+  Logger.info(`Express started on port: ${app.get('port')}; press Ctrl-C to terminate.`);
 });

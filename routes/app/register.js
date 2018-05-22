@@ -1,4 +1,4 @@
-// const { KEYS }    = require('../../models/encryption');
+const Logger      = require('../../models/logger');
 const { Router }  = require('express');
 
 
@@ -20,6 +20,7 @@ router.get('/register', async function(req, res) {
       layout: 'blank'
     });
   } catch (error) {
-    console.error(error);
+    Logger.error(error);
+    res.status(500).send();
   }
 });
