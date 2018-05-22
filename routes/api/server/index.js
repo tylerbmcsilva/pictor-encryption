@@ -1,4 +1,5 @@
 const { KEYS, getServerPublicKey }  = require('../../../models/encryption');
+const Logger                    = require('../../../models/logger');
 const { Router }                    = require('express');
 
 
@@ -14,7 +15,7 @@ router.get('/server/public-key', async function(req, res) {
       publicKey: response.public_key
     });
   } catch (error) {
-    console.error(error);
+    Logger.error(error);
     res.status(500);
   }
 });
@@ -28,7 +29,7 @@ router.post('/server/create-store-keys', async function(req, res) {
 
     res.json({ message: 'Success' });
   } catch (error) {
-    console.error(error);
+    Logger.error(error);
     res.status(500);
   }
 });

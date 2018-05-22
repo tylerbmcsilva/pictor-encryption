@@ -1,4 +1,5 @@
-const Post        = require('../../../models/post')
+const Logger      = require('../../../models/logger');
+const Post        = require('../../../models/post');
 const { Router }  = require('express');
 
 
@@ -36,7 +37,7 @@ router.get('/feed', async function(req, res) {
       res.json(posts);
     }
   } catch (error) {
-    console.error(error);
+    Logger.error(error);
     res.status(500).json({
       error: error.message
     });

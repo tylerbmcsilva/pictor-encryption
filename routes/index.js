@@ -1,14 +1,9 @@
-const { Router } = require('express');
+const Logger      = require('../models/logger');
+const { Router }  = require('express');
 
 
 const router = new Router();
 module.exports = router;
-
-
-router.use((req, res, next) => {
-  console.log(`${req.method}: ${req.url}`);
-  next();
-})
 
 
 router.use('/api', require('./api'));
@@ -23,7 +18,7 @@ router.use( (req, res) => {
 
 
 router.use( (err, req, res, next) => {
-  console.error(err.stack);
+  Logger.error(err.stack);
   res.type('plain/text');
   res.status(500);
   res.render('500');

@@ -1,4 +1,5 @@
-const DB = require('../database');
+const DB      = require('../database');
+const Logger  = require('../logger');
 
 
 async function create({ user_id, title, body, date, url, post_type }) {
@@ -13,7 +14,7 @@ async function create({ user_id, title, body, date, url, post_type }) {
     });
     return post;
   } catch (error) {
-    console.error(error);
+    Logger.error(error);
     throw error;
   }
 }
@@ -24,7 +25,7 @@ async function update(id, updates) {
     const post = await DB.query('UPDATE `post` SET ? WHERE ?', [updates, { id }]);
     return post;
   } catch (error) {
-    console.error(error);
+    Logger.error(error);
     throw error;
   }
 }
@@ -35,7 +36,7 @@ async function remove({ id }) {
     const post = await DB.query('DELETE FROM `post` WHERE ?', { id });
     return post;
   } catch (error) {
-    console.error(error);
+    Logger.error(error);
     throw error;
   }
 }
@@ -46,7 +47,7 @@ async function findOne({ id }) {
     const [ post ] = await DB.query('SELECT * FROM `post` WHERE ?', { id });
     return post;
   } catch (error) {
-    console.error(error);
+    Logger.error(error);
     throw error;
   }
 }
@@ -57,7 +58,7 @@ async function findAll() {
     const posts = await DB.query('SELECT * FROM `post` ORDER BY `date` DESC');
     return posts;
   } catch (error) {
-    console.error(error);
+    Logger.error(error);
     throw error;
   }
 }
