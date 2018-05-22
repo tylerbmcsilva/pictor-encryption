@@ -1,4 +1,4 @@
-const PAGE_TYPES = ['feed', 'post', 'friend', 'friends', 'profile'];
+const PAGE_TYPES = ['feed', 'post', 'friend', 'friends', 'profile', 'settings'];
 
 
 async function main(window, document) {
@@ -80,6 +80,9 @@ function getPage(pageName) {
     case 'friend':
       return UserPage;
       break;
+    case 'settings':
+      return SettingsPage;
+      break;
     case 'testEncryption':
       return TestEncryptionPage;
       break;
@@ -94,8 +97,27 @@ function getPage(pageName) {
 function PageMapping(mapping) {
   let i;
   for (i = 0; i < mapping.length; i++) {
+    if (mapping[i].id === 'user-picture' && mapping[i].data ) {
+      document.getElementById(mapping[i].id).src = mapping[i].data;
+    }
+    else if (mapping[i].data){
       document.getElementById(mapping[i].id).innerHTML = mapping[i].data;
+    }
   }
+}
+
+function SettingsMapping(mapping) {
+  let i;
+  for (i = 0; i < mapping.length; i++) {
+    if (mapping[i].id === 'user-picture' && mapping[i].data ) {
+      document.getElementById(mapping[i].id).src = mapping[i].data;
+    }
+    else if (mapping[i].data){
+      // console.log(mapping[i].id);
+      document.getElementById(mapping[i].id).value = mapping[i].data;
+    }
+  }
+  M.updateTextFields();
 }
 
 function PageAppend(id, htmlArray) {
@@ -164,7 +186,7 @@ function FriendsPage(data) {
     let friend = {
         id:     el.id,
         name:   `${el.first_name} ${el.last_name}`,
-        photo:  'https://i.imgur.com/FyWI0.jpg'
+        photo:  '/images/profile/blank.png'
       };
     return createFriendCard(friend);
   });
@@ -190,7 +212,6 @@ function createFriendCard(friend) {
 
 function UserPage(data){
   const { basic, encrypted } = data;
-
   let pageMapping = [
     {
       id:   'user-name',
@@ -205,7 +226,6 @@ function UserPage(data){
       data: basic.email
     }
   ];
-
   if(encrypted){
     Array.prototype.push.apply(pageMapping, [
       {
@@ -231,11 +251,69 @@ function UserPage(data){
       {
         id:   'user-work',
         data: encrypted.work
+      },
+      {
+        id:   'user-picture',
+        data: encrypted.picture
       }
     ]);
   }
-
   return PageMapping(pageMapping);
+}
+
+function SettingsPage(data){
+  const { basic, encrypted } = data;
+  let pageMapping = [
+    {
+      id:   'user-firstname',
+      data: basic.name.first
+    },
+    {
+      id:   'user-lastname',
+      data: basic.name.last
+    },
+    {
+      id:   'user-location',
+      data: basic.location
+    },
+    // {
+    //   id:   'user-email',
+    //   data: basic.email
+    // }
+  ];
+  if(encrypted){
+    Array.prototype.push.apply(pageMapping, [
+      {
+        id:   'user-phone',
+        data: encrypted.phone
+      },
+      {
+        id:   'user-gender',
+        data: encrypted.gender
+      },
+      {
+        id:   'user-birthdate',
+        data: encrypted.birthdate
+      },
+      {
+        id:   'user-language',
+        data: encrypted.language
+      },
+      {
+        id:   'user-school',
+        data: encrypted.school
+      },
+      {
+        id:   'user-work',
+        data: encrypted.work
+      },
+      {
+        id:   'user-picture',
+        data: encrypted.picture
+      }
+    ]);
+  }
+  return SettingsMapping(pageMapping);
 }
 
 !function() {
