@@ -13,3 +13,4 @@ router.use(require('./feed'));
 router.use(require('./server'));
 router.use(require('./user'));
 router.use(require('./post'));
+router.use(require('./settings'));

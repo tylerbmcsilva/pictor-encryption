@@ -10,28 +10,19 @@ module.exports    = router;
 
 
 router.get('/profile', async function(req, res) {
-  // Code to get information regarding self
+  const user  = await User.findOne({ id: req.session.passport.user });
+  // ENCRYPTION HERE
   res.json({
-    id: 1,
-    basic: {
-      name: {
-        first:  'Dominic',
-        last:   'Mathis'
+    id:     user.id,
+    basic:  {
+      name:   {
+        first:  user.first_name,
+        last:   user.last_name
       },
-      email:    'dmathis@gmail.com',
-      location: {
-        city:   'New York City',
-        state:  'New York'
-      }
+      email:    user.email,
+      location: user.location
     },
-    encrypted: {
-      phone:    '415-867-5309',
-      gender:   'Male',
-      birthdate: 'Jul 02, 1985',
-      language: 'English',
-      school: 'Stanford',
-      work:   'Myspace'
-    }
+    encrypted: JSON.parse(user.json_block)
   });
 });
 
@@ -151,11 +142,6 @@ router.post('/user/new', async function(req, res) {
   }
 });
 
-
-router.post('/user/update', function(req, res) {
-  // update DB with data
-  Logger.debug(req.body);
-})
 
 passport.serializeUser(function(user_id, done){
   done(null, user_id);

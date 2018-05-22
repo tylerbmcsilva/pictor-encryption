@@ -1,0 +1,84 @@
+<section class="section blue-grey lighten-5 full-height">
+  <div class="container">
+    <div class="card">
+      <div class="card-tabs indigo">
+        <ul class="tabs tabs-fixed-width tabs-transparent">
+          <li class="tab white-text"><a class="white-text active" href="#edit_info">Information</a></li>
+          <li class="tab white-text"><a class="white-text" href="#edit_pic">Profile Picture</a></li>
+        </ul>
+      </div>
+      <div class="card-content">
+        <div id="edit_info">
+          <form id="edit_about_form">
+            <div class="card-content">
+              <!-- <span class="card-title">Edit Information</span> -->
+              <div class="input-field indigo-text">
+                <input class="validate indigo-text" type="text" name="first_name" id="user-firstname">
+                <label for="user-firstname">First Name</label>
+              </div>
+              <div class="input-field indigo-text">
+                <input class="validate indigo-text" type="text" name="last_name" id="user-lastname">
+                <label for="user-lastname">Last Name</label>
+              </div>
+              <div class="input-field indigo-text">
+                <input class="validate indigo-text" type="text" name="location" id="user-location">
+                <label for="user-location">Location</label>
+              </div>
+              <div class="input-field indigo-text">
+                <input class="validate indigo-text" type="text" name="phone" id="user-phone">
+                <label for="user-phone">Phone</label>
+              </div>
+              <div class="input-field indigo-text">
+                <input class="validate indigo-text" type="text" name="gender" id="user-gender">
+                <label for="user-gender">Gender</label>
+              </div>
+              <div class="input-field indigo-text">
+                <input class="datepicker indigo-text" type="text" name="birthdate" id="user-birthdate">
+                <label for="user-birthdate">Birthdate</label>
+              </div>
+              <div class="input-field indigo-text">
+                <input class="validate indigo-text" type="text" name="language" id="user-language">
+                <label for="user-language">Language</label>
+              </div>
+              <div class="input-field">
+                <input class="validate indigo-text" type="text" name="school" id="user-school">
+                <label for="user-school">School</label>
+              </div>
+              <div class="input-field indigo-text">
+                <input class="validate indigo-text" type="text" name="work" id="user-work">
+                <label for="user-work">Work</label>
+              </div>
+            </div>
+            <div class="card-action">
+              <button id="editaboutbutton" name="edit_about" type="submit" class="waves-effect waves-light btn indigo darken-3">Save</button>
+            </div>
+          </form>
+        </div>
+        <div id="edit_pic">
+          <div class="card-content">
+            <div id="preview">
+              <img src="/images/profile/blank.png" height="400" width="300" class="responsive-img" id="user-picture" accept="image/*">
+            </div>
+            <form action="#" id="edit_pic_form" enctype="multipart/form-data">
+              <div class="file-field input-field">
+                <div class="btn waves-effect waves-light btn indigo darken-3">
+                  <span>Upload</span>
+                  <input type="file" id="filename">
+                </div>
+                <div class="file-path-wrapper">
+                  <input class="file-path validate" name="upload" type="text" id="file-upload">
+                  <label for="file-upload">Filename</label>
+                </div>
+              </div>
+              <div class="card-action">
+                <button id="editaboutbutton" name="edit_about" type="submit" class="waves-effect waves-light btn indigo darken-3">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="/js/settings.js"></script>
