@@ -1,9 +1,11 @@
 const DB = require('../database');
 const passport = require('passport');
+const metaphone = require('metaphone')
 
 async function create({ first_name, last_name, email, password, location, public_key }) {
   try {
     // Hash password w/ bcrypt
+    const sounds_like = metaphone(first_name+" "+last_name);
     const user = await DB.query('INSERT INTO `user` SET ?', {
         first_name,
         last_name,
@@ -11,6 +13,7 @@ async function create({ first_name, last_name, email, password, location, public
         password,
         location,
         public_key,
+        sounds_like
       });
       return user;
   } catch (error) {
@@ -63,6 +66,54 @@ async function findAll() {
   }
 }
 
+async function findOneFriend({id, friendId}) {
+  try {
+    var qString = 'SELECT * FROM (SELECT * FROM `user` u '+
+      'WHERE u.id=?) as notU '+
+      'WHERE notU.id IN '+
+      '(SELECT r.receiver_id as `id` FROM `request` r '+
+      'WHERE r.sender_id=? AND r.req_accepted=1 AND r.blocked=0 '+
+      'UNION SELECT r.sender_id FROM `request` r '+
+      'WHERE r.receiver_id=? AND r.req_accepted=1 AND r.blocked=0);';
+    const users = await DB.query(qString, [friendId, id, id]);
+    return users;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+async function findFriends( id ) {
+  try {
+    var qString = 'SELECT * FROM (SELECT * FROM `user` u '+
+      'WHERE u.id!=?) as notU '+
+      'WHERE notU.id IN '+
+      '(SELECT r.receiver_id as `id` FROM `request` r '+
+      'WHERE r.sender_id=? AND r.req_accepted=1 AND r.blocked=0 '+
+      'UNION SELECT r.sender_id FROM `request` r '+
+      'WHERE r.receiver_id=? AND r.req_accepted=1 AND r.blocked=0);';
+    const users = await DB.query(qString, [id, id, id]);
+    return users;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+async function findNotFriends() {
+  var qString = 'SELECT * FROM (SELECT u.first_name, u.last_name, u.id FROM `user` u '+
+    'WHERE u.id!=?) as notU '+
+    'WHERE notU.id NOT IN '+
+    '(SELECT r.receiver_id as `id` FROM `request` r '+
+    'WHERE r.sender_id=? AND r.req_accepted=1 AND r.blocked=0 '+
+    'UNION SELECT r.sender_id FROM `request` r '+
+    'WHERE r.receiver_id=? AND r.req_accepted=1 AND r.blocked=0);';
+  try {
+    const users = await DB.query(qString, [id, id, id]);
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
 function authUser() {
   return (req, res, next) => {
     console.log(`
@@ -79,6 +130,7 @@ function authUser() {
 async function findPass( { email, password }) {
   try {
     const results = await DB.query('SELECT `id`, `password` FROM `user` WHERE ?', {email});
+    console.log(results);
     return results;
   }  catch (error) {
     console.error(error);
@@ -93,5 +145,8 @@ module.exports = {
   findAll,
   findOne,
   authUser,
-  findPass
+  findPass,
+  findFriends,
+  findNotFriends,
+  findOneFriend,
 }

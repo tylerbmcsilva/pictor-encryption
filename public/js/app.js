@@ -1,5 +1,4 @@
-const PAGE_TYPES = ['feed', 'post', 'friend', 'friends', 'profile'];
-
+const PAGE_TYPES = ['feed', 'post', 'friend', 'friends', 'profile', 'search'];
 
 async function main(window, document) {
   try {
@@ -24,7 +23,8 @@ async function main(window, document) {
     // document.getElementsByTagName('main')[0].innerHTML += `<pre>${JSON.stringify(data)}</pre>`;
 
     populateDataFromServer(window.location.pathname, data);
-
+    //var elems = document.querySelectorAll('.autocomplete');
+    //var instances = M.Autocomplete.init(elems, friendsOptions);
   } catch (e) {
     console.error(e);
   } finally {
@@ -38,6 +38,7 @@ async function main(window, document) {
 function populateDataFromServer(path, data){
   const pathArray = path.split('/').filter(function(el){ return el !== ''});
   const pageName  = getPageFromPathArray(pathArray);
+  console.log(pageName); 
   const page      = getPage(pageName);
 
   return page(data);
@@ -78,6 +79,9 @@ function getPage(pageName) {
       break;
     case 'testEncryption':
       return TestEncryptionPage;
+      break;
+    case 'search':
+      return SearchPage;
       break;
     default:
       console.error(`UNKNOWN PAGE "${pageName}"`);
@@ -133,6 +137,7 @@ function PostPage(data){
 
 
 function FriendsPage(data) {
+
   const friendsFormatted = data.map( el => {
     let friend = {
         id:     el.id,
@@ -145,6 +150,20 @@ function FriendsPage(data) {
   return;
 }
 
+function SearchPage(data) {
+  const usersFormatted = data.map( el => {
+    let user = {
+        id:     el.id,
+        name:   `${el.first_name} ${el.last_name}`,
+        location: el.location,
+        photo:  'https://i.imgur.com/FyWI0.jpg',
+        friendBool: el.friendBool
+      };
+    return createSearchCard(user);
+  });
+  PageAppend('search_results', usersFormatted);
+  return;
+}
 
 function createFriendCard(friend) {
   return `<div class="col s12 m4 l3">
@@ -158,6 +177,20 @@ function createFriendCard(friend) {
               </div>
             </div>
           </div>`;
+}
+
+function createSearchCard(user){
+  var link = '<a href="/addFriend/${user.id}" class="secondary-content"><i class="material-icons">add</i></a>'
+  if(user.friendBool){
+    var link = '<a href="/friend/${user.id}">Vist Profile</a>'
+  }
+
+  return `<li class="collection-item avatar">
+            <img src="${user.photo}" alt="" class="circle">
+            <span class="title">${user.name}</span>
+            <p>${user.location}</p>
+            ${link}
+          </li>`;
 }
 
 

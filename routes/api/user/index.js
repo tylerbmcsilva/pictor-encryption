@@ -36,15 +36,15 @@ router.get('/profile', async function(req, res) {
 
 
 router.get('/friends', async function(req, res) {
-  const users = await User.findAll();
+  const users = await User.findFriends(req.user);
   res.json(users);
 });
 
 
 router.get('/friend/:id', async function(req, res) {
-  const user  = await User.findOne({ id: req.params.id });
-  if(user === undefined)
-    res.send('');
+  //validate profile page accessed a friend
+  const user  = await User.findOneFriend(req.user, req.params.id);
+  if(user.length === 0) res.status(401); 
   else {
     console.log(user);
     // const encrypted = await Encryption.encryptUsingPublicKey({ key: user.public_key, data: user });
@@ -103,7 +103,7 @@ router.post('/user/new', async function(req, res) {
       location,
       public_key
     });
-    console.log(insertId); 
+    console.log(insertId);
     req.login(insertId, function(err){ if(err) throw err; });
     res.json({
       redirectUrl: '/feed'
