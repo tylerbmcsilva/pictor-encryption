@@ -1,4 +1,5 @@
 const Encryption  = require('../../../models/encryption');
+const Logger      = require('../../../models/logger');
 const { Router }  = require('express');
 const User        = require('../../../models/user');
 const passport    = require('passport');
@@ -9,84 +10,110 @@ module.exports    = router;
 
 
 router.get('/profile', async function(req, res) {
-  // Code to get information regarding self
+  const user  = await User.findOne({ id: req.session.passport.user });
+  // ENCRYPTION HERE
   res.json({
-    id: 1,
-    basic: {
-      name: {
-        first:  'Dominic',
-        last:   'Mathis'
+    id:     user.id,
+    basic:  {
+      name:   {
+        first:  user.first_name,
+        last:   user.last_name
       },
-      email:    'dmathis@gmail.com',
-      location: {
-        city:   'New York City',
-        state:  'New York'
-      }
+      email:    user.email,
+      location: user.location
     },
-    encrypted: {
-      phone:    '415-867-5309',
-      gender:   'Male',
-      birthdate: 'Jul 02, 1985',
-      language: 'English',
-      school: 'Stanford',
-      work:   'Myspace'
-    }
+    encrypted: JSON.parse(user.json_block)
   });
 });
 
 
 router.get('/friends', async function(req, res) {
-  const users = await User.findFriends(req.user);
-  res.json(users);
+  try {
+    const users = await User.findFriends(req.user);
+    if(users.length === 0) {
+      // ****************************************
+      // IF NOTHING, SEND TEST DATA FOR NOW
+      // ****************************************
+      res.json([{
+        id: 1,
+        basic: {
+          name: {
+            first:  'Dominic',
+            last:   'Mathis'
+          },
+          email:    'dmathis@gmail.com',
+          location: 'New York City, New York'
+        },
+        encrypted: {
+          phone:      '415-867-5309',
+          gender:     'Male',
+          birthdate:  'Jul 02, 1985',
+          language:   'English',
+          school:     'Stanford',
+          work:       'Myspace'
+        }
+      }]);
+    }
+    else {
+      res.json(users);
+    }
+  } catch (error) {
+    Logger.error(error);
+    res.status(500).json({
+      error: error.message
+    })
+  }
 });
 
 
 router.get('/friend/:id', async function(req, res) {
-  //validate profile page accessed a friend
-  const user  = await User.findOneFriend(req.user, req.params.id);
-  if(user.length === 0) res.status(401); 
-  else {
-    console.log(user);
-    // const encrypted = await Encryption.encryptUsingPublicKey({ key: user.public_key, data: user });
-    // console.log(encrypted);
-    res.json({
-      id:     user.id,
-      basic:  {
-        name:   {
-          first:  user.first_name,
-          last:   user.last_name
+  try {
+    const user  = await User.findOneFriend(req.user, req.params.id);
+    if(user.length === 0) {
+      // ****************************************
+      // IF NOTHING, SEND TEST DATA FOR NOW
+      // ****************************************
+      res.json({
+        id: 1,
+        basic: {
+          name: {
+            first:  'Dominic',
+            last:   'Mathis'
+          },
+          email:    'dmathis@gmail.com',
+          location: 'New York City, New York'
         },
-        email:    user.email,
-        location: {
-          city:   user.location.split(',')[0],
-          state:  user.location.split(',')[1]
+        encrypted: {
+          phone:      '415-867-5309',
+          gender:     'Male',
+          birthdate:  'Jul 02, 1985',
+          language:   'English',
+          school:     'Stanford',
+          work:       'Myspace'
         }
-      },
-      encrypted: user.json_block
-    });
+      });
+    } else {
+      // ENCRYPTION HERE
+      res.json({
+        id:     user.id,
+        basic:  {
+          name:   {
+            first:  user.first_name,
+            last:   user.last_name
+          },
+          email:    user.email,
+          location: user.location
+        },
+        encrypted: user.json_block
+      });
+    }
+  } catch (error) {
+    Logger.error(error);
+    res.status(500).json({
+      error: error.message
+    })
   }
-  // res.json({
-  //   id: 1,
-  //   basic: {
-  //     name: {
-  //       first:  'Dominic',
-  //       last:   'Mathis'
-  //     },
-  //     email:    'dmathis@gmail.com',
-  //     location: {
-  //       city:   'New York City',
-  //       state:  'New York'
-  //     }
-  //   },
-  //   encrypted: {
-  //     phone:    '415-867-5309',
-  //     gender:   'Male',
-  //     birthdate: 'Jul 02, 1985',
-  //     language: 'English',
-  //     school: 'Stanford',
-  //     work:   'Myspace'
-  //   }
-  // });
+
 })
 
 
@@ -103,7 +130,7 @@ router.post('/user/new', async function(req, res) {
       location,
       public_key
     });
-    console.log(insertId);
+    Logger.debug(insertId);
     req.login(insertId, function(err){ if(err) throw err; });
     res.json({
       redirectUrl: '/feed'
@@ -113,13 +140,8 @@ router.post('/user/new', async function(req, res) {
       error: error.message
     })
   }
-})
+});
 
-
-router.post('/user/update', function(req, res) {
-  // update DB with data
-  console.log(req.body);
-})
 
 passport.serializeUser(function(user_id, done){
   done(null, user_id);

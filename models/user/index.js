@@ -1,5 +1,6 @@
-const DB = require('../database');
-const passport = require('passport');
+const DB        = require('../database');
+const Logger    = require('../logger');
+const passport  = require('passport');
 const metaphone = require('metaphone')
 
 async function create({ first_name, last_name, email, password, location, public_key }) {
@@ -17,7 +18,7 @@ async function create({ first_name, last_name, email, password, location, public
       });
       return user;
   } catch (error) {
-    console.error(error);
+    Logger.error(error);
     throw error;
   }
 }
@@ -28,7 +29,7 @@ async function update(id, updates) {
     const user = await DB.query('UPDATE `user` SET ? WHERE ?', [updates, { id }]);
     return user;
   } catch (error) {
-    console.error(error);
+    Logger.error(error);
     throw error;
   }
 }
@@ -39,7 +40,7 @@ async function remove({ id }) {
     const user = await DB.query('DELETE FROM `user` WHERE ?', { id });
     return user;
   } catch (error) {
-    console.error(error);
+    Logger.error(error);
     throw error;
   }
 }
@@ -50,7 +51,7 @@ async function findOne({ id }) {
     const [ user ] = await DB.query('SELECT * FROM `user` WHERE ?', { id });
     return user;
   } catch (error) {
-    console.error(error);
+    Logger.error(error);
     throw error;
   }
 }
@@ -61,7 +62,7 @@ async function findAll() {
     const users = await DB.query('SELECT * FROM `user`');
     return users;
   } catch (error) {
-    console.error(error);
+    Logger.error(error);
     throw error;
   }
 }
@@ -116,7 +117,7 @@ async function findNotFriends() {
 }
 function authUser() {
   return (req, res, next) => {
-    console.log(`
+    Logger.log(`
       req.session.passport.user: ${JSON.
         stringify(req.session.passport)}`);
 
@@ -133,7 +134,7 @@ async function findPass( { email, password }) {
     console.log(results);
     return results;
   }  catch (error) {
-    console.error(error);
+    Logger.error(error);
     throw error;
   }
 }

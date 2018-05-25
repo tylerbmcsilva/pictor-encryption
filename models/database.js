@@ -1,5 +1,6 @@
-const mysql = require('mysql');
-const util  = require('util');
+const mysql   = require('mysql');
+const Logger  = require('./logger');
+const util    = require('util');
 
 
 const POOL = mysql.createPool({
@@ -8,7 +9,7 @@ const POOL = mysql.createPool({
   password:         process.env.DBPASSWORD,
   database:         process.env.DBNAME,
   ssl:              'Amazon RDS',
-  acquireTimeout:   60000,
+  acquireTimeout:   15000,
   debug:            false
 });
 
@@ -16,27 +17,28 @@ const POOL = mysql.createPool({
 POOL.getConnection((err, connection) => {
   if (err) {
     if (err.code === 'PROTOCOL_CONNECTION_LOST')
-      console.error('Database connection was closed.');
+      Logger.error('Database connection was closed.');
 
     if (err.code === 'ER_CON_COUNT_ERROR')
-      console.error('Database has too many connections.');
+      Logger.error('Database has too many connections.');
 
     if (err.code === 'ECONNREFUSED')
-      console.error('Database connection was refused.');
+      Logger.error('Database connection was refused.');
 
     if (err.code === 'ETIMEDOUT')
-      console.error('Database timed out...');
+      Logger.error('Database timed out...');
 
     if (connection)
       connection.release();
 
-    return;
+    return connection;
   }
-  console.log('Database Connected!');
+  Logger.info('Database Connected!');
 });
 
 
-POOL.query = util.promisify(POOL.query);
+POOL.query          = util.promisify(POOL.query);
+POOL.getConnection  = util.promisify(POOL.getConnection);
 
 
 module.exports = POOL;

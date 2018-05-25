@@ -1,4 +1,5 @@
-const PAGE_TYPES = ['feed', 'post', 'friend', 'friends', 'profile', 'search'];
+const PAGE_TYPES = ['feed', 'post', 'friend', 'friends', 'profile', 'settings', 'search'];
+
 
 async function main(window, document) {
   try {
@@ -7,6 +8,10 @@ async function main(window, document) {
     // const keys          = await getDataIndexedDB(indexedDBConn, 'keys', 'test@test.com');
     // indexedDBConn.close();
     // console.log(keys.privateKey);
+
+    // TODO: Figure out a way to handle other pages we don't want to load data on
+    if(window.location.pathname === '/post/new')
+      return;
 
     // Request data from the server
     const dataSourceURL = `${window.location.origin}/api${window.location.pathname}`;
@@ -38,7 +43,7 @@ async function main(window, document) {
 function populateDataFromServer(path, data){
   const pathArray = path.split('/').filter(function(el){ return el !== ''});
   const pageName  = getPageFromPathArray(pathArray);
-  console.log(pageName); 
+  console.log(pageName);
   const page      = getPage(pageName);
 
   return page(data);
@@ -77,6 +82,9 @@ function getPage(pageName) {
     case 'friend':
       return UserPage;
       break;
+    case 'settings':
+      return SettingsPage;
+      break;
     case 'testEncryption':
       return TestEncryptionPage;
       break;
@@ -94,8 +102,27 @@ function getPage(pageName) {
 function PageMapping(mapping) {
   let i;
   for (i = 0; i < mapping.length; i++) {
+    if (mapping[i].id === 'user-picture' && mapping[i].data ) {
+      document.getElementById(mapping[i].id).src = mapping[i].data;
+    }
+    else if (mapping[i].data){
       document.getElementById(mapping[i].id).innerHTML = mapping[i].data;
+    }
   }
+}
+
+function SettingsMapping(mapping) {
+  let i;
+  for (i = 0; i < mapping.length; i++) {
+    if (mapping[i].id === 'user-picture' && mapping[i].data ) {
+      document.getElementById(mapping[i].id).src = mapping[i].data;
+    }
+    else if (mapping[i].data){
+      // console.log(mapping[i].id);
+      document.getElementById(mapping[i].id).value = mapping[i].data;
+    }
+  }
+  M.updateTextFields();
 }
 
 function PageAppend(id, htmlArray) {
@@ -108,31 +135,54 @@ function PageAppend(id, htmlArray) {
 
 function FeedPage(data){
   let postsListFormatted = data.map( el => {
-    return createPostHTML(el);
+    return createPostFeedHTML(el);
   });
 
   PageAppend('feed_start', postsListFormatted);
+  return;
 }
 
 
-function createPostHTML(post) {
-  return `<li class="collection-item" id="post-${post.id}">
-            <span class="title">User #
-              <a href="friend/${post.user_id}" id="post-user-${post.user_id}">${post.user_id}</a>
-            </span>
-            </br>
-            <a href="${post.url}" class="left" id="post-title-${post.id}">${post.title}</a>
-            <span class="right" id="post-date-${post.id}">${post.date}</span>
-            </br>
-            <p id="post-body-${post.id}">${post.body}</p>
-          </li>
-        `;
+function createPostFeedHTML(post) {
+  return `<div class="card-panel">
+            <a href="/post/${post.id}" class="indigo-text"><h3 style="margin:0">${post.title}</h3></a>
+            <div class="row">
+              <div class="col s6">
+                <a href="/friend/${post.user_id}" class="indigo-text"><h5 class="truncate">#${post.user_id}</h5></a>
+              </div>
+              <div class="col s6">
+                <h5 class="right-align">${post.date}</h5>
+              </div>
+            </div>
+            <a href="${post.url ? post.url : '#'}" class="indigo-text ${post.url ? '' : 'hide'}"><h5>${post.url ? post.url : ''}</h5></a>
+            <div id="post-body" class="truncate">
+              ${post.body}
+            </div>
+          </div>`;
 }
 
 
 function PostPage(data){
-  console.log('POST', data);
+  PageAppend('post_section', [ createPostHTML(data) ]);
   return;
+}
+
+function createPostHTML(post) {
+  return `<div class="card-panel">
+            <h3 style="margin:0">${post.title}</h3>
+            <div class="row">
+              <div class="col s6">
+                <a href="/friend/${post.user_id}" class="indigo-text"><h5 class="truncate">#${post.user_id}</h5></a>
+              </div>
+              <div class="col s6">
+                <h5 class="right-align">${post.date}</h5>
+              </div>
+            </div>
+            <a href="${post.url ? post.url : '#'}" class="indigo-text ${post.url ? '' : 'hide'}"><h5>${post.url ? post.url : ''}</h5></a>
+            <div id="post-body">
+              ${post.body}
+            </div>
+          </div>`;
 }
 
 
@@ -142,7 +192,7 @@ function FriendsPage(data) {
     let friend = {
         id:     el.id,
         name:   `${el.first_name} ${el.last_name}`,
-        photo:  'https://i.imgur.com/FyWI0.jpg'
+        photo:  '/images/profile/blank.png'
       };
     return createFriendCard(friend);
   });
@@ -196,7 +246,6 @@ function createSearchCard(user){
 
 function UserPage(data){
   const { basic, encrypted } = data;
-
   let pageMapping = [
     {
       id:   'user-name',
@@ -204,14 +253,13 @@ function UserPage(data){
     },
     {
       id:   'user-location',
-      data: `${basic.location.city}, ${basic.location.state}`
+      data: basic.location
     },
     {
       id:   'user-email',
       data: basic.email
     }
   ];
-
   if(encrypted){
     Array.prototype.push.apply(pageMapping, [
       {
@@ -237,11 +285,69 @@ function UserPage(data){
       {
         id:   'user-work',
         data: encrypted.work
+      },
+      {
+        id:   'user-picture',
+        data: encrypted.picture
       }
     ]);
   }
-
   return PageMapping(pageMapping);
+}
+
+function SettingsPage(data){
+  const { basic, encrypted } = data;
+  let pageMapping = [
+    {
+      id:   'user-firstname',
+      data: basic.name.first
+    },
+    {
+      id:   'user-lastname',
+      data: basic.name.last
+    },
+    {
+      id:   'user-location',
+      data: basic.location
+    },
+    // {
+    //   id:   'user-email',
+    //   data: basic.email
+    // }
+  ];
+  if(encrypted){
+    Array.prototype.push.apply(pageMapping, [
+      {
+        id:   'user-phone',
+        data: encrypted.phone
+      },
+      {
+        id:   'user-gender',
+        data: encrypted.gender
+      },
+      {
+        id:   'user-birthdate',
+        data: encrypted.birthdate
+      },
+      {
+        id:   'user-language',
+        data: encrypted.language
+      },
+      {
+        id:   'user-school',
+        data: encrypted.school
+      },
+      {
+        id:   'user-work',
+        data: encrypted.work
+      },
+      {
+        id:   'user-picture',
+        data: encrypted.picture
+      }
+    ]);
+  }
+  return SettingsMapping(pageMapping);
 }
 
 !function() {

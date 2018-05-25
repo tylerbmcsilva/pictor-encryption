@@ -1,16 +1,3 @@
-//  test data - temporary
-// const testEmail = "harrypotter@gmail.com";
-// const testData = {
-//   id: 1,
-//   name:     'Harry Potter',
-//   location: {
-//     city:   'New York City',
-//     state:  'New York'
-//   }
-// }
-//
-//  argument used to search IndexedDB record
-// let id = testEmail;
 
 async function createAndStoreKeys(id) {
   let keyPair = await generateRSAKeyPair();
