@@ -206,8 +206,8 @@ function SearchPage(data) {
         id:     el.id,
         name:   `${el.first_name} ${el.last_name}`,
         location: el.location,
-        photo:  'https://i.imgur.com/FyWI0.jpg',
-        friendBool: el.friendBool
+        photo:  'https://i.imgur.com/FyWI0.jpg', //replace with image eventually
+        friendBool: el.friend_bool
       };
     return createSearchCard(user);
   });
@@ -230,15 +230,15 @@ function createFriendCard(friend) {
 }
 
 function createSearchCard(user){
-  var link = '<a href="/addFriend/${user.id}" class="secondary-content"><i class="material-icons">add</i></a>'
+  var link = `<a href="/addFriend/${user.id}">Send Friend Request</a>`
   if(user.friendBool){
-    var link = '<a href="/friend/${user.id}">Vist Profile</a>'
+    var link = `<a href="/friend/${user.id}">Vist Profile</a>`
   }
 
   return `<li class="collection-item avatar">
             <img src="${user.photo}" alt="" class="circle">
-            <span class="title">${user.name}</span>
-            <p>${user.location}</p>
+            <span class="title">Name: ${user.name}</span>
+            <p>From: ${user.location}</p>
             ${link}
           </li>`;
 }

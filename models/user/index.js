@@ -67,7 +67,7 @@ async function findAll() {
   }
 }
 
-async function findOneFriend({id, friendId}) {
+async function findOneFriend(id, friendId) {
   try {
     var qString = 'SELECT * FROM (SELECT * FROM `user` u '+
       'WHERE u.id=?) as notU '+
@@ -76,8 +76,9 @@ async function findOneFriend({id, friendId}) {
       'WHERE r.sender_id=? AND r.req_accepted=1 AND r.blocked=0 '+
       'UNION SELECT r.sender_id FROM `request` r '+
       'WHERE r.receiver_id=? AND r.req_accepted=1 AND r.blocked=0);';
-    const users = await DB.query(qString, [friendId, id, id]);
-    return users;
+    const user = await DB.query(qString, [friendId, id, id]);
+    console.log(user);
+    return user;
   } catch (error) {
     console.error(error);
     throw error;
@@ -139,6 +140,17 @@ async function findPass( { email, password }) {
   }
 }
 
+async function addFriend( { receiver_id, sender_id }) {
+  try {
+    const results = await DB.query('INSERT INTO `request` SET ?',
+      {receiver_id, sender_id});
+    return results;
+  }  catch (error) {
+    Logger.error(error);
+    throw error;
+  }
+}
+
 module.exports = {
   create,
   update,
@@ -150,4 +162,5 @@ module.exports = {
   findFriends,
   findNotFriends,
   findOneFriend,
+  addFriend
 }

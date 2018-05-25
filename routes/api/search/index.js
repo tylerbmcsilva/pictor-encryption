@@ -11,11 +11,15 @@ router.get('/updateSounds', async function(req, res) {
 });
 
 router.get('/search/:name', async function(req, res) {
-  const sounds_like = metaphone(req.params.name);
-  //console.log(sounds_like);
-  const friendResults = await Search.searchFriends(req.user, sounds_like);
-  const notFriendResults = await Search.searchNotFriends(req.user, sounds_like);
-  friendResults.concat(notFriendResults);
-  console.log(friendResults);
-  res.json(friendResults);
+  var sounds_like = metaphone(req.params.name);
+  var friendResults = await Search.searchFriends(req.user, sounds_like);
+  for (var i in friendResults){
+    friendResults[i].friend_bool = true;
+  }
+  var notFriendResults = await Search.searchNotFriends(req.user, sounds_like);
+  for (var i in notFriendResults){
+    notFriendResults[i].friend_bool = false;
+  }
+  const allResults = friendResults.concat(notFriendResults);
+  res.json(allResults);
 });

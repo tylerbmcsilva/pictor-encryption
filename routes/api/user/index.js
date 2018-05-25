@@ -95,16 +95,16 @@ router.get('/friend/:id', async function(req, res) {
     } else {
       // ENCRYPTION HERE
       res.json({
-        id:     user.id,
+        id:     user[0].id,
         basic:  {
           name:   {
-            first:  user.first_name,
-            last:   user.last_name
+            first:  user[0].first_name,
+            last:   user[0].last_name
           },
-          email:    user.email,
-          location: user.location
+          email:    user[0].email,
+          location: user[0].location
         },
-        encrypted: user.json_block
+        encrypted: user[0].json_block
       });
     }
   } catch (error) {
