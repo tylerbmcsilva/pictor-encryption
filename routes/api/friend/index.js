@@ -67,7 +67,7 @@ router.get('/friends', async function(req, res) {
     var results = friends.concat(sentRequests);
     results = results.concat(blockedUsers);
     results = results.concat(receivedRequests);
-    console.log(results);
+    //console.log(results);
     if(results.length === 0) {
       // ****************************************
       // IF NOTHING, SEND TEST DATA FOR NOW

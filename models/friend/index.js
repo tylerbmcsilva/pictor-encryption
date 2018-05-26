@@ -103,7 +103,7 @@ async function getSentRequests(id) {
       'WHERE r.sender_id=? AND r.req_accepted=0 AND r.blocked=0) as sReq ' +
       `ON sReq.id = notU.id;`;
     const users = await DB.query(qString, [id, id]);
-    console.log(users);
+    //console.log(users);
     return users;
   } catch (error) {
     console.error(error);
@@ -120,7 +120,7 @@ async function getReceivedRequests(id) {
       'WHERE r.receiver_id=? AND r.req_accepted=0 AND r.blocked=0) as rReq ' +
       `ON rReq.id = notU.id;`;
     const users = await DB.query(qString, [id, id]);
-    console.log(users);
+    //console.log(users);
     return users;
   } catch (error) {
     console.error(error);

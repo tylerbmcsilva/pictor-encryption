@@ -192,7 +192,11 @@ function FriendsPage(data) {
     let friend = {
         id:     el.id,
         name:   `${el.first_name} ${el.last_name}`,
-        photo:  '/images/profile/blank.png'
+        photo:  '/images/profile/blank.png',
+        friend_bool: el.friend_bool,
+        rreq_bool: el.rreq_bool,
+        sreq_bool: el.sreq_bool,
+        blocked_bool: el.blocked_bool
       };
     return createFriendCard(friend);
   });
@@ -241,6 +245,7 @@ function createFriendCard(friend) {
 }
 
 function createSearchCard(user){
+  var link = `<a href="/friend/sendRequest/${user.id}">Send Friend Request</a>`;
   if(user.friend_bool){
     var link = `<a href="/friend/${user.id}">Vist Profile</a>`;
   }
@@ -251,11 +256,8 @@ function createSearchCard(user){
     var link = `<a href="/friend/unblock/${user.id}">Unblock User</a>`;
   }
   else if(user.rreq_bool){
-    var link = `<a href="/friend/accept/${user.id}">Add User</a>` +
+    var link = `<a href="/friend/accept/${user.id}">Add User</a><br>` +
       `<a href="/friend/delete/${user.id}">Delete Request</a>`;
-  }
-  else{
-    var link = `<a href="/friend/sendRequest/${user.id}">Send Friend Request</a>`;
   }
 
   return `<li class="collection-item avatar">
