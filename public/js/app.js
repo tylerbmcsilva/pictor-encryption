@@ -236,7 +236,7 @@ function createFriendCard(friend) {
             </div>`;
   }
   else{
-     return createSearchCard(friend)
+     return createSearchCard(friend);
   }
 }
 

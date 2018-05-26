@@ -98,11 +98,12 @@ async function getSentRequests(id) {
   try {
     var qString = 'SELECT * FROM (SELECT u.first_name, u.last_name, u.id, u.location FROM `user` u '+
       'WHERE u.id!=?) as notU '+
-      'WHERE notU.id IN'+
-      '(SELECT r.receiver_id as `id`, r.date as `date` FROM `request` r '+
-      'WHERE r.sender_id=? AND r.req_accepted=0 AND r.blocked=0)';
+      'JOIN '+
+      '(SELECT r.receiver_id as `id`, r.date FROM `request` r '+
+      'WHERE r.sender_id=? AND r.req_accepted=0 AND r.blocked=0) as sReq ' +
+      `ON sReq.id = notU.id;`;
     const users = await DB.query(qString, [id, id]);
-    console.log(user);
+    console.log(users);
     return users;
   } catch (error) {
     console.error(error);
@@ -114,10 +115,12 @@ async function getReceivedRequests(id) {
   try {
     var qString = 'SELECT * FROM (SELECT u.first_name, u.last_name, u.id, u.location FROM `user` u '+
       'WHERE u.id!=?) as notU '+
-      'WHERE notU.id IN '+
+      'JOIN '+
       '(SELECT r.sender_id as `id` FROM `request` r '+
-      'WHERE r.receiver_id=? AND r.req_accepted=0 AND r.blocked=0 ';
+      'WHERE r.receiver_id=? AND r.req_accepted=0 AND r.blocked=0) as rReq ' +
+      `ON rReq.id = notU.id;`;
     const users = await DB.query(qString, [id, id]);
+    console.log(users);
     return users;
   } catch (error) {
     console.error(error);
