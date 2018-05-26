@@ -51,11 +51,11 @@ function populateDataFromServer(path, data){
 
 
 async function getDataFromUrl(url) {
-  return axios.get(url)
-    .catch( function (error) {
-      console.error(error);
-      throw error;
-    });
+      return axios.get(url)
+        .catch( function (error) {
+          console.error(error);
+          throw error;
+        });
 }
 
 
@@ -207,7 +207,7 @@ function SearchPage(data) {
         name:   `${el.first_name} ${el.last_name}`,
         location: el.location,
         photo:  'https://i.imgur.com/FyWI0.jpg', //replace with image eventually
-        friendBool: el.friend_bool
+        friend_bool: el.friend_bool
       };
     return createSearchCard(user);
   });
@@ -216,23 +216,46 @@ function SearchPage(data) {
 }
 
 function createFriendCard(friend) {
-  return `<div class="col s12 m4 l3">
-            <div class="card">
-              <div class="card-image">
-                <img src="${friend.photo}">
-                <span class="card-title">${friend.name}</span>
+  if(friend.friend_bool){
+    return `<div class="col s6 m4 l3">
+              <div class="card">
+                <div class="card-image">
+                  <img src="${friend.photo}">
+                  <span class="card-title">${friend.name}</span>
+                </div>
+                <div class="card-action">
+                  <a href="/friend/${friend.id}">Vist Profile</a>
+                </div>
+                <div class="card-action">
+                  <a class="red-text darken-4" href="/friend/delete/${friend.id}">Delete</a>
+                </div>
+                <div class="card-action">
+                  <a class="indigo-text darken-4" href="/friend/block/${friend.id}">Block</a>
+                </div>
               </div>
-              <div class="card-action">
-                <a href="/friend/${friend.id}">Vist Profile</a>
-              </div>
-            </div>
-          </div>`;
+            </div>`;
+  }
+  else{
+     return createSearchCard(friend)
+  }
 }
 
 function createSearchCard(user){
-  var link = `<a href="/addFriend/${user.id}">Send Friend Request</a>`
-  if(user.friendBool){
-    var link = `<a href="/friend/${user.id}">Vist Profile</a>`
+  if(user.friend_bool){
+    var link = `<a href="/friend/${user.id}">Vist Profile</a>`;
+  }
+  else if(user.sreq_bool){
+    var link = `<a >Request Sent: ${user.date}</a>`;
+  }
+  else if(user.blocked_bool){
+    var link = `<a href="/friend/unblock/${user.id}">Unblock User</a>`;
+  }
+  else if(user.rreq_bool){
+    var link = `<a href="/friend/accept/${user.id}">Add User</a>` +
+      `<a href="/friend/delete/${user.id}">Delete Request</a>`;
+  }
+  else{
+    var link = `<a href="/friend/sendRequest/${user.id}">Send Friend Request</a>`;
   }
 
   return `<li class="collection-item avatar">

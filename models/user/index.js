@@ -67,55 +67,7 @@ async function findAll() {
   }
 }
 
-async function findOneFriend(id, friendId) {
-  try {
-    var qString = 'SELECT * FROM (SELECT * FROM `user` u '+
-      'WHERE u.id=?) as notU '+
-      'WHERE notU.id IN '+
-      '(SELECT r.receiver_id as `id` FROM `request` r '+
-      'WHERE r.sender_id=? AND r.req_accepted=1 AND r.blocked=0 '+
-      'UNION SELECT r.sender_id FROM `request` r '+
-      'WHERE r.receiver_id=? AND r.req_accepted=1 AND r.blocked=0);';
-    const user = await DB.query(qString, [friendId, id, id]);
-    console.log(user);
-    return user;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-}
-async function findFriends( id ) {
-  try {
-    var qString = 'SELECT * FROM (SELECT * FROM `user` u '+
-      'WHERE u.id!=?) as notU '+
-      'WHERE notU.id IN '+
-      '(SELECT r.receiver_id as `id` FROM `request` r '+
-      'WHERE r.sender_id=? AND r.req_accepted=1 AND r.blocked=0 '+
-      'UNION SELECT r.sender_id FROM `request` r '+
-      'WHERE r.receiver_id=? AND r.req_accepted=1 AND r.blocked=0);';
-    const users = await DB.query(qString, [id, id, id]);
-    return users;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-}
 
-async function findNotFriends() {
-  var qString = 'SELECT * FROM (SELECT u.first_name, u.last_name, u.id FROM `user` u '+
-    'WHERE u.id!=?) as notU '+
-    'WHERE notU.id NOT IN '+
-    '(SELECT r.receiver_id as `id` FROM `request` r '+
-    'WHERE r.sender_id=? AND r.req_accepted=1 AND r.blocked=0 '+
-    'UNION SELECT r.sender_id FROM `request` r '+
-    'WHERE r.receiver_id=? AND r.req_accepted=1 AND r.blocked=0);';
-  try {
-    const users = await DB.query(qString, [id, id, id]);
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-}
 function authUser() {
   return (req, res, next) => {
     Logger.log(`
@@ -132,7 +84,7 @@ function authUser() {
 async function findPass( { email, password }) {
   try {
     const results = await DB.query('SELECT `id`, `password` FROM `user` WHERE ?', {email});
-    console.log(results);
+    //console.log(results);
     return results;
   }  catch (error) {
     Logger.error(error);
@@ -140,16 +92,6 @@ async function findPass( { email, password }) {
   }
 }
 
-async function addFriend( { receiver_id, sender_id }) {
-  try {
-    const results = await DB.query('INSERT INTO `request` SET ?',
-      {receiver_id, sender_id});
-    return results;
-  }  catch (error) {
-    Logger.error(error);
-    throw error;
-  }
-}
 
 module.exports = {
   create,
@@ -158,9 +100,5 @@ module.exports = {
   findAll,
   findOne,
   authUser,
-  findPass,
-  findFriends,
-  findNotFriends,
-  findOneFriend,
-  addFriend
+  findPass
 }

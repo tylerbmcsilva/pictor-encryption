@@ -12,7 +12,7 @@ router.use(require('./feed'));
 router.use(require('./post'));
 router.use(require('./settings'));
 router.use(require('./search'));
-
+router.use(require('./friend'));
 router.get('/not-found', function(req, res) {
   res.render('app/not_found');
 });
