@@ -42,9 +42,9 @@ async function remove({ id }) {
 }
 
 
-async function findOne({ id }) {
+async function findOne( id ) {
   try {
-    const [ post ] = await DB.query('SELECT * FROM `post` WHERE ?', { id });
+    const [ post ] = await DB.query('SELECT post.*, user.first_name, user.last_name FROM `post` INNER JOIN `user` ON post.user_id = user.id WHERE ?',  id );
     return post;
   } catch (error) {
     Logger.error(error);
@@ -55,7 +55,7 @@ async function findOne({ id }) {
 
 async function findAll() {
   try {
-    const posts = await DB.query('SELECT * FROM `post` ORDER BY `date` DESC');
+    const posts = await DB.query('SELECT post.*, user.first_name, user.last_name FROM `post` INNER JOIN `user` ON post.user_id = user.id ORDER BY `date` DESC');
     return posts;
   } catch (error) {
     Logger.error(error);

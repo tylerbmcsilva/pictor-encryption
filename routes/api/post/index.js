@@ -10,7 +10,7 @@ module.exports  = router;
 
 router.get('/post/:id', async function(req, res) {
   try {
-    const post  = await Post.findOne({ id: req.params.id });
+    const post  = await Post.findOne({ 'post.id': req.params.id });
     if(post === undefined)
       // res.send('');
       // ****************************************

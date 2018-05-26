@@ -12,7 +12,7 @@ router.use('/post', authUser());
 router.get('/post/new', function(req, res) {
   // TODO: Load user's id
   res.render('app/new_post', {
-    user_id: '1'
+    user_id: req.session.passport.user
   });
 });
 
