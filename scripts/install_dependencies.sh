@@ -11,12 +11,12 @@ sudo yum install -y nodejs
 sudo yum install -y gcc-c++ make
 
 curl -sL https://dl.yarnpkg.com/rpm/yarn.repo | sudo tee /etc/yum.repos.d/yarn.repo
-sudo yum install yarn
+sudo yum install yarn -y
 
 echo -e "Restarting Bash"
 source ~/.bashrc
 
 echo -e "Installing PM2"
-npm install -g pm2
+sudo npm install -g pm2
 echo -e "Installing Application Dependencies"
-yarn install
+sudo yarn install
