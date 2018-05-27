@@ -1,19 +1,24 @@
 const { Router }    = require('express');
-const { authUser }  = require('../../../models/user');
+const { authenticateUser }  = require('../../../models/authentication');
 
 
 const router    = new Router();
 module.exports  = router;
 
 
-router.use('/post', authUser());
+router.use('/post', authenticateUser());
 
 
 router.get('/post/new', function(req, res) {
-  // TODO: Load user's id
-  res.render('app/new_post', {
-    user_id: req.session.passport.user
-  });
+  try {
+    const user_id = req.session.passport.user;
+
+    res.render('app/new_post', {
+      user_id
+    });
+  } catch (error) {
+    res.redirect('/feed');
+  }
 });
 
 

@@ -188,41 +188,52 @@ function createPostHTML(post) {
 
 function FriendsPage(data) {
 
-  const friendsFormatted = data.map( el => {
+  const friendsFormatted = data.friends.map( (el) => {
     let friend = {
         id:     el.id,
         name:   `${el.first_name} ${el.last_name}`,
         photo:  'https://i.imgur.com/FyWI0.jpg',
-        date: el.date,
-        location: el.location,
-        friend_bool: el.friend_bool,
-        rreq_bool: el.rreq_bool,
-        sreq_bool: el.sreq_bool,
-        blocked_bool: el.blocked_bool
       };
     return createFriendCard(friend);
   });
   PageAppend('friends_list', friendsFormatted);
+
+
+  const currentInboundRequests = data.currentRequests.map( (el) => {
+    if(el.id === el.sender_id){
+      return createCollectionItem({
+        title:  `${el.first_name} ${el.last_name}`,
+        link:   `#`,
+        icon:   'check'
+      });
+    } else {
+      return '';
+    }
+  });
+  PageAppend('received_requests', currentInboundRequests);
+
+
+  const currentOutboundRequests = data.currentRequests.map( (el) => {
+    if(el.id === el.receiver_id){
+      return createCollectionItem({
+        title:  `${el.first_name} ${el.last_name}`,
+        link:   `/friend/${el.id}`,
+        icon:   'access_time'
+      });
+    } else {
+      return '';
+    }
+  });
+  console.log(currentInboundRequests, currentOutboundRequests);
+  PageAppend('sent_requests', currentOutboundRequests);
+
+
+
   return;
 }
 
-function SearchPage(data) {
-  const usersFormatted = data.map( el => {
-    let user = {
-        id:     el.id,
-        name:   `${el.first_name} ${el.last_name}`,
-        location: el.location,
-        photo:  'https://i.imgur.com/FyWI0.jpg', //replace with image eventually
-        friend_bool: el.friend_bool
-      };
-    return createInfoCard(user);
-  });
-  PageAppend('search_results', usersFormatted);
-  return;
-}
 
 function createFriendCard(friend) {
-  if(friend.friend_bool){
     return `<div class="col s6 m4 l3">
               <div class="card">
                 <div class="card-image">
@@ -240,10 +251,10 @@ function createFriendCard(friend) {
                 </div>
               </div>
             </div>`;
-  }
-  else{
-     return createInfoCard(friend);
-  }
+}
+
+function createCollectionItem(item) {
+  return `<li class="collection-item"><div>${item.title}<a href="${item.link}" class="secondary-content"><i class="material-icons">${item.icon}</i></a></div></li>`;
 }
 
 function createInfoCard(user){
@@ -268,6 +279,22 @@ function createInfoCard(user){
             <p>From: ${user.location}</p>
             ${link}
           </li>`;
+}
+
+
+function SearchPage(data) {
+  const usersFormatted = data.map( el => {
+    let user = {
+        id:     el.id,
+        name:   `${el.first_name} ${el.last_name}`,
+        location: el.location,
+        photo:  'https://i.imgur.com/FyWI0.jpg', //replace with image eventually
+        friend_bool: el.friend_bool
+      };
+    return createInfoCard(user);
+  });
+  PageAppend('search_results', usersFormatted);
+  return;
 }
 
 

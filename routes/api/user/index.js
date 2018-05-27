@@ -10,20 +10,32 @@ module.exports    = router;
 
 
 router.get('/profile', async function(req, res) {
-  const user  = await User.findOne({ id: req.session.passport.user });
-  // ENCRYPTION HERE
-  res.json({
-    id:     user.id,
-    basic:  {
-      name:   {
-        first:  user.first_name,
-        last:   user.last_name
-      },
-      email:    user.email,
-      location: user.location
-    },
-    encrypted: JSON.parse(user.json_block)
-  });
+  try {
+    const user  = await User.findOne({ id: req.session.passport.user });
+    if(!user)
+      res.status(404).json({ error: 'User not found' });
+    else {
+      // ENCRYPTION HERE
+      res.json({
+        id:     user.id,
+        basic:  {
+          name:   {
+            first:  user.first_name,
+            last:   user.last_name
+          },
+          email:    user.email,
+          location: user.location
+        },
+        encrypted: JSON.parse(user.json_block)
+      });
+    }
+  } catch (error) {
+    Logger.error(error);
+    res.status(500).json({
+      error: error.message
+    })
+  }
+
 });
 
 

@@ -98,15 +98,6 @@ async function main(window, document) {
   }
 
 
-  function postDataToUrl(url, data) {
-    return axios.post(url, data)
-      .catch(function(err) {
-        // SILENTLY FAIL
-        return;
-      });
-  }
-
-
   // Function to grab key from indexedDB
   async function getDataFromIndexedDB(id) {
     let conn;

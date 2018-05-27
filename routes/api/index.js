@@ -1,12 +1,12 @@
-const { Router }    = require('express');
-const { authUser }  = require('../../models/user');
+const { authenticateUser }  = require('../../models/authentication');
+const { Router }            = require('express');
 
 
 const router    = new Router();
 module.exports  = router;
 
 
-router.use('/api/*', authUser());
+router.use('/api/*', authenticateUser());
 
 
 router.use(require('./feed'));
@@ -15,4 +15,4 @@ router.use(require('./user'));
 router.use(require('./post'));
 router.use(require('./settings'));
 router.use(require('./search'));
-router.use(require('./friends')); 
+router.use(require('./friends'));
