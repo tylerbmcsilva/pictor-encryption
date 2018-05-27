@@ -43,6 +43,10 @@ header, main, footer {
   border-radius: 50%;
 }
 
+.collapsible-body {
+  padding: 0;
+}
+
 nav {
   padding: 0 1em;
 }

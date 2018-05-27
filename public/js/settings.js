@@ -8,14 +8,14 @@ function main(window, document) {
   async function handleEditAboutSubmit(event) {
     event.preventDefault();
     let firstName = document.getElementById("user-firstname").value;
-    let lastName = document.getElementById("user-lastname").value;
-    let location = document.getElementById("user-location").value;
-    let phone = document.getElementById("user-phone").value;
-    let gender = document.getElementById("user-gender").value;
+    let lastName  = document.getElementById("user-lastname").value;
+    let location  = document.getElementById("user-location").value;
+    let phone     = document.getElementById("user-phone").value;
+    let gender    = document.getElementById("user-gender").value;
     let birthdate = document.getElementById("user-birthdate").value;
-    let language = document.getElementById("user-language").value;
-    let school = document.getElementById("user-school").value;
-    let work = document.getElementById("user-work").value;
+    let language  = document.getElementById("user-language").value;
+    let school    = document.getElementById("user-school").value;
+    let work      = document.getElementById("user-work").value;
 
     let data = {
       first_name: firstName,
@@ -45,8 +45,9 @@ function main(window, document) {
   async function handleEditPicSubmit(event) {
     event.preventDefault();
 
-    let file = document.getElementById('filename').files[0];
-    let formData = new FormData();
+    let file      = document.getElementById('filename').files[0];
+    let formData  = new FormData();
+
     formData.append("file", file);
     formData.append("filename", file.name);
 
@@ -62,8 +63,9 @@ function main(window, document) {
 
   function generatePreviewPic() {
     let preview = document.getElementById('preview');
-    let file = document.getElementById('filename').files[0];
-    let reader = new FileReader();
+    let file    = document.getElementById('filename').files[0];
+    let reader  = new FileReader();
+
     reader.addEventListener('load', function() {
       let img = document.getElementById('user-picture');
       img.src = reader.result;
@@ -72,14 +74,6 @@ function main(window, document) {
     if (file) {
       reader.readAsDataURL(file);
     }
-  }
-
-  function postDataToUrl(url, data) {
-    return axios.post(url, data)
-      .catch(function(err) {
-        // SILENTLY FAIL
-        return;
-      });
   }
 }
 

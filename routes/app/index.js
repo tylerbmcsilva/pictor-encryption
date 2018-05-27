@@ -13,6 +13,8 @@ router.use(require('./post'));
 router.use(require('./settings'));
 router.use(require('./search'));
 router.use(require('./friends'));
+
+
 router.get('/not-found', function(req, res) {
   res.render('app/not_found');
 });

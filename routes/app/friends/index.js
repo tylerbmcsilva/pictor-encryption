@@ -1,13 +1,14 @@
 const { Router }  = require('express');
-const { authUser }  = require('../../../models/user');
+const { authenticateUser }  = require('../../../models/authentication');
 
 
 const router    = new Router();
 module.exports  = router;
 
 
-router.use('/friends', authUser());
-router.use('/friend', authUser());
+router.use('/friends', authenticateUser());
+router.use('/friend', authenticateUser());
+
 
 router.get('/friends*', function(req, res) {
   res.render('app/user_list');
@@ -17,6 +18,8 @@ router.get('/friends*', function(req, res) {
 router.get('/friend/:id', function(req, res) {
   res.render('app/user');
 });
+
+
 router.get('/friends/*', function(req, res) {
   res.render('app/user_list');
 });

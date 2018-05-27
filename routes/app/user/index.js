@@ -1,15 +1,12 @@
+const { authenticateUser }  = require('../../../models/authentication');
 const { Router }  = require('express');
-const { authUser }  = require('../../../models/user');
 
 
 const router    = new Router();
 module.exports  = router;
 
 
-router.use('/profile', authUser());
-router.use('/friends', authUser());
-router.use('/friend', authUser());
-
+router.use('/profile', authenticateUser());
 
 
 router.get('/profile', function(req, res) {

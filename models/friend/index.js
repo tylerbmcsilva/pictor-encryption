@@ -2,7 +2,7 @@ const DB        = require('../database');
 const Logger    = require('../logger');
 
 /*Working*/
-async function findOneFriend(id, friendId) {
+async function getUser({ id, friendId }) {
   try {
     var qString = 'SELECT * FROM (SELECT * FROM `user` u '+
       'WHERE u.id=?) as notU '+
@@ -11,49 +11,53 @@ async function findOneFriend(id, friendId) {
       'WHERE r.sender_id=? AND r.req_accepted=1 AND r.blocked=0 '+
       'UNION SELECT r.sender_id FROM `request` r '+
       'WHERE r.receiver_id=? AND r.req_accepted=1 AND r.blocked=0);';
-    const user = await DB.query(qString, [friendId, id, id]);
-    console.log(user);
+    const [ user ] = await DB.query(qString, [friendId, id, id]);
     return user;
   } catch (error) {
-    console.error(error);
+    Logger.error(error);
     throw error;
   }
 }
 
+
 /*Working*/
-async function findFriends( id ) {
+async function getFriends({ id }) {
   try {
-    var qString = 'SELECT * FROM (SELECT * FROM `user` u '+
-      'WHERE u.id!=?) as notU '+
-      'WHERE notU.id IN '+
-      '(SELECT r.receiver_id as `id` FROM `request` r '+
-      'WHERE r.sender_id=? AND r.req_accepted=1 AND r.blocked=0 '+
-      'UNION SELECT r.sender_id FROM `request` r '+
-      'WHERE r.receiver_id=? AND r.req_accepted=1 AND r.blocked=0);';
-    const users = await DB.query(qString, [id, id, id]);
+    var qString = `
+      SELECT u.id, u.first_name, u.last_name FROM \`user\` u WHERE u.id IN (
+        SELECT a.receiver_id as \`id\` FROM \`request\` a WHERE a.sender_id=${id} AND a.req_accepted=1 AND a.blocked=0
+        UNION
+        SELECT b.sender_id as \`id\` FROM \`request\` b WHERE b.receiver_id=${id} AND b.req_accepted=1 AND b.blocked=0
+      );
+    `;
+    const users = await DB.query(qString);
     return users;
   } catch (error) {
-    console.error(error);
+    Logger.error(error);
     throw error;
   }
 }
 
+
 /*Working*/
-async function findNotFriends() {
-  var qString = 'SELECT * FROM (SELECT u.first_name, u.last_name, u.id FROM `user` u '+
-    'WHERE u.id!=?) as notU '+
-    'WHERE notU.id NOT IN '+
-    '(SELECT r.receiver_id as `id` FROM `request` r '+
-    'WHERE r.sender_id=? AND r.req_accepted=1 AND r.blocked=0 '+
-    'UNION SELECT r.sender_id FROM `request` r '+
-    'WHERE r.receiver_id=? AND r.req_accepted=1 AND r.blocked=0);';
+async function getNotFriends() {
   try {
-    const users = await DB.query(qString, [id, id, id]);
+    var qString = `
+      SELECT u.id, u.first_name, u.last_name FROM \`user\` u WHERE u.id NOT IN (
+        SELECT r.receiver_id as \`id\`, r.req_accepted FROM \`request\` r WHERE r.sender_id=${id} AND r.blocked=0
+        UNION
+        SELECT r.sender_id as \`id\`, r.req_accepted FROM \`request\` r WHERE r.receiver_id=${id} AND r.blocked=0
+      );
+    `;
+
+    const users = await DB.query(qString);
+    return users;
   } catch (error) {
-    console.error(error);
+    Logger.error(error);
     throw error;
   }
 }
+
 
 /*Working*/
 async function sendFriendRequest( { receiver_id, sender_id }) {
@@ -67,17 +71,19 @@ async function sendFriendRequest( { receiver_id, sender_id }) {
   }
 }
 
+
 /*Working*/
 async function acceptFriendRequest(receiver_id, sender_id) {
   try {
-    const results = await DB.query('UPDATE `request` SET `req_accepted`=1 WHERE `receiver_id`=? AND `sender_id`=?',
-      [receiver_id, sender_id]);
+    const qString = `UPDATE \`request\` SET \`req_accepted\`=1 WHERE \`receiver_id\`=${receiver_id} AND \`sender_id\`=${sender_id}`;
+    const results = await DB.query(qString);
     return results;
   }  catch (error) {
     Logger.error(error);
     throw error;
   }
 }
+
 
 /*Working*/
 async function deleteFriendRequest(uId, notUId) {
@@ -93,6 +99,7 @@ async function deleteFriendRequest(uId, notUId) {
   }
 }
 
+
 /*Working*/
 async function getSentRequests(id) {
   try {
@@ -103,13 +110,13 @@ async function getSentRequests(id) {
       'WHERE r.sender_id=? AND r.req_accepted=0 AND r.blocked=0) as sReq ' +
       `ON sReq.id = notU.id;`;
     const users = await DB.query(qString, [id, id]);
-    //console.log(users);
     return users;
   } catch (error) {
-    console.error(error);
+    Logger.error(error);
     throw error;
   }
 }
+
 
 /*Working*/
 async function getReceivedRequests(id) {
@@ -121,13 +128,14 @@ async function getReceivedRequests(id) {
       'WHERE r.receiver_id=? AND r.req_accepted=0 AND r.blocked=0) as rReq ' +
       `ON rReq.id = notU.id;`;
     const users = await DB.query(qString, [id, id]);
-    //console.log(users);
+    //Logger.debug(users);
     return users;
   } catch (error) {
-    console.error(error);
+    Logger.error(error);
     throw error;
   }
 }
+
 
 async function getBlockedUsers(id) {
   try {
@@ -139,13 +147,14 @@ async function getBlockedUsers(id) {
       'UNION SELECT r.sender_id FROM `request` r '+
       'WHERE r.receiver_id=? AND r.blocked=1);';
     const users = await DB.query(qString, [id, id, id]);
-    console.log(users);
+    Logger.debug(users);
     return users;
   } catch (error) {
-    console.error(error);
+    Logger.error(error);
     throw error;
   }
 }
+
 
 /* Working */
 async function blockUser(uId, notUId) {
@@ -163,6 +172,7 @@ async function blockUser(uId, notUId) {
   }
 }
 
+
 /* Working */
 async function unblockUser(uId, notUId) {
   try {
@@ -179,10 +189,48 @@ async function unblockUser(uId, notUId) {
   }
 }
 
+
+async function getAllCurrentRequests({ id }) {
+  try {
+    const qString = `
+      SELECT u.id, u.first_name, u.last_name, r.receiver_id, r.sender_id FROM \`user\` u
+      LEFT JOIN \`request\` r
+        ON (
+          (r.receiver_id=u.id AND r.sender_id=${id} AND r.req_accepted=0 AND r.blocked=0)
+          OR
+          (r.sender_id=u.id AND r.receiver_id=${id} AND r.req_accepted=0 AND r.blocked=0)
+        )
+    `;
+
+    const results = await DB.query(qString);
+    return results;
+  } catch (error) {
+    Logger.error(error);
+    throw error;
+  }
+}
+
+
+async function getAllFriendsAndRequests({ id }){
+  try {
+    var friends         = await getFriends({ id });
+    var currentRequests = await getAllCurrentRequests({ id });
+
+    return {
+      friends,
+      currentRequests
+    };
+  } catch (error) {
+    Logger.error(error);
+    throw error;
+  }
+}
+
+
 module.exports = {
-  findFriends,
-  findNotFriends,
-  findOneFriend,
+  getFriends,
+  getNotFriends,
+  getUser,
   sendFriendRequest,
   acceptFriendRequest,
   deleteFriendRequest,
@@ -190,5 +238,6 @@ module.exports = {
   unblockUser,
   getBlockedUsers,
   getReceivedRequests,
-  getSentRequests
+  getSentRequests,
+  getAllFriendsAndRequests
 }
