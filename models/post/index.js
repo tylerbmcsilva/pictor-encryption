@@ -42,9 +42,9 @@ async function remove({ id }) {
 }
 
 
-async function findOne({ id }) {
+async function findOne( id ) {
   try {
-    const [ post ] = await DB.query('SELECT * FROM `post` WHERE ?', { id });
+    const [ post ] = await DB.query('SELECT post.*, user.first_name, user.last_name FROM `post` INNER JOIN `user` ON post.user_id = user.id WHERE ?',  id );
     return post;
   } catch (error) {
     Logger.error(error);
@@ -53,9 +53,27 @@ async function findOne({ id }) {
 }
 
 
-async function findAll() {
+async function findAllUserPosts({ id }) {
   try {
-    const posts = await DB.query('SELECT * FROM `post` ORDER BY `date` DESC');
+    let qString = `SELECT post.*, user.first_name, user.last_name FROM \`post\` INNER JOIN \`user\` ON post.user_id = ${id} WHERE ? ORDER BY \`date\` DESC`;
+    const posts = await DB.query(qString);
+    return posts;
+  } catch (error) {
+    Logger.error(error);
+    throw error;
+  }
+}
+
+
+async function findAllFriendPosts({ id }) {
+  try {
+    let qString = `SELECT DISTINCT p.id, p.user_id, p.title, u.first_name, u.last_name
+                  FROM (SELECT user.id, user.first_name, user.last_name from \`user\`
+                        INNER JOIN \`request\` ON (user.id = request.sender_id OR user.id = request.receiver_id)
+                        WHERE request.req_accepted = 1 AND request.blocked = 0 AND (request.sender_id = ${id} OR request.receiver_id = ${id}) AND user.id != ${id}) as u
+                        INNER JOIN post as p ON p.user_id = u.id ORDER BY \`date\` DESC`;
+    console.log({id});
+    const posts = await DB.query(qString);
     return posts;
   } catch (error) {
     Logger.error(error);
@@ -68,6 +86,7 @@ module.exports = {
   create,
   update,
   remove,
-  findAll,
   findOne,
+  findAllUserPosts,
+  findAllFriendPosts,
 }

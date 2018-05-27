@@ -148,7 +148,7 @@ function createPostFeedHTML(post) {
             <a href="/post/${post.id}" class="indigo-text"><h3 style="margin:0">${post.title}</h3></a>
             <div class="row">
               <div class="col s6">
-                <a href="/friend/${post.user_id}" class="indigo-text"><h5 class="truncate">#${post.user_id}</h5></a>
+                <a href="/friend/${post.user_id}" class="indigo-text"><h5 class="truncate">${post.first_name} ${post.last_name}</h5></a>
               </div>
               <div class="col s6">
                 <h5 class="right-align">${post.date}</h5>
@@ -172,7 +172,7 @@ function createPostHTML(post) {
             <h3 style="margin:0">${post.title}</h3>
             <div class="row">
               <div class="col s6">
-                <a href="/friend/${post.user_id}" class="indigo-text"><h5 class="truncate">#${post.user_id}</h5></a>
+                <a href="/friend/${post.user_id}" class="indigo-text"><h5 class="truncate">${post.first_name} ${post.last_name}</h5></a>
               </div>
               <div class="col s6">
                 <h5 class="right-align">${post.date}</h5>
