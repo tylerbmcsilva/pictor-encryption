@@ -53,9 +53,20 @@ async function findOne( id ) {
 }
 
 
-async function findAll() {
+async function findAllUser( user ) {
   try {
-    const posts = await DB.query('SELECT post.*, user.first_name, user.last_name FROM `post` INNER JOIN `user` ON post.user_id = user.id ORDER BY `date` DESC');
+    const posts = await DB.query('SELECT post.*, user.first_name, user.last_name FROM `post` INNER JOIN `user` ON post.user_id = user.id WHERE ? ORDER BY `date` DESC', user);
+    return posts;
+  } catch (error) {
+    Logger.error(error);
+    throw error;
+  }
+}
+
+
+async function findAllFriend( user ) {
+  try {
+    const posts = await DB.query('SELECT DISTINCT p.id, p.user_id, p.title, u.first_name, u.last_name FROM (SELECT user.id, user.first_name, user.last_name from `user` INNER JOIN `request` ON (user.id = request.sender_id OR user.id = request.receiver_id) WHERE request.req_accepted = 1 AND request.blocked = 0 AND (request.sender_id = ? OR request.receiver_id = ?) AND user.id != ?) as u INNER JOIN post as p ON p.user_id = u.id ORDER BY `date` DESC', [user, user, user]);
     return posts;
   } catch (error) {
     Logger.error(error);
@@ -68,6 +79,7 @@ module.exports = {
   create,
   update,
   remove,
-  findAll,
+  findAllUser,
   findOne,
+  findAllFriend,
 }
