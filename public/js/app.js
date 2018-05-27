@@ -1,4 +1,4 @@
-const PAGE_TYPES = ['feed', 'post', 'friend', 'friends', 'profile', 'settings'];
+const PAGE_TYPES = ['feed', 'post', 'friend', 'friends', 'profile', 'settings', 'search'];
 
 
 async function main(window, document) {
@@ -28,7 +28,8 @@ async function main(window, document) {
     // document.getElementsByTagName('main')[0].innerHTML += `<pre>${JSON.stringify(data)}</pre>`;
 
     populateDataFromServer(window.location.pathname, data);
-
+    //var elems = document.querySelectorAll('.autocomplete');
+    //var instances = M.Autocomplete.init(elems, friendsOptions);
   } catch (e) {
     console.error(e);
   } finally {
@@ -42,6 +43,7 @@ async function main(window, document) {
 function populateDataFromServer(path, data){
   const pathArray = path.split('/').filter(function(el){ return el !== ''});
   const pageName  = getPageFromPathArray(pathArray);
+  console.log(pageName);
   const page      = getPage(pageName);
 
   return page(data);
@@ -49,11 +51,11 @@ function populateDataFromServer(path, data){
 
 
 async function getDataFromUrl(url) {
-  return axios.get(url)
-    .catch( function (error) {
-      console.error(error);
-      throw error;
-    });
+      return axios.get(url)
+        .catch( function (error) {
+          console.error(error);
+          throw error;
+        });
 }
 
 
@@ -85,6 +87,9 @@ function getPage(pageName) {
       break;
     case 'testEncryption':
       return TestEncryptionPage;
+      break;
+    case 'search':
+      return SearchPage;
       break;
     default:
       console.error(`UNKNOWN PAGE "${pageName}"`);
@@ -182,11 +187,18 @@ function createPostHTML(post) {
 
 
 function FriendsPage(data) {
+
   const friendsFormatted = data.map( el => {
     let friend = {
         id:     el.id,
         name:   `${el.first_name} ${el.last_name}`,
-        photo:  '/images/profile/blank.png'
+        photo:  'https://i.imgur.com/FyWI0.jpg',
+        date: el.date,
+        location: el.location,
+        friend_bool: el.friend_bool,
+        rreq_bool: el.rreq_bool,
+        sreq_bool: el.sreq_bool,
+        blocked_bool: el.blocked_bool
       };
     return createFriendCard(friend);
   });
@@ -194,19 +206,68 @@ function FriendsPage(data) {
   return;
 }
 
+function SearchPage(data) {
+  const usersFormatted = data.map( el => {
+    let user = {
+        id:     el.id,
+        name:   `${el.first_name} ${el.last_name}`,
+        location: el.location,
+        photo:  'https://i.imgur.com/FyWI0.jpg', //replace with image eventually
+        friend_bool: el.friend_bool
+      };
+    return createInfoCard(user);
+  });
+  PageAppend('search_results', usersFormatted);
+  return;
+}
 
 function createFriendCard(friend) {
-  return `<div class="col s12 m4 l3">
-            <div class="card">
-              <div class="card-image">
-                <img src="${friend.photo}">
-                <span class="card-title">${friend.name}</span>
+  if(friend.friend_bool){
+    return `<div class="col s6 m4 l3">
+              <div class="card">
+                <div class="card-image">
+                  <img src="${friend.photo}">
+                  <span class="card-title">${friend.name}</span>
+                </div>
+                <div class="card-action">
+                  <a href="/friend/${friend.id}">Vist Profile</a>
+                </div>
+                <div class="card-action">
+                  <a class="red-text darken-4" href="/friends/delete/${friend.id}">Delete</a>
+                </div>
+                <div class="card-action">
+                  <a class="indigo-text darken-4" href="/friends/block/${friend.id}">Block</a>
+                </div>
               </div>
-              <div class="card-action">
-                <a href="/friend/${friend.id}">Vist Profile</a>
-              </div>
-            </div>
-          </div>`;
+            </div>`;
+  }
+  else{
+     return createInfoCard(friend);
+  }
+}
+
+function createInfoCard(user){
+  var link = `<a href="/friends/sendRequest/${user.id}">Send Friend Request</a>`;
+  if(user.friend_bool){
+    var link = `<a href="/friend/${user.id}">Vist Profile</a>`;
+  }
+  else if(user.sreq_bool){
+    var link = `<a >Request Sent: ${user.date}</a>`;
+  }
+  else if(user.blocked_bool){
+    var link = `<a href="/friends/unblock/${user.id}">Unblock User</a>`;
+  }
+  else if(user.rreq_bool){
+    var link = `<a href="/friends/accept/${user.id}" id="acceptRequest">Add User</a><br>` +
+      `<a href="/friends/delete/${user.id}" id="deleteFriend">Delete Request</a>`;
+  }
+
+  return `<li class="collection-item avatar">
+            <img src="${user.photo}" alt="" class="circle">
+            <span class="title">Name: ${user.name}</span>
+            <p>From: ${user.location}</p>
+            ${link}
+          </li>`;
 }
 
 
