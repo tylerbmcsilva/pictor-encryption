@@ -93,7 +93,7 @@ async function deleteFriendRequest(uId, notUId) {
   }
 }
 
-
+/*Working*/
 async function getSentRequests(id) {
   try {
     var qString = 'SELECT * FROM (SELECT u.first_name, u.last_name, u.id, u.location FROM `user` u '+
@@ -111,6 +111,7 @@ async function getSentRequests(id) {
   }
 }
 
+/*Working*/
 async function getReceivedRequests(id) {
   try {
     var qString = 'SELECT * FROM (SELECT u.first_name, u.last_name, u.id, u.location FROM `user` u '+
