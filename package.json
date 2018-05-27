@@ -17,7 +17,7 @@
     "url": "https://github.com/tylerbmcsilva/pictor-encryption/issues"
   },
   "engines": {
-    "node": "10.0.0"
+    "node": "10.*"
   },
   "homepage": "https://github.com/tylerbmcsilva/pictor-encryption#readme",
   "dependencies": {
