@@ -94,3 +94,12 @@ function hidePreloader(d) {
   plw.style.opacity = 0;
   plw.style.zIndex = -1;
 }
+
+
+function postDataToUrl(url, data) {
+  return axios.post(url, data)
+    .catch(function(err) {
+      // SILENTLY FAIL
+      return;
+    });
+}

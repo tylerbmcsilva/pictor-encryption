@@ -68,23 +68,9 @@ async function findAll() {
 }
 
 
-function authUser() {
-  return (req, res, next) => {
-    Logger.log(`
-      req.session.passport.user: ${JSON.
-        stringify(req.session.passport)}`);
-
-    if (req.isAuthenticated()) return next();
-
-    res.redirect('/');
-  }
-
-}
-
 async function findPass( { email, password }) {
   try {
     const results = await DB.query('SELECT `id`, `password` FROM `user` WHERE ?', {email});
-    //console.log(results);
     return results;
   }  catch (error) {
     Logger.error(error);
@@ -99,6 +85,5 @@ module.exports = {
   remove,
   findAll,
   findOne,
-  authUser,
   findPass
 }

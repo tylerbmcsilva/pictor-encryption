@@ -1,12 +1,12 @@
 const { Router }    = require('express');
-const { authUser }  = require('../../../models/user');
+const { authenticateUser }  = require('../../../models/authentication');
 
 
 const router    = new Router();
 module.exports  = router;
 
 
-router.use('/feed', authUser());
+router.use('/feed', authenticateUser());
 
 
 router.get('/feed', function(req, res) {

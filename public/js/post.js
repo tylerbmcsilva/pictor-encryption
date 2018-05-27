@@ -36,14 +36,6 @@ function main(window, document) {
     else
       return false;
   }
-
-  async function postDataToUrl(url, data) {
-    return axios.post(url, data)
-      .catch(function(err) {
-        // SILENTLY FAIL
-        return;
-      });
-  }
 }
 
 !function(w,d) {
