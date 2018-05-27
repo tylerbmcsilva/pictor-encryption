@@ -67,12 +67,11 @@ async function findAllUserPosts({ id }) {
 
 async function findAllFriendPosts({ id }) {
   try {
-    let qString = `SELECT DISTINCT p.id, p.user_id, p.title, u.first_name, u.last_name
+    let qString = `SELECT DISTINCT p.*, u.first_name, u.last_name
                   FROM (SELECT user.id, user.first_name, user.last_name from \`user\`
                         INNER JOIN \`request\` ON (user.id = request.sender_id OR user.id = request.receiver_id)
                         WHERE request.req_accepted = 1 AND request.blocked = 0 AND (request.sender_id = ${id} OR request.receiver_id = ${id}) AND user.id != ${id}) as u
                         INNER JOIN post as p ON p.user_id = u.id ORDER BY \`date\` DESC`;
-    console.log({id});
     const posts = await DB.query(qString);
     return posts;
   } catch (error) {
