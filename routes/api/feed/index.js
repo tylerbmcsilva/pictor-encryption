@@ -9,7 +9,7 @@ module.exports  = router;
 
 router.get('/feed', async function(req, res) {
   try {
-    const posts  = await Post.findAllFriend(req.session.passport.user);
+    const posts  = await Post.findAllFriendPosts({ id: req.session.passport.user });
     if(posts.length === 0) {
       // res.send('')
       // ****************************************
