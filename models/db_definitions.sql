@@ -12,10 +12,11 @@ CREATE TABLE `user` (
     `first_name` varchar(255) NOT NULL,
     `last_name` varchar(255) NOT NULL,
     `email` varchar(320) NOT NULL,
-    `password` binary(60) NOT NULL, 
+    `password` binary(60) NOT NULL,
     `location` varchar(255) NOT NULL,
     `public_key` varchar(2048) NOT NULL,
     `json_block` json,
+    `sounds_like` varchar(255),
     PRIMARY KEY(`id`),
     UNIQUE KEY(`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -41,8 +42,8 @@ CREATE TABLE `request` (
     `receiver_id` int NOT NULL,
     `accepted_date` datetime,
     `date` datetime,
-    `req_accepted` tinyint(1),
-    `blocked` tinyint(1),
+    `req_accepted` tinyint(1) DEFAULT 0,
+    `blocked` tinyint(1) DEFAULT 0,
     PRIMARY KEY(`id`),
     CONSTRAINT `request_ibfk_1` FOREIGN KEY (`sender_id`)
     REFERENCES `user`(`id`),

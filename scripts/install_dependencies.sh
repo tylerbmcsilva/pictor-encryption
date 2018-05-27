@@ -1,16 +1,22 @@
 #!/bin/bash
-yum update -y
+sudo yum update -y
+sudo yum install nginx -y
+sudo service nginx start
 
 cd /tmp/
 
-echo -e "Installing Node@10"
-sudo curl --silent --location https://rpm.nodesource.com/setup_10.x | bash -
-echo -e "Installing C++"
+echo -e "Installing NVM"
+sudo curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+sudo yum install -y nodejs
 sudo yum install -y gcc-c++ make
-echo -e "Installing NPM"
-sudo yum install -y nodejs npm
+
+curl -sL https://dl.yarnpkg.com/rpm/yarn.repo | sudo tee /etc/yum.repos.d/yarn.repo
+sudo yum install yarn -y
+
+echo -e "Restarting Bash"
+source ~/.bashrc
 
 echo -e "Installing PM2"
-npm install -g pm2
+sudo npm install -g pm2
 echo -e "Installing Application Dependencies"
-npm install
+sudo yarn install

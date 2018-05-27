@@ -1,10 +1,12 @@
 const DB        = require('../database');
 const Logger    = require('../logger');
 const passport  = require('passport');
+const metaphone = require('metaphone')
 
 async function create({ first_name, last_name, email, password, location, public_key }) {
   try {
     // Hash password w/ bcrypt
+    const sounds_like = metaphone(first_name+" "+last_name);
     const user = await DB.query('INSERT INTO `user` SET ?', {
         first_name,
         last_name,
@@ -12,6 +14,7 @@ async function create({ first_name, last_name, email, password, location, public
         password,
         location,
         public_key,
+        sounds_like
       });
       return user;
   } catch (error) {
@@ -64,6 +67,7 @@ async function findAll() {
   }
 }
 
+
 function authUser() {
   return (req, res, next) => {
     Logger.log(`
@@ -80,12 +84,14 @@ function authUser() {
 async function findPass( { email, password }) {
   try {
     const results = await DB.query('SELECT `id`, `password` FROM `user` WHERE ?', {email});
+    //console.log(results);
     return results;
   }  catch (error) {
     Logger.error(error);
     throw error;
   }
 }
+
 
 module.exports = {
   create,

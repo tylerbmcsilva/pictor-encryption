@@ -17,7 +17,7 @@
     "url": "https://github.com/tylerbmcsilva/pictor-encryption/issues"
   },
   "engines": {
-    "node": "10.0.0"
+    "node": "10.*"
   },
   "homepage": "https://github.com/tylerbmcsilva/pictor-encryption#readme",
   "dependencies": {
@@ -32,6 +32,7 @@
     "express-mysql-session": "^1.3.0",
     "express-session": "^1.15.6",
     "express-winston": "^2.5.1",
+    "metaphone": "^1.0.3",
     "mocha": "^5.1.1",
     "mysql": "^2.15.0",
     "nan": "^2.10.0",
