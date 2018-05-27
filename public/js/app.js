@@ -192,7 +192,9 @@ function FriendsPage(data) {
     let friend = {
         id:     el.id,
         name:   `${el.first_name} ${el.last_name}`,
-        photo:  '/images/profile/blank.png',
+        photo:  'https://i.imgur.com/FyWI0.jpg',
+        date: el.date,
+        location: el.location,
         friend_bool: el.friend_bool,
         rreq_bool: el.rreq_bool,
         sreq_bool: el.sreq_bool,
@@ -213,7 +215,7 @@ function SearchPage(data) {
         photo:  'https://i.imgur.com/FyWI0.jpg', //replace with image eventually
         friend_bool: el.friend_bool
       };
-    return createSearchCard(user);
+    return createInfoCard(user);
   });
   PageAppend('search_results', usersFormatted);
   return;
@@ -231,21 +233,21 @@ function createFriendCard(friend) {
                   <a href="/friend/${friend.id}">Vist Profile</a>
                 </div>
                 <div class="card-action">
-                  <a class="red-text darken-4" href="/friend/delete/${friend.id}">Delete</a>
+                  <a class="red-text darken-4" href="/friends/delete/${friend.id}">Delete</a>
                 </div>
                 <div class="card-action">
-                  <a class="indigo-text darken-4" href="/friend/block/${friend.id}">Block</a>
+                  <a class="indigo-text darken-4" href="/friends/block/${friend.id}">Block</a>
                 </div>
               </div>
             </div>`;
   }
   else{
-     return createSearchCard(friend);
+     return createInfoCard(friend);
   }
 }
 
-function createSearchCard(user){
-  var link = `<a href="/friend/sendRequest/${user.id}">Send Friend Request</a>`;
+function createInfoCard(user){
+  var link = `<a href="/friends/sendRequest/${user.id}">Send Friend Request</a>`;
   if(user.friend_bool){
     var link = `<a href="/friend/${user.id}">Vist Profile</a>`;
   }
@@ -253,11 +255,11 @@ function createSearchCard(user){
     var link = `<a >Request Sent: ${user.date}</a>`;
   }
   else if(user.blocked_bool){
-    var link = `<a href="/friend/unblock/${user.id}">Unblock User</a>`;
+    var link = `<a href="/friends/unblock/${user.id}">Unblock User</a>`;
   }
   else if(user.rreq_bool){
-    var link = `<a href="/friend/accept/${user.id}">Add User</a><br>` +
-      `<a href="/friend/delete/${user.id}">Delete Request</a>`;
+    var link = `<a href="/friends/accept/${user.id}" id="acceptRequest">Add User</a><br>` +
+      `<a href="/friends/delete/${user.id}" id="deleteFriend">Delete Request</a>`;
   }
 
   return `<li class="collection-item avatar">

@@ -67,7 +67,7 @@ async function sendFriendRequest( { receiver_id, sender_id }) {
   }
 }
 
-
+/*Working*/
 async function acceptFriendRequest(receiver_id, sender_id) {
   try {
     const results = await DB.query('UPDATE `request` SET `req_accepted`=1 WHERE `receiver_id`=? AND `sender_id`=?',
@@ -139,6 +139,7 @@ async function getBlockedUsers(id) {
       'UNION SELECT r.sender_id FROM `request` r '+
       'WHERE r.receiver_id=? AND r.blocked=1);';
     const users = await DB.query(qString, [id, id, id]);
+    console.log(users);
     return users;
   } catch (error) {
     console.error(error);
@@ -146,11 +147,15 @@ async function getBlockedUsers(id) {
   }
 }
 
-async function blockUser(receiver_id, sender_id) {
+/* Working */
+async function blockUser(uId, notUId) {
   try {
     // needs to be changed to reflect situations where ids are swapped (see delete friend request query)
-    const results = await DB.query('UPDATE `request` SET `blocked`=1 WHERE `receiver_id`=? AND `sender_id`=?',
-      [receiver_id, sender_id]);
+    var qString = 'UPDATE `request` SET `blocked`=1 '  +
+      'WHERE (`receiver_id`=? AND `sender_id`=?) ' +
+      'OR (`receiver_id`=? AND `sender_id`=?)';
+    const results = await DB.query(qString,
+      [uId, notUId, notUId, uId ]);
     return results;
   }  catch (error) {
     Logger.error(error);
@@ -158,11 +163,15 @@ async function blockUser(receiver_id, sender_id) {
   }
 }
 
-async function unblockUser(receiver_id, sender_id) {
+/* Working */
+async function unblockUser(uId, notUId) {
   try {
-        // needs to be changed to reflect situations where ids are swapped (see delete friend request query)
-    const results = await DB.query('UPDATE `request` SET `blocked`=0 WHERE `receiver_id`=? AND `sender_id`=?',
-      [receiver_id, sender_id]);
+    // needs to be changed to reflect situations where ids are swapped (see delete friend request query)
+    var qString = 'UPDATE `request` SET `blocked`=0 ' +
+      'WHERE (`receiver_id`=? AND `sender_id`=?) ' +
+      'OR (`receiver_id`=? AND `sender_id`=?)';
+    const results = await DB.query(qString,
+      [uId, notUId, notUId, uId ]);
     return results;
   }  catch (error) {
     Logger.error(error);

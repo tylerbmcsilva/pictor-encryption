@@ -9,7 +9,7 @@ module.exports  = router;
 router.use('/friends', authUser());
 router.use('/friend', authUser());
 
-router.get('/friends', function(req, res) {
+router.get('/friends*', function(req, res) {
   res.render('app/user_list');
 });
 
@@ -17,10 +17,6 @@ router.get('/friends', function(req, res) {
 router.get('/friend/:id', function(req, res) {
   res.render('app/user');
 });
-
-router.get('/friend/delete/*', function(req, res){
+router.get('/friends/*', function(req, res) {
   res.render('app/user_list');
-})
-router.get('/friend/sendRequest/*', function(req, res){
-  res.render('app/user_list');
-})
+});

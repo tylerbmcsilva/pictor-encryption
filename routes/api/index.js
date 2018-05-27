@@ -15,4 +15,4 @@ router.use(require('./user'));
 router.use(require('./post'));
 router.use(require('./settings'));
 router.use(require('./search'));
-router.use(require('./friend')); 
+router.use(require('./friends')); 
