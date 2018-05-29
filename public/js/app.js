@@ -9,15 +9,14 @@ async function main(window, document) {
     // indexedDBConn.close();
     // console.log(keys.privateKey);
 
-    // TODO: Figure out a way to handle other pages we don't want to load data on
-    if(shouldSkipLoading(window.location.pathname))
+    if (shouldSkipLoading(window.location.pathname))
       return;
 
     // Request data from the server
     const dataSourceURL = `${window.location.origin}/api${window.location.pathname}`;
     const { data }      = await getDataFromUrl(dataSourceURL);
-    console.log(data);
-    if(data === '') {
+    // console.log(data);
+    if (data === '') {
       window.location.replace(`${window.location.origin}/not-found`);
       return;
     }
@@ -33,8 +32,8 @@ async function main(window, document) {
   } catch (e) {
     console.error(e);
   } finally {
-    setTimeout(function() {
-      hidePreloader(document);
+    setTimeout(() => {
+      hidePreloader();
     }, 1500);
   }
 
@@ -49,7 +48,7 @@ async function main(window, document) {
         return false;
         break;
     }
-    switch(pathname) {
+    switch (pathname) {
       case '/post/new':
       case '/post/edit':
         return true;
@@ -61,18 +60,20 @@ async function main(window, document) {
   }
 
 
-  function populateDataFromServer(path, data){
-    const pathArray = path.split('/').filter(function(el){ return el !== ''});
-    const pageName  = getPageFromPathArray(pathArray);
+  function populateDataFromServer(path, data) {
+    const pathArray = path.split('/').filter(function(el) {
+      return el !== ''
+    });
+    const pageName = getPageFromPathArray(pathArray);
     console.log(pageName);
-    const page      = getPage(pageName);
+    const page = getPage(pageName);
 
     return page(data);
   }
 
 
   function getPageFromPathArray(pathArray) {
-    const pages = pathArray.filter(function(path){
+    const pages = pathArray.filter(function(path) {
       return PAGE_TYPES.includes(path);
     })
     return pages[0];
@@ -80,7 +81,7 @@ async function main(window, document) {
 
 
   function getPage(pageName) {
-    switch(pageName){
+    switch (pageName) {
       case 'feed':
         return FeedPage;
         break;
@@ -115,10 +116,9 @@ async function main(window, document) {
   function PageMapping(mapping) {
     let i;
     for (i = 0; i < mapping.length; i++) {
-      if (mapping[i].id === 'user-picture' && mapping[i].data ) {
+      if (mapping[i].id === 'user-picture' && mapping[i].data) {
         document.getElementById(mapping[i].id).src = mapping[i].data;
-      }
-      else if (mapping[i].data){
+      } else if (mapping[i].data) {
         document.getElementById(mapping[i].id).innerHTML = mapping[i].data;
       }
     }
@@ -128,10 +128,9 @@ async function main(window, document) {
   function SettingsMapping(mapping) {
     let i;
     for (i = 0; i < mapping.length; i++) {
-      if (mapping[i].id === 'user-picture' && mapping[i].data ) {
+      if (mapping[i].id === 'user-picture' && mapping[i].data) {
         document.getElementById(mapping[i].id).src = mapping[i].data;
-      }
-      else if (mapping[i].data){
+      } else if (mapping[i].data) {
         // console.log(mapping[i].id);
         document.getElementById(mapping[i].id).value = mapping[i].data;
       }
@@ -148,8 +147,8 @@ async function main(window, document) {
   }
 
 
-  function FeedPage(data){
-    let postsListFormatted = data.map( el => {
+  function FeedPage(data) {
+    let postsListFormatted = data.map(el => {
       return createPostFeedHTML(el);
     });
 
@@ -177,8 +176,8 @@ async function main(window, document) {
   }
 
 
-  function PostPage(data){
-    PageAppend('post_section', [ createPostHTML(data) ]);
+  function PostPage(data) {
+    PageAppend('post_section', [createPostHTML(data)]);
     return;
   }
 
@@ -211,23 +210,22 @@ async function main(window, document) {
 
   function FriendsPage(data) {
 
-    const friendsFormatted = data.friends.map( (el) => {
+    const friendsFormatted = data.friends.map((el) => {
       let friend = {
-          id:     el.id,
-          name:   `${el.first_name} ${el.last_name}`,
-          photo:  'https://i.imgur.com/FyWI0.jpg',
-        };
+        id: el.id,
+        name: `${el.first_name} ${el.last_name}`,
+        photo: 'https://i.imgur.com/FyWI0.jpg',
+      };
       return createFriendCard(friend);
     });
     PageAppend('friends_list', friendsFormatted);
 
-
-    const currentInboundRequests = data.currentRequests.map( (el) => {
-      if(el.id === el.sender_id){
+    const currentInboundRequests = data.currentRequests.map((el) => {
+      if (el.id === el.sender_id) {
         return createCollectionItem({
-          title:  `${el.first_name} ${el.last_name}`,
-          link:   `#`,
-          icon:   'check'
+          title: `${el.first_name} ${el.last_name}`,
+          link: `#`,
+          icon: 'check'
         });
       } else {
         return '';
@@ -235,64 +233,32 @@ async function main(window, document) {
     });
     PageAppend('received_requests', currentInboundRequests);
 
-    const currentOutboundRequests = data.currentRequests.map( (el) => {
-      if(el.id === el.receiver_id){
+    const currentOutboundRequests = data.currentRequests.map((el) => {
+      if (el.id === el.receiver_id) {
         return createCollectionItem({
-          title:  `${el.first_name} ${el.last_name}`,
-          link:   `/friend/${el.id}`,
-          icon:   'access_time'
+          title: `${el.first_name} ${el.last_name}`,
+          link: `/friend/${el.id}`,
+          icon: 'access_time'
         });
       } else {
         return '';
       }
     });
-    console.log(currentInboundRequests, currentOutboundRequests);
     PageAppend('sent_requests', currentOutboundRequests);
-    
+
     return;
-}
- 
-
-function createFriendCard(friend) {
-    return `<div class="col s6 m4 l3">
-              <div class="card">
-                <div class="card-image">
-                  <img src="${friend.photo}">
-                  <span class="card-title">${friend.name}</span>
-                </div>
-                <div class="card-action">
-                  <a href="/friend/${friend.id}">Visit Profile</a>
-                </div>
-                <div class="card-action">
-                  <a class="red-text darken-4" href="/friends/delete/${friend.id}">Delete</a>
-                </div>
-                <div class="card-action">
-                  <a class="indigo-text darken-4" href="/friends/block/${friend.id}">Block</a>
-                </div>
-              </div>
-            </div>`;
-}
-
-
-function createInfoCard(user){
-  var link = `<a href="/friends/sendRequest/${user.id}">Send Friend Request</a>`;
-  if(user.friend_bool){
-    var link = `<a href="/friend/${user.id}">Visit Profile</a>`;
-  }
-  else if(user.sreq_bool){
-    var link = `<a >Request Sent: ${user.date}</a>`;
   }
 
 
   function createFriendCard(friend) {
-      return `<div class="col s6 m4 l3">
+    return `<div class="col s6 m4 l3">
                 <div class="card">
                   <div class="card-image">
                     <img src="${friend.photo}">
                     <span class="card-title">${friend.name}</span>
                   </div>
                   <div class="card-action">
-                    <a href="/friend/${friend.id}">Vist Profile</a>
+                    <a href="/friend/${friend.id}">Visit Profile</a>
                   </div>
                   <div class="card-action">
                     <a class="red-text darken-4" href="/friends/delete/${friend.id}">Delete</a>
@@ -310,124 +276,104 @@ function createInfoCard(user){
   }
 
 
-  function createInfoCard(user){
-    var link = `<a href="/friends/sendRequest/${user.id}">Send Friend Request</a>`;
-    if(user.friend_bool){
-      var link = `<a href="/friend/${user.id}">Vist Profile</a>`;
-    }
-    else if(user.sreq_bool){
-      var link = `<a >Request Sent: ${user.date}</a>`;
-    }
-    else if(user.blocked_bool){
-      var link = `<a href="/friends/unblock/${user.id}">Unblock User</a>`;
-    }
-    else if(user.rreq_bool){
-      var link = `<a href="/friends/accept/${user.id}" id="acceptRequest">Add User</a><br>` +
-        `<a href="/friends/delete/${user.id}" id="deleteFriend">Delete Request</a>`;
-    }
-
+  function createInfoCard(user) {
     return `<li class="collection-item avatar">
               <img src="${user.photo}" alt="" class="circle">
               <span class="title">Name: ${user.name}</span>
               <p>From: ${user.location}</p>
-              ${link}
+              ${user.url}
             </li>`;
   }
 
 
   function SearchPage(data) {
-    const usersFormatted = data.map( el => {
+    const usersFormatted = data.map(el => {
       let user = {
-          id:     el.id,
-          name:   `${el.first_name} ${el.last_name}`,
-          location: el.location,
-          photo:  'https://i.imgur.com/FyWI0.jpg', //replace with image eventually
-          friend_bool: el.friend_bool
-        };
+        id:       el.id,
+        name:     `${el.first_name} ${el.last_name}`,
+        location: el.location,
+        photo:    'https://i.imgur.com/FyWI0.jpg', //replace with image eventually
+        url:      `/friend/${el.id}`
+      };
       return createInfoCard(user);
     });
-    PageAppend('search_results', usersFormatted);
-    return;
+    return PageAppend('search_results', usersFormatted);
   }
 
-function createFriendListCard(user){
-  let link = `<a href="/friend/${user.id}">Visit Profile</a>`;
-  if(user.blocked_bool){
-    link = `<a href="/friends/unblock/${user.id}">Unblock User</a>`;
+
+  function createFriendListCard(user) {
+    return `<li class="collection-item avatar">
+              <img src="${user.photo}" alt="" class="circle">
+              <span class="title">${user.name}</span>
+              <p><a href="/friend/${user.id}">Visit Profile</a></p>
+            </li>`;
   }
 
-  return `<li class="collection-item avatar">
-            <img src="${user.photo}" alt="" class="circle">
-            <span class="title">${user.name}</span>
-            <p>${link}</p>
-          </li>`;
-}
 
   function ProfileFriendsList(data) {
-    const friendsFormatted = data.friends.map( (el) => {
+    const friendsFormatted = data.friends.map((el) => {
       let friend = {
-          id:     el.id,
-          name:   `${el.first_name} ${el.last_name}`,
-          photo:  'https://i.imgur.com/FyWI0.jpg',
-          // location: `${el.location}`
-        };
+        id: el.id,
+        name: `${el.first_name} ${el.last_name}`,
+        photo: 'https://i.imgur.com/FyWI0.jpg',
+        // location: `${el.location}`
+      };
       return createFriendListCard(friend);
     });
     PageAppend('friends_list', friendsFormatted);
   }
 
 
-function UserPage(data){
-  const { basic, encrypted, posts, friends } = data;
-  if(posts){
-    FeedPage(posts);
-  }
-  if(friends){
-    ProfileFriendsList(friends);
-  }
+  function UserPage(data) {
+    const { basic, encrypted, posts, friends } = data;
 
-  let pageMapping = [
-      {
-        id:   'user-name',
+    if (posts) {
+      FeedPage(posts);
+    }
+    if (friends) {
+      ProfileFriendsList(friends);
+    }
+
+    let pageMapping = [{
+        id: 'user-name',
         data: `${basic.name.first} ${basic.name.last}`
       },
       {
-        id:   'user-location',
+        id: 'user-location',
         data: basic.location
       },
       {
-        id:   'user-email',
+        id: 'user-email',
         data: basic.email
       }
     ];
-    if(encrypted){
-      Array.prototype.push.apply(pageMapping, [
-        {
-          id:   'user-phone',
+    if (encrypted) {
+      Array.prototype.push.apply(pageMapping, [{
+          id: 'user-phone',
           data: encrypted.phone
         },
         {
-          id:   'user-gender',
+          id: 'user-gender',
           data: encrypted.gender
         },
         {
-          id:   'user-birthdate',
+          id: 'user-birthdate',
           data: encrypted.birthdate
         },
         {
-          id:   'user-language',
+          id: 'user-language',
           data: encrypted.language
         },
         {
-          id:   'user-school',
+          id: 'user-school',
           data: encrypted.school
         },
         {
-          id:   'user-work',
+          id: 'user-work',
           data: encrypted.work
         },
         {
-          id:   'user-picture',
+          id: 'user-picture',
           data: encrypted.picture
         }
       ]);
@@ -436,19 +382,19 @@ function UserPage(data){
   }
 
 
-  function SettingsPage(data){
+  function SettingsPage(data) {
     const { basic, encrypted } = data;
-    let pageMapping = [
-      {
-        id:   'user-firstname',
+
+    let pageMapping = [{
+        id: 'user-firstname',
         data: basic.name.first
       },
       {
-        id:   'user-lastname',
+        id: 'user-lastname',
         data: basic.name.last
       },
       {
-        id:   'user-location',
+        id: 'user-location',
         data: basic.location
       },
       // {
@@ -456,34 +402,33 @@ function UserPage(data){
       //   data: basic.email
       // }
     ];
-    if(encrypted){
-      Array.prototype.push.apply(pageMapping, [
-        {
-          id:   'user-phone',
+    if (encrypted) {
+      Array.prototype.push.apply(pageMapping, [{
+          id: 'user-phone',
           data: encrypted.phone
         },
         {
-          id:   'user-gender',
+          id: 'user-gender',
           data: encrypted.gender
         },
         {
-          id:   'user-birthdate',
+          id: 'user-birthdate',
           data: encrypted.birthdate
         },
         {
-          id:   'user-language',
+          id: 'user-language',
           data: encrypted.language
         },
         {
-          id:   'user-school',
+          id: 'user-school',
           data: encrypted.school
         },
         {
-          id:   'user-work',
+          id: 'user-work',
           data: encrypted.work
         },
         {
-          id:   'user-picture',
+          id: 'user-picture',
           data: encrypted.picture
         }
       ]);
@@ -492,7 +437,7 @@ function UserPage(data){
   }
 
 
-  function formatSQLDatetime( datetime ) {
+  function formatSQLDatetime(datetime) {
     const d = new Date(datetime);
     return d.toDateString();
   }
