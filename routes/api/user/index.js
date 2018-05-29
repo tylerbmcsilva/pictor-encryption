@@ -13,10 +13,10 @@ module.exports    = router;
 
 router.get('/profile', async function(req, res) {
   try {
-    const id = req.session.passport.user
-    const user  = await User.findOne({ id: id });
-    const posts = await Post.findAllUserPosts({ id: id });
-    const friends   = await Friend.getFriends({ id: id });
+    const id      = req.session.passport.user
+    const user    = await User.findOne({ id: id });
+    const posts   = await Post.findAllUserPosts({ id: id });
+    const friends = await Friend.getAllFriendsAndRequests({ id: id });
 
     if(!user)
       res.status(404).json({ error: 'User not found' });

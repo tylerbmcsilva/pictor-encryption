@@ -185,18 +185,6 @@ function createPostHTML(post) {
           </div>`;
 }
 
-function FormatFriendsCard(data) {
-  const friendsFormatted = data.map( (el) => {
-    let friend = {
-        id:     el.id,
-        name:   `${el.first_name} ${el.last_name}`,
-        photo:  'https://i.imgur.com/FyWI0.jpg',
-      };
-    return createFriendCard(friend);
-  });
-  PageAppend('friends_list', friendsFormatted);
-}
-
 
 function FriendsPage(data) {
 
@@ -272,7 +260,7 @@ function createCollectionItem(item) {
 function createInfoCard(user){
   var link = `<a href="/friends/sendRequest/${user.id}">Send Friend Request</a>`;
   if(user.friend_bool){
-    var link = `<a href="/friend/${user.id}">Vist Profile</a>`;
+    var link = `<a href="/friend/${user.id}">Visit Profile</a>`;
   }
   else if(user.sreq_bool){
     var link = `<a >Request Sent: ${user.date}</a>`;
@@ -310,13 +298,40 @@ function SearchPage(data) {
 }
 
 
+function createFriendListCard(user){
+  let link = `<a href="/friend/${user.id}">Visit Profile</a>`;
+  if(user.blocked_bool){
+    link = `<a href="/friends/unblock/${user.id}">Unblock User</a>`;
+  }
+
+  return `<li class="collection-item avatar">
+            <img src="${user.photo}" alt="" class="circle">
+            <span class="title">${user.name}</span>
+            <p>${link}</p>
+          </li>`;
+}
+
+function ProfileFriendsList(data) {
+  const friendsFormatted = data.friends.map( (el) => {
+    let friend = {
+        id:     el.id,
+        name:   `${el.first_name} ${el.last_name}`,
+        photo:  'https://i.imgur.com/FyWI0.jpg',
+        // location: `${el.location}`
+      };
+    return createFriendListCard(friend);
+  });
+  PageAppend('friends_list', friendsFormatted);
+}
+
+
 function UserPage(data){
   const { basic, encrypted, posts, friends } = data;
   if(posts){
     FeedPage(posts);
   }
   if(friends){
-    FormatFriendsCard(friends);
+    ProfileFriendsList(friends);
   }
 
   let pageMapping = [

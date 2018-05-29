@@ -1,5 +1,6 @@
 const { Router }  = require('express');
-const Friend       = require('../../../models/friend');
+const Friend      = require('../../../models/friend');
+const Post        = require('../../../models/post');
 const Logger      = require('../../../models/logger');
 const passport    = require('passport');
 
@@ -142,7 +143,10 @@ router.get('/friends', async function(req, res) {
 
 router.get('/friend/:id', async function(req, res) {
   try {
-    const user  = await Friend.getUser({ id: req.user, friendId: req.params.id });
+    const friendId = req.params.id
+    const user  = await Friend.getUser({ id: req.user, friendId: friendId });
+    const posts   = await Post.findAllUserPosts({ id: friendId });
+    const friends = await Friend.getAllFriendsAndRequests({ id: friendId });
     if(!user) {
       // ****************************************
       // IF NOTHING, SEND TEST DATA FOR NOW
@@ -160,7 +164,9 @@ router.get('/friend/:id', async function(req, res) {
           email:    user.email,
           location: user.location
         },
-        encrypted: JSON.parse(user.json_block)
+        encrypted: JSON.parse(user.json_block),
+        posts,
+        friends
       });
     }
   } catch (error) {
