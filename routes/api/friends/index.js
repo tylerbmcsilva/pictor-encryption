@@ -160,7 +160,7 @@ router.get('/friend/:id', async function(req, res) {
           email:    user.email,
           location: user.location
         },
-        encrypted: user.json_block
+        encrypted: JSON.parse(user.json_block)
       });
     }
   } catch (error) {

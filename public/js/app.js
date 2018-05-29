@@ -185,6 +185,18 @@ function createPostHTML(post) {
           </div>`;
 }
 
+function FormatFriendsCard(data) {
+  const friendsFormatted = data.map( (el) => {
+    let friend = {
+        id:     el.id,
+        name:   `${el.first_name} ${el.last_name}`,
+        photo:  'https://i.imgur.com/FyWI0.jpg',
+      };
+    return createFriendCard(friend);
+  });
+  PageAppend('friends_list', friendsFormatted);
+}
+
 
 function FriendsPage(data) {
 
@@ -241,7 +253,7 @@ function createFriendCard(friend) {
                   <span class="card-title">${friend.name}</span>
                 </div>
                 <div class="card-action">
-                  <a href="/friend/${friend.id}">Vist Profile</a>
+                  <a href="/friend/${friend.id}">Visit Profile</a>
                 </div>
                 <div class="card-action">
                   <a class="red-text darken-4" href="/friends/delete/${friend.id}">Delete</a>
@@ -299,7 +311,14 @@ function SearchPage(data) {
 
 
 function UserPage(data){
-  const { basic, encrypted } = data;
+  const { basic, encrypted, posts, friends } = data;
+  if(posts){
+    FeedPage(posts);
+  }
+  if(friends){
+    FormatFriendsCard(friends);
+  }
+
   let pageMapping = [
     {
       id:   'user-name',
