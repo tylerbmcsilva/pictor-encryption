@@ -55,7 +55,7 @@ async function findOne( id ) {
 
 async function findAllUserPosts({ id }) {
   try {
-    let qString = `SELECT post.*, user.first_name, user.last_name FROM \`post\` INNER JOIN \`user\` ON post.user_id = ${id} WHERE ? ORDER BY \`date\` DESC`;
+    let qString = `SELECT post.*, user.first_name, user.last_name FROM \`post\` INNER JOIN \`user\` ON post.user_id = user.id WHERE user.id = ${id} ORDER BY \`date\` DESC`;
     const posts = await DB.query(qString);
     return posts;
   } catch (error) {
