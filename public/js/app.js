@@ -40,6 +40,15 @@ async function main(window, document) {
 
 
   function shouldSkipLoading(pathname) {
+    switch (true) {
+      case /\/post\/[0-9]\/edit/.test(pathname):
+      case /\/post\/new/.test(pathname):
+        return true;
+        break;
+      default:
+        return false;
+        break;
+    }
     switch(pathname) {
       case '/post/new':
       case '/post/edit':
@@ -157,7 +166,7 @@ async function main(window, document) {
                   <a href="/friend/${post.user_id}" class="indigo-text"><h5 class="truncate">${post.first_name} ${post.last_name}</h5></a>
                 </div>
                 <div class="col s6">
-                  <h5 class="right-align">${post.date}</h5>
+                  <h5 class="right-align">${formatSQLDatetime(post.date)}</h5>
                 </div>
               </div>
               <a href="${post.url ? post.url : '#'}" class="indigo-text ${post.url ? '' : 'hide'}"><h5>${post.url ? post.url : ''}</h5></a>
@@ -176,13 +185,20 @@ async function main(window, document) {
 
   function createPostHTML(post) {
     return `<div class="card-panel">
-              <h3 style="margin:0">${post.title}</h3>
+              <div class="row">
+                <h3 class="col s10" style="margin:0">${post.title}</h3>
+                <div class="col s2 ${post.editable ? '' : 'hide'} right-align">
+                  <a href="#" class="transparent blue-grey-text lighten-5-text"><i class="small material-icons">edit</i></a>
+                  <a href="#" class="transparent blue-grey-text lighten-5-text"><i class="small material-icons">delete_forever</i></a>
+                </div>
+              </div>
+
               <div class="row">
                 <div class="col s6">
                   <a href="/friend/${post.user_id}" class="indigo-text"><h5 class="truncate">${post.first_name} ${post.last_name}</h5></a>
                 </div>
                 <div class="col s6">
-                  <h5 class="right-align">${post.date}</h5>
+                  <h5 class="right-align">${formatSQLDatetime(post.date)}</h5>
                 </div>
               </div>
               <a href="${post.url ? post.url : '#'}" class="indigo-text ${post.url ? '' : 'hide'}"><h5>${post.url ? post.url : ''}</h5></a>
@@ -412,6 +428,12 @@ async function main(window, document) {
       ]);
     }
     return SettingsMapping(pageMapping);
+  }
+
+
+  function formatSQLDatetime( datetime ) {
+    const d = new Date(datetime);
+    return d.toDateString();
   }
 }
 

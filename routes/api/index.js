@@ -8,6 +8,7 @@ module.exports  = router;
 
 router.use('/*', authenticateUser());
 
+
 router.use(require('./feed'));
 router.use(require('./server'));
 router.use(require('./user'));
