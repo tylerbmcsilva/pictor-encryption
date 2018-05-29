@@ -235,7 +235,6 @@ async function main(window, document) {
     });
     PageAppend('received_requests', currentInboundRequests);
 
-
     const currentOutboundRequests = data.currentRequests.map( (el) => {
       if(el.id === el.receiver_id){
         return createCollectionItem({
@@ -249,10 +248,39 @@ async function main(window, document) {
     });
     console.log(currentInboundRequests, currentOutboundRequests);
     PageAppend('sent_requests', currentOutboundRequests);
-
-
-
+    
     return;
+}
+ 
+
+function createFriendCard(friend) {
+    return `<div class="col s6 m4 l3">
+              <div class="card">
+                <div class="card-image">
+                  <img src="${friend.photo}">
+                  <span class="card-title">${friend.name}</span>
+                </div>
+                <div class="card-action">
+                  <a href="/friend/${friend.id}">Visit Profile</a>
+                </div>
+                <div class="card-action">
+                  <a class="red-text darken-4" href="/friends/delete/${friend.id}">Delete</a>
+                </div>
+                <div class="card-action">
+                  <a class="indigo-text darken-4" href="/friends/block/${friend.id}">Block</a>
+                </div>
+              </div>
+            </div>`;
+}
+
+
+function createInfoCard(user){
+  var link = `<a href="/friends/sendRequest/${user.id}">Send Friend Request</a>`;
+  if(user.friend_bool){
+    var link = `<a href="/friend/${user.id}">Visit Profile</a>`;
+  }
+  else if(user.sreq_bool){
+    var link = `<a >Request Sent: ${user.date}</a>`;
   }
 
 
@@ -322,10 +350,43 @@ async function main(window, document) {
     return;
   }
 
+function createFriendListCard(user){
+  let link = `<a href="/friend/${user.id}">Visit Profile</a>`;
+  if(user.blocked_bool){
+    link = `<a href="/friends/unblock/${user.id}">Unblock User</a>`;
+  }
 
-  function UserPage(data){
-    const { basic, encrypted } = data;
-    let pageMapping = [
+  return `<li class="collection-item avatar">
+            <img src="${user.photo}" alt="" class="circle">
+            <span class="title">${user.name}</span>
+            <p>${link}</p>
+          </li>`;
+}
+
+  function ProfileFriendsList(data) {
+    const friendsFormatted = data.friends.map( (el) => {
+      let friend = {
+          id:     el.id,
+          name:   `${el.first_name} ${el.last_name}`,
+          photo:  'https://i.imgur.com/FyWI0.jpg',
+          // location: `${el.location}`
+        };
+      return createFriendListCard(friend);
+    });
+    PageAppend('friends_list', friendsFormatted);
+  }
+
+
+function UserPage(data){
+  const { basic, encrypted, posts, friends } = data;
+  if(posts){
+    FeedPage(posts);
+  }
+  if(friends){
+    ProfileFriendsList(friends);
+  }
+
+  let pageMapping = [
       {
         id:   'user-name',
         data: `${basic.name.first} ${basic.name.last}`

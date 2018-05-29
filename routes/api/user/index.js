@@ -2,6 +2,8 @@ const Encryption  = require('../../../models/encryption');
 const Logger      = require('../../../models/logger');
 const { Router }  = require('express');
 const User        = require('../../../models/user');
+const Post        = require('../../../models/post');
+const Friend       = require('../../../models/friend');
 const passport    = require('passport');
 const bcrypt = require('bcrypt');
 
@@ -11,7 +13,12 @@ module.exports    = router;
 
 router.get('/profile', async function(req, res) {
   try {
-    const user  = await User.getOne({ id: req.session.passport.user });
+
+    const id      = req.session.passport.user
+    const user    = await User.findOne({ id: id });
+    const posts   = await Post.findAllUserPosts({ id: id });
+    const friends = await Friend.getAllFriendsAndRequests({ id: id });
+
     if(!user)
       res.status(404).json({ error: 'User not found' });
     else {
@@ -26,7 +33,9 @@ router.get('/profile', async function(req, res) {
           email:    user.email,
           location: user.location
         },
-        encrypted: JSON.parse(user.json_block)
+        encrypted: JSON.parse(user.json_block),
+        posts,
+        friends
       });
     }
   } catch (error) {
