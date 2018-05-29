@@ -8,7 +8,7 @@ module.exports  = router;
 
 
 router.get('/settings', async function(req, res) {
-  const user  = await User.findOne({ id: req.session.passport.user });
+  const user  = await User.getOne({ id: req.session.passport.user });
   // ENCRYPTION HERE
   res.json({
     id:     user.id,

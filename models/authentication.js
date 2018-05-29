@@ -7,9 +7,13 @@ function authenticateUser() {
       req.session.passport.user: ${JSON.
         stringify(req.session.passport)}`);
 
-    if (req.isAuthenticated()) return next();
-
-    res.redirect('/');
+    if (req.isAuthenticated()){
+      return next();
+    } else {
+      const err = new Error();
+      err.name = 'UnauthorizedError';
+      return next(err);
+    }
   }
 }
 

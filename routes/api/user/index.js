@@ -11,7 +11,7 @@ module.exports    = router;
 
 router.get('/profile', async function(req, res) {
   try {
-    const user  = await User.findOne({ id: req.session.passport.user });
+    const user  = await User.getOne({ id: req.session.passport.user });
     if(!user)
       res.status(404).json({ error: 'User not found' });
     else {

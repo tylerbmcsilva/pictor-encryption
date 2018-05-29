@@ -6,8 +6,7 @@ const router    = new Router();
 module.exports  = router;
 
 
-router.use('/api/*', authenticateUser());
-
+router.use('/*', authenticateUser());
 
 router.use(require('./feed'));
 router.use(require('./server'));
@@ -16,3 +15,12 @@ router.use(require('./post'));
 router.use(require('./settings'));
 router.use(require('./search'));
 router.use(require('./friends'));
+
+
+router.use(async function(err, req, res, next) {
+  if(err.name === 'UnauthorizedError') {
+    res.status(401).json({ error: 'Unauthorized' });
+  } else {
+    next(err);
+  }
+})
