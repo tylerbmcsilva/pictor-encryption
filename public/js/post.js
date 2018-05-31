@@ -1,13 +1,18 @@
 function main(window, document) {
-  document.getElementById("new_post").addEventListener("submit", handleCreateFormSubmit);
+  console.log('LOADED');
+  const EDIT_POST = window.location.pathname.includes('/edit');
 
-  async function handleCreateFormSubmit(e) {
+  document.getElementById("post-form").addEventListener("submit", handleFormSubmit);
+
+  async function handleFormSubmit(e) {
     e.preventDefault();
+    e.stopPropagation();
+    console.log(EDIT_POST);
     showePreloader();
 
     const user_id   = parseInt(document.getElementById('user-id').value);
     const title     = document.getElementById('post-title').value;
-    const post_type = document.getElementById('post-type').value ? document.getElementById('post-type').value : 'text';
+    const post_type = 'text';
     const body      = document.getElementById('post-body').value;
     const url       = document.getElementById('post-url').value;
 
@@ -19,15 +24,23 @@ function main(window, document) {
     const payload = {
       user_id,
       title,
-      body,
-      url,
+      body: body ? body : '',
+      url:  url ? url : '',
       post_type,
       date: (new Date()).toISOString()
     }
 
-    const { data } = await postDataToUrl("/api/post/new", payload);
-    console.log(data);
-    window.location.pathname = `/post/${data.id}`;
+    if(EDIT_POST) {
+      console.log('EDIT!');
+      const postId    = window.location.pathname.split('/')[2];
+      console.log(postId);
+      const { data }  = await putDataToUrl(`/api/post/${postId}`, payload);
+      window.location.pathname = `/post/${postId}`;
+    } else {
+      console.log('new post');
+      const { data }  = await postDataToUrl('/api/post/new', payload);
+      window.location.pathname = `/post/${data.id}`;
+    }
   }
 
   function validateFormEntries(user_id, title, post_type) {
@@ -39,5 +52,5 @@ function main(window, document) {
 }
 
 !function(w,d) {
-  w.addEventListener('DOMContentLoaded', main(w,d));
+  main(w,d);
 }(window, document);

@@ -9,26 +9,27 @@ async function main(window, document) {
     // indexedDBConn.close();
     // console.log(keys.privateKey);
 
-    if (shouldSkipLoading(window.location.pathname))
+    if (shouldSkipLoading(window.location.pathname)) {
       return;
+    } else {
+      // Request data from the server
+      const dataSourceURL = `${window.location.origin}/api${window.location.pathname}`;
+      const { data }      = await getDataFromUrl(dataSourceURL);
+      // console.log(data);
+      if (data === '') {
+        window.location.replace(`${window.location.origin}/not-found`);
+        return;
+      }
 
-    // Request data from the server
-    const dataSourceURL = `${window.location.origin}/api${window.location.pathname}`;
-    const { data }      = await getDataFromUrl(dataSourceURL);
-    // console.log(data);
-    if (data === '') {
-      window.location.replace(`${window.location.origin}/not-found`);
-      return;
-    }
+      // Decrypt the data from the server
+      // const decryptedData = await decryptJSON( data, 'test@test.com');
+      // console.log(decryptedData);
+      // document.getElementsByTagName('main')[0].innerHTML += `<pre>${JSON.stringify(data)}</pre>`;
 
-    // Decrypt the data from the server
-    // const decryptedData = await decryptJSON( data, 'test@test.com');
-    // console.log(decryptedData);
-    // document.getElementsByTagName('main')[0].innerHTML += `<pre>${JSON.stringify(data)}</pre>`;
-
-    populateDataFromServer(window.location.pathname, data);
-    //var elems = document.querySelectorAll('.autocomplete');
-    //var instances = M.Autocomplete.init(elems, friendsOptions);
+      populateDataFromServer(window.location.pathname, data);
+      //var elems = document.querySelectorAll('.autocomplete');
+      //var instances = M.Autocomplete.init(elems, friendsOptions);
+    };
   } catch (e) {
     console.error(e);
   } finally {
@@ -39,18 +40,11 @@ async function main(window, document) {
 
 
   function shouldSkipLoading(pathname) {
+    console.log(pathname);
     switch (true) {
-      case /\/post\/[0-9]\/edit/.test(pathname):
+      case /\/not\-found/.test(pathname):
+      case /\/post\/\d+\/edit/.test(pathname):
       case /\/post\/new/.test(pathname):
-        return true;
-        break;
-      default:
-        return false;
-        break;
-    }
-    switch (pathname) {
-      case '/post/new':
-      case '/post/edit':
         return true;
         break;
       default:
@@ -178,17 +172,32 @@ async function main(window, document) {
 
   function PostPage(data) {
     PageAppend('post_section', [createPostHTML(data)]);
+    document.getElementById('delete-post').addEventListener('click', async function(e) {
+      const { data } = await deleteFromUrl(`/api/post/${data.id}`);
+      if(data.message === 'Success'){
+        window.location.pathname = '/profile';
+      } else {
+        window.location.pathname = '/not-found';
+      }
+
+    })
     return;
   }
 
 
   function createPostHTML(post) {
+    let buttons = '';
+
+    if(post.editable) {
+      buttons = `<a href="/post/${post.id}/edit" class="transparent blue-grey-text lighten-5-text"><i class="small material-icons">edit</i></a>
+      <a href="#" id="delete-post" class="transparent blue-grey-text lighten-5-text"><i class="small material-icons">delete_forever</i></a>`;
+    }
+
     return `<div class="card-panel">
               <div class="row">
                 <h3 class="col s10" style="margin:0">${post.title}</h3>
                 <div class="col s2 ${post.editable ? '' : 'hide'} right-align">
-                  <a href="#" class="transparent blue-grey-text lighten-5-text"><i class="small material-icons">edit</i></a>
-                  <a href="#" class="transparent blue-grey-text lighten-5-text"><i class="small material-icons">delete_forever</i></a>
+                  ${buttons}
                 </div>
               </div>
 

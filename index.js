@@ -23,7 +23,6 @@ const app = express();
 app.use(expressWinston.logger({
       transports: [
         new winston.transports.Console({
-          json:     true,
           colorize: true
         }),
         new winston.transports.File({

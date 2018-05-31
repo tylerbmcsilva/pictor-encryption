@@ -1,31 +1,23 @@
 <section class="section">
   <div class="row pad5">
-    <h1 class="center-align">New Post!</h1>
     <div class="col s12 m6 offset-m3 card-panel">
-      <form id="new_post" class="pad5">
+      <form id="post-form" class="pad5">
         <div class="input-field hide">
           <input type="text" id="user-id" name="" value="{{user_id}}">{{user_id}}</input>
         </div>
         <div class="input-field indigo-text">
-          <input class="validate indigo-text" type="text" name="post-title" id="post-title" required>
+          <input class="validate indigo-text" type="text" name="post-title" id="post-title" value="{{post.title}}" required>
           <label for="post-title" class="indigo-text">Title</label>
         </div>
-        <div class="input-field indigo-text">
-          <select class="indigo-text" id="post-type">
-            <option value="text" class="indigo-text">Text</option>
-            <option value="link" class="indigo-text">Link</option>
-          </select>
-          <label>Post Type</label>
-        </div>
         <div class="input-field">
-          <input class="validate indigo-text" type="text" name="post-url" id="post-url">
+          <input class="validate indigo-text" type="text" name="post-url" id="post-url" value="{{post.url}}">
           <label for="post-url" class="indigo-text">URL (optional)</label>
         </div>
         <div class="input-field">
-          <textarea id="post-body" class="materialize-textarea"></textarea>
+          <textarea id="post-body" class="materialize-textarea">{{post.body}}</textarea>
           <label for="post-body" class="indigo-text">Post Body (optional)</label>
         </div>
-        <button id="create-post" name="create" type="submit" class="waves-effect waves-light btn white indigo-text">Create</button>
+        <button id="submit" name="create" type="submit" class="waves-effect waves-light btn white indigo-text">Submit</button>
       </form>
     </div>
   </div>
