@@ -4,7 +4,7 @@ document.getElementById("login").addEventListener("submit", handleSignInSubmit);
 
 async function handleSignInSubmit(e) {
   e.preventDefault();
-  showePreloader();
+  //showePreloader();
 
   const USER_EMAIL  = document.getElementById("email_login").value;
   const PASSWORD = document.getElementById("password_login").value;
@@ -14,6 +14,12 @@ async function handleSignInSubmit(e) {
     email: USER_EMAIL,
     password: PASSWORD
   };
-  let res1 = await postDataToUrl("/signin", payload);
-  window.location.pathname = "/feed";
+  let response = await postDataToUrl("/signin", payload);
+
+  if(response.data.message==="success"){
+    window.location.pathname = "/feed";
+  }
+  else {
+    document.getElementById("login-error").innerHTML = "Incorrect email or password";
+  }
 }

@@ -24,7 +24,9 @@ router.post('/signin', async function(req, res) {
         message: 'success'
       });
     } else {
-      res.status(401); // send unauthorized
+      res.json({
+        message: 'failure'
+      });
     }
   } catch (error) {
     Logger.error(error);
