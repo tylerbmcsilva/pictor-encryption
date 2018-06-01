@@ -40,7 +40,6 @@ async function main(window, document) {
 
 
   function shouldSkipLoading(pathname) {
-    console.log(pathname);
     switch (true) {
       case /\/not\-found/.test(pathname):
       case /\/post\/\d+\/edit/.test(pathname):
@@ -58,9 +57,8 @@ async function main(window, document) {
     const pathArray = path.split('/').filter(function(el) {
       return el !== ''
     });
-    const pageName = getPageFromPathArray(pathArray);
-    console.log(pageName);
-    const page = getPage(pageName);
+    const pageName  = getPageFromPathArray(pathArray);
+    const page      = getPage(pageName);
 
     return page(data);
   }
@@ -171,10 +169,11 @@ async function main(window, document) {
 
 
   function PostPage(data) {
+    console.log(data);
     PageAppend('post_section', [createPostHTML(data)]);
     document.getElementById('delete-post').addEventListener('click', async function(e) {
-      const { data } = await deleteFromUrl(`/api/post/${data.id}`);
-      if(data.message === 'Success'){
+      const res = await deleteFromUrl(`/api/post/${data.id}`);
+      if(res.data.message === 'Success'){
         window.location.pathname = '/profile';
       } else {
         window.location.pathname = '/not-found';
@@ -285,16 +284,6 @@ async function main(window, document) {
   }
 
 
-  function createInfoCard(user) {
-    return `<li class="collection-item avatar">
-              <img src="${user.photo}" alt="" class="circle">
-              <span class="title">Name: ${user.name}</span>
-              <p>From: ${user.location}</p>
-              ${user.url}
-            </li>`;
-  }
-
-
   function SearchPage(data) {
     const usersFormatted = data.map(el => {
       let user = {
@@ -304,9 +293,19 @@ async function main(window, document) {
         photo:    'https://i.imgur.com/FyWI0.jpg', //replace with image eventually
         url:      `/friend/${el.id}`
       };
-      return createInfoCard(user);
+      return createSearchInfoCard(user);
     });
     return PageAppend('search_results', usersFormatted);
+  }
+
+
+  function createSearchInfoCard(user) {
+    return `<li class="collection-item avatar">
+              <img src="${user.photo}" alt="" class="circle">
+              <span class="title">Name: ${user.name}</span>
+              <p>From: ${user.location}</p>
+              <a href="/friend/${user.id}">Visit Profile</a>
+            </li>`;
   }
 
 
