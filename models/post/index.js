@@ -20,7 +20,7 @@ async function create({ user_id, title, body, date, url, post_type }) {
 }
 
 
-async function update(id, updates) {
+async function update({ id, updates }) {
   try {
     const post = await DB.query('UPDATE `post` SET ? WHERE ?', [updates, { id }]);
     return post;
@@ -33,7 +33,7 @@ async function update(id, updates) {
 
 async function remove({ id }) {
   try {
-    const post = await DB.query('DELETE FROM `post` WHERE ?', { id });
+    const post = await DB.query(`DELETE FROM \`post\` WHERE id=${id}`);
     return post;
   } catch (error) {
     Logger.error(error);
@@ -42,9 +42,12 @@ async function remove({ id }) {
 }
 
 
-async function findOne( id ) {
+async function getOne({ id }) {
   try {
-    const [ post ] = await DB.query('SELECT post.*, user.first_name, user.last_name FROM `post` INNER JOIN `user` ON post.user_id = user.id WHERE ?',  id );
+    const [ post ] = await DB.query(`SELECT post.*, user.first_name, user.last_name FROM \`post\`
+        INNER JOIN \`user\` ON post.user_id = user.id
+        WHERE post.id=${id}`
+      );
     return post;
   } catch (error) {
     Logger.error(error);
@@ -53,7 +56,7 @@ async function findOne( id ) {
 }
 
 
-async function findAllUserPosts({ id }) {
+async function getAllUserPosts({ id }) {
   try {
     let qString = `SELECT post.*, user.first_name, user.last_name FROM \`post\` INNER JOIN \`user\` ON post.user_id = user.id WHERE user.id = ${id} ORDER BY \`date\` DESC`;
     const posts = await DB.query(qString);
@@ -65,7 +68,7 @@ async function findAllUserPosts({ id }) {
 }
 
 
-async function findAllFriendPosts({ id }) {
+async function getAllFriendPosts({ id }) {
   try {
     let qString = `SELECT DISTINCT p.*, u.first_name, u.last_name
                   FROM (SELECT user.id, user.first_name, user.last_name from \`user\`
@@ -85,7 +88,7 @@ module.exports = {
   create,
   update,
   remove,
-  findOne,
-  findAllUserPosts,
-  findAllFriendPosts,
+  getOne,
+  getAllUserPosts,
+  getAllFriendPosts,
 }

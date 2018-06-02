@@ -3,9 +3,10 @@ const Logger      = require('../../../models/logger');
 const { Router }  = require('express');
 const User        = require('../../../models/user');
 const Post        = require('../../../models/post');
-const Friend       = require('../../../models/friend');
+const Friend      = require('../../../models/friend');
 const passport    = require('passport');
-const bcrypt = require('bcrypt');
+const bcrypt      = require('bcrypt');
+
 
 const router      = new Router();
 module.exports    = router;
@@ -14,8 +15,8 @@ module.exports    = router;
 router.get('/profile', async function(req, res) {
   try {
     const id      = req.session.passport.user
-    const user    = await User.findOne({ id: id });
-    const posts   = await Post.findAllUserPosts({ id: id });
+    const user    = await User.getOne({ id: id });
+    const posts   = await Post.getAllUserPosts({ id: id });
     const friends = await Friend.getAllFriendsAndRequests({ id: id });
 
     if(!user)
