@@ -4,8 +4,7 @@ document.getElementById("login").addEventListener("submit", handleSignInSubmit);
 
 async function handleSignInSubmit(e) {
   e.preventDefault();
-  //showePreloader();
-
+  showePreloader();
   const USER_EMAIL  = document.getElementById("email_login").value;
   const PASSWORD = document.getElementById("password_login").value;
   //const USER_KEY    = await getDataFromIndexedDB(USER_EMAIL);
@@ -16,10 +15,11 @@ async function handleSignInSubmit(e) {
   };
   let response = await postDataToUrl("/signin", payload);
 
-  if(response.data.message==="success"){
+  if(response.data.message ==="success"){
     window.location.pathname = "/feed";
   }
   else {
+    hidePreloader();
     document.getElementById("login-error").innerHTML = "Incorrect email or password";
   }
 }

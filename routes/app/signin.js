@@ -24,12 +24,12 @@ router.post('/signin', async function(req, res) {
         message: 'success'
       });
     } else {
-      throw new Error('Password is incorrect.'); 
+      throw new Error('Password is incorrect.');
     }
   } catch (error) {
     Logger.error(error);
     res.json({
-      message: 'failure'
+      error: error.message
     });
   }
 
