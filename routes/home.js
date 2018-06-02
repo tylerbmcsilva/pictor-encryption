@@ -9,13 +9,18 @@ module.exports = router;
   Main route
 */
 router.get('/', function(req, res) {
-  res.render('home_page', {
-    layout: 'blank'
-  });
+  if (req.isAuthenticated()){
+    res.redirect('/feed');
+  } else {
+    res.render('home_page', {
+      layout: 'blank'
+    });
+  }
+
 });
 
 router.get('/logout', function(req, res){
   req.logout();
   req.session.destroy();
-  res.redirect('/');; 
+  res.redirect('/');;
 })

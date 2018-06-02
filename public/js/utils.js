@@ -96,10 +96,38 @@ function hidePreloader(d) {
 }
 
 
+function getDataFromUrl(url) {
+  return axios.get(url)
+    .catch( function (error) {
+      console.error(error);
+      throw error;
+    });
+}
+
+
 function postDataToUrl(url, data) {
   return axios.post(url, data)
     .catch(function(err) {
-      // SILENTLY FAIL
+      console.error(err);
+      return;
+    });
+}
+
+
+function putDataToUrl(url, data) {
+  return axios.put(url, data)
+    .catch(function(err) {
+      console.error(err);
+      return;
+    });
+}
+
+
+
+function deleteFromUrl(url, data) {
+  return axios.delete(url)
+    .catch(function(err) {
+      console.error(err);
       return;
     });
 }

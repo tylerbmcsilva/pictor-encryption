@@ -8,25 +8,28 @@ const router    = new Router();
 module.exports  = router;
 
 
-router.get('/post/:id', async function(req, res) {
+router.post('/post/new', async function(req, res) {
+  const { user_id, title, body, date, url, post_type } = req.body;
+  const response = await Post.create({ user_id, title, body, date, url, post_type });
+  res.json({
+    id: response.insertId
+  });
+});
+
+
+router.get('/post/:post_id', async function(req, res) {
+  const { post_id } = req.params;
+  const { user }    = req;
   try {
-    const post  = await Post.findOne({ 'post.id': req.params.id });
+
+    const post  = await Post.getOne({ id: post_id });
     if(post === undefined)
-      // res.send('');
-      // ****************************************
-      // IF NOTHING, SEND TEST DATA FOR NOW
-      // ****************************************
-      res.json( {
-        id:         1,
-        user_id:    1,
-        title:      'test title',
-        body:       'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-        date:       '2018-05-13 19:36:32',
-        url:        'http://google.com',
-        encrypted:  0
-      });
+      res.status(404).json({});
     else {
-      res.json(post);
+      res.json({
+        ...post,
+        editable: user === post.user_id ? true : false
+      });
     }
   } catch (error) {
     Logger.error(error);
@@ -37,10 +40,47 @@ router.get('/post/:id', async function(req, res) {
 });
 
 
-router.post('/post/new', async function(req, res) {
-  const { user_id, title, body, date, url, post_type } = req.body;
-  const response = await Post.create({ user_id, title, body, date, url, post_type });
-  res.json({
-    id: response.insertId
-  });
+router.put('/post/:post_id', async function(req,res) {
+  try {
+    const { user }    = req;
+    const { post_id } = req.params;
+    const updates     = req.body
+
+    const post  = await Post.getOne({ id: post_id });
+
+    if(post && post.user_id === user) {
+      const updatedPost = await Post.update({ id: post_id, updates });
+      res.json({ message: 'Success' });
+    } else {
+      res.status(401).json({ error: 'Unauthorized' });
+    }
+  } catch (error) {
+    Logger.error(error);
+    res.status(500).json({
+      error: error.message
+    });
+  }
+});
+
+
+router.delete('/post/:post_id', async function(req,res) {
+  try {
+    const { user }    = req;
+    const { post_id } = req.params;
+
+    const post  = await Post.getOne({ id: post_id });
+
+    if(post && post.user_id === user) {
+      const deletedPost = await Post.remove({ id: post_id });
+
+      res.json({ message: 'Success' });
+    } else {
+      res.status(401).json({ error: 'Unauthorized' });
+    }
+  } catch (error) {
+    Logger.error(error);
+    res.status(500).json({
+      error: error.message
+    });
+  }
 });

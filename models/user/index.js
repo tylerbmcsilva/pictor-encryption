@@ -46,7 +46,7 @@ async function remove({ id }) {
 }
 
 
-async function findOne({ id }) {
+async function getOne({ id }) {
   try {
     const [ user ] = await DB.query('SELECT * FROM `user` WHERE ?', { id });
     return user;
@@ -57,7 +57,7 @@ async function findOne({ id }) {
 }
 
 
-async function findAll() {
+async function getAll() {
   try {
     const users = await DB.query('SELECT * FROM `user`');
     return users;
@@ -83,7 +83,7 @@ module.exports = {
   create,
   update,
   remove,
-  findAll,
-  findOne,
+  getAll,
+  getOne,
   findPass
 }

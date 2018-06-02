@@ -121,17 +121,10 @@ router.get('/friends/accept/:id', async function(req, res) {
 
 router.get('/friends', async function(req, res) {
   try {
-    var results = await Friend.getAllFriendsAndRequests({ id: req.session.passport.user });
-    //console.log(results);
-    if(results.length === 0) {
-      // ****************************************
-      // IF NOTHING, SEND TEST DATA FOR NOW
-      // ****************************************
-      res.json(nothingFoundUser);
-    }
-    else {
-      res.json(results);
-    }
+    const { user }  = req.session.passport;
+    const results   = await Friend.getAllFriendsAndRequests({ id: user});
+
+    res.json(results);
   } catch (error) {
     Logger.error(error);
     res.status(500).json({
@@ -141,16 +134,14 @@ router.get('/friends', async function(req, res) {
 });
 
 
-router.get('/friend/:id', async function(req, res) {
+router.get('/friend/:friendId', async function(req, res) {
   try {
-    const friendId = req.params.id
-    const user  = await Friend.getUser({ id: req.user, friendId: friendId });
-    const posts   = await Post.findAllUserPosts({ id: friendId });
-    const friends = await Friend.getAllFriendsAndRequests({ id: friendId });
+    const { friendId }  = req.params;
+    const user          = await Friend.getUser({ id: req.user, friendId });
+    const posts         = await Post.getAllUserPosts({ id: friendId });
+    const friends       = await Friend.getAllFriendsAndRequests({ id: friendId });
+
     if(!user) {
-      // ****************************************
-      // IF NOTHING, SEND TEST DATA FOR NOW
-      // ****************************************
       res.status(404).send();
     } else {
       // ENCRYPTION HERE
