@@ -177,17 +177,15 @@ async function getReceivedRequests(id) {
   }
 }
 
-
-async function getBlockedUsers(id) {
+/*Working*/
+async function getBlockedUsers({ id }) {
   try {
-    var queryString = 'SELECT * FROM (SELECT u.first_name, u.last_name, u.id, u.location FROM `user` u '+
-      'WHERE u.id!=?) as notU '+
-      'WHERE notU.id IN '+
-      '(SELECT r.receiver_id as `id` FROM `request` r '+
-      'WHERE r.sender_id=? AND r.blocked=1 '+
-      'UNION SELECT r.sender_id FROM `request` r '+
-      'WHERE r.receiver_id=? AND r.blocked=1);';
-    const users = await DB.query(queryString, [id, id, id]);
+    var queryString = `SELECT *
+      FROM
+        (SELECT u.first_name, u.last_name, u.id, u.location FROM \`user\` u WHERE u.id!=${id}) as notU
+      WHERE notU.id IN
+        (SELECT r.receiver_id as \`id\` FROM \`request\` r WHERE r.sender_id=${id} AND r.blocked=1 UNION SELECT r.sender_id FROM \`request\` r WHERE r.receiver_id=${id} AND r.blocked=1)`;
+    const users = await DB.query(queryString);
     Logger.debug(users);
     return users;
   } catch (error) {
