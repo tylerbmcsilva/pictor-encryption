@@ -48,7 +48,7 @@ async function remove({ id }) {
 
 async function getOne({ id }) {
   try {
-    const [ user ] = await DB.query('SELECT * FROM `user` WHERE ?', { id });
+    const [ user ] = await DB.query(`SELECT * FROM \`user\` WHERE user.id=${id}`);
     return user;
   } catch (error) {
     Logger.error(error);
