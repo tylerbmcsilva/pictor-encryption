@@ -14,7 +14,7 @@ module.exports    = router;
 
 router.get('/profile', async function(req, res) {
   try {
-    const id      = req.session.passport.user
+    const id      = req.session.passport.user;
     const user    = await User.getOne({ id: id });
     const posts   = await Post.getAllUserPosts({ id: id });
     const friends = await Friend.getAllFriendsAndRequests({ id: id });
