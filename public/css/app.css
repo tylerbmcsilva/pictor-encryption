@@ -8,6 +8,10 @@ header, main, footer {
   header, main, footer {
     padding-left: 0;
   }
+
+  section.section {
+    padding-top: 3em;
+  }
 }
 
 .full-height {
@@ -30,6 +34,9 @@ header, main, footer {
 .pad5 {
   padding: 0.5em;
 }
+.pad1 {
+  padding: 1em;
+}
 
 .sidenav-trigger {
   position: fixed;
@@ -49,4 +56,12 @@ header, main, footer {
 
 nav {
   padding: 0 1em;
+}
+
+h1,h2,h3,h4,h5,h6 {
+  margin: 0.2em 0;
+}
+
+h2.header {
+  text-transform: capitalize;
 }
