@@ -145,20 +145,9 @@ router.get('/friend/:friendId', async function(req, res) {
       res.status(404).send();
     } else {
       // ENCRYPTION HERE
-      res.json({
-        id:     user.id,
-        basic:  {
-          name:   {
-            first:  user.first_name,
-            last:   user.last_name
-          },
-          email:    user.email,
-          location: user.location
-        },
-        encrypted: JSON.parse(user.json_block),
-        posts,
-        friends
-      });
+      
+      // json_block, posts, and friends will only be there if they are friends
+      res.json( Friend.normalize(user, posts, friends) );
     }
   } catch (error) {
     Logger.error(error);
@@ -167,7 +156,7 @@ router.get('/friend/:friendId', async function(req, res) {
     })
   }
 
-})
+});
 
 const nothingFoundUser = {
   id: null,
