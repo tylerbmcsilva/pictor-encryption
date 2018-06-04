@@ -17,7 +17,6 @@ async function handleSignInSubmit(e) {
     let response = await postDataToUrl("/signin", payload);
     window.location.pathname = "/feed";
   } catch (error) {
-    console.log(error);
     hidePreloader();
     if(error.message === 'Request failed with status code 401') {
       document.getElementById("login-error").innerHTML = "Incorrect email or password";
