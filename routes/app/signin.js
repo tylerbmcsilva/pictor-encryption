@@ -29,7 +29,7 @@ router.post('/signin', async function(req, res) {
   } catch (error) {
     Logger.error(error);
     res.status(401).json({
-      error: error.message
+      message: error.message
     });
   }
 
