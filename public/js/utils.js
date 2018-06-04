@@ -99,7 +99,6 @@ function hidePreloader(d) {
 function getDataFromUrl(url) {
   return axios.get(url)
     .catch( function (error) {
-      console.error(error);
       throw error;
     });
 }
@@ -107,18 +106,16 @@ function getDataFromUrl(url) {
 
 function postDataToUrl(url, data) {
   return axios.post(url, data)
-    .catch(function(err) {
-      console.error(err);
-      return;
+    .catch(function(error) {
+      throw error;
     });
 }
 
 
 function putDataToUrl(url, data) {
   return axios.put(url, data)
-    .catch(function(err) {
-      console.error(err);
-      return;
+    .catch(function(error) {
+      throw error;
     });
 }
 
@@ -126,8 +123,7 @@ function putDataToUrl(url, data) {
 
 function deleteFromUrl(url, data) {
   return axios.delete(url)
-    .catch(function(err) {
-      console.error(err);
-      return;
+    .catch(function(error) {
+      throw error;
     });
 }

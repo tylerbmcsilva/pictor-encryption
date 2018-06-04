@@ -77,8 +77,9 @@ router.get('/friends/block/:id', async function(req, res) {
 
 router.get('/friends/unblock/:id', async function(req, res) {
   try {
+    const { user }  = req.session.passport;
     const response  = await Friend.unblockUser(req.user, req.params.id);
-    const results   = await Friend.getAllFriendsAndRequests(req, res);
+    const results   = await Friend.getAllFriendsAndRequests({ id: user});
     if(results.length === 0) {
       // ****************************************
       // IF NOTHING, SEND TEST DATA FOR NOW
@@ -145,7 +146,7 @@ router.get('/friend/:friendId', async function(req, res) {
       res.status(404).send();
     } else {
       // ENCRYPTION HERE
-      
+
       // json_block, posts, and friends will only be there if they are friends
       res.json( Friend.normalize(user, posts, friends) );
     }

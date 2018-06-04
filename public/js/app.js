@@ -309,11 +309,11 @@ async function main(window, document) {
   }
 
 
-  function createFriendListCard(user) {
+  function createFriendListCard(friend) {
     return `<li class="collection-item avatar">
-              <img src="${user.photo}" alt="" class="circle">
-              <span class="title">${user.name}</span>
-              <p><a href="/friend/${user.id}">Visit Profile</a></p>
+              <img src="${friend.photo}" alt="" class="circle">
+              <span class="title">${friend.name}</span>
+              <p><a href="/friend/${friend.id}">Visit Profile</a></p>
             </li>`;
   }
 
@@ -334,7 +334,6 @@ async function main(window, document) {
 
   function UserPage(data) {
     const { basic, encrypted, posts, friends } = data;
-
     if (posts) {
       FeedPage(posts);
     }
@@ -389,9 +388,35 @@ async function main(window, document) {
     return PageMapping(pageMapping);
   }
 
+  function createBlockedListCard(user) {
+    return `<li class="collection-item avatar">
+              <img src="${user.photo}" alt="" class="circle">
+              <span class="title">${user.name}</span>
+              <p>${user.location}</p>
+              <p><a href="/friends/unblock/${user.id}">Unblock</a></p>
+            </li>`;
+  }
+
+  function BlockedUsersPage(data) {
+    const blockedFormatted = data.map((el) => {
+      let blocked = {
+        id: el.id,
+        name: `${el.first_name} ${el.last_name}`,
+        photo: 'https://i.imgur.com/FyWI0.jpg',
+        location: `${el.location}`
+      };
+      return createBlockedListCard(blocked);
+    });
+    PageAppend('blocked_users', blockedFormatted);
+  }
+
 
   function SettingsPage(data) {
-    const { basic, encrypted } = data;
+    const { basic, encrypted, blocked } = data;
+
+    if (blocked) {
+      BlockedUsersPage(blocked);
+    }
 
     let pageMapping = [{
         id: 'user-firstname',
@@ -404,11 +429,7 @@ async function main(window, document) {
       {
         id: 'user-location',
         data: basic.location
-      },
-      // {
-      //   id:   'user-email',
-      //   data: basic.email
-      // }
+      }
     ];
     if (encrypted) {
       Array.prototype.push.apply(pageMapping, [{

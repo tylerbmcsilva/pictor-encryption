@@ -35,9 +35,9 @@ function main(window, document) {
     let payload = data;
     // let payload = await encryptUsingRSA(SERVER_KEY, data);
     // Encrypt payload with server public key
-
+    
     // POST data from form
-    postDataToUrl(`${window.location.origin}/api${window.location.pathname}/update`, payload);
+    putDataToUrl(`${window.location.origin}/api${window.location.pathname}`, payload);
     window.location.pathname = `${window.location.pathname}`;
   }
 
