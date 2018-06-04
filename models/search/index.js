@@ -4,14 +4,14 @@ const metaphone = require('metaphone');
 async function searchFriends( id , sounds_like) {
   try {
     const full = "'%"+sounds_like+"%'"
-    var qString = 'SELECT * FROM (SELECT u.first_name, u.last_name, u.id, u.location FROM `user` u '+
+    var queryString = 'SELECT * FROM (SELECT u.first_name, u.last_name, u.id, u.location FROM `user` u '+
       'WHERE u.id!=? AND sounds_like like ' + full + ') as notU '+
       'WHERE notU.id IN '+
       '(SELECT r.receiver_id as `id` FROM `request` r '+
       'WHERE r.sender_id=? AND r.req_accepted=1 AND r.blocked=0 '+
       'UNION SELECT r.sender_id FROM `request` r '+
       'WHERE r.receiver_id=? AND r.req_accepted=1 AND r.blocked=0);';
-    const users = await DB.query(qString, [id, id, id]);
+    const users = await DB.query(queryString, [id, id, id]);
     return users;
   } catch (error) {
     console.error(error);
@@ -22,14 +22,14 @@ async function searchFriends( id , sounds_like) {
 async function searchNotFriends(id, sounds_like) {
   try {
     const full = "'%"+sounds_like+"%'"
-    var qString = 'SELECT * FROM (SELECT u.first_name, u.last_name, u.id, u.location FROM `user` u '+
+    var queryString = 'SELECT * FROM (SELECT u.first_name, u.last_name, u.id, u.location FROM `user` u '+
       'WHERE u.id!=? AND sounds_like like ' + full + ') as notU '+
       'WHERE notU.id NOT IN '+
       '(SELECT r.receiver_id as `id` FROM `request` r '+
       'WHERE r.sender_id=? AND r.req_accepted=1 AND r.blocked=0 '+
       'UNION SELECT r.sender_id FROM `request` r '+
       'WHERE r.receiver_id=? AND r.req_accepted=1 AND r.blocked=0);';
-    const users = await DB.query(qString, [id, id, id]);
+    const users = await DB.query(queryString, [id, id, id]);
     return users;
   } catch (error) {
     console.error(error);

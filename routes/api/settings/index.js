@@ -1,6 +1,7 @@
 const Encryption  = require('../../../models/encryption');
 const { Router }  = require('express');
 const User        = require('../../../models/user');
+const Friend      = require('../../../models/friend');
 
 
 const router    = new Router();
@@ -8,7 +9,9 @@ module.exports  = router;
 
 
 router.get('/settings', async function(req, res) {
-  const user  = await User.getOne({ id: req.session.passport.user });
+  const id      = req.session.passport.user;
+  const user    = await User.getOne({ id: id });
+  const blocked = await Friend.getBlockedUsers({ id: id });
   // ENCRYPTION HERE
   res.json({
     id:     user.id,
@@ -20,12 +23,13 @@ router.get('/settings', async function(req, res) {
       email:    user.email,
       location: user.location
     },
-    encrypted: JSON.parse(user.json_block)
+    encrypted: JSON.parse(user.json_block),
+    blocked
   });
 })
 
 
-router.post('/settings/update', async function(req, res) {
+router.put('/settings', async function(req, res) {
   let updates;
   const { first_name, last_name, location, json_block } = req.body;
   updates = {

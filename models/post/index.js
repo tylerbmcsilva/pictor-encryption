@@ -58,8 +58,8 @@ async function getOne({ id }) {
 
 async function getAllUserPosts({ id }) {
   try {
-    let qString = `SELECT post.*, user.first_name, user.last_name FROM \`post\` INNER JOIN \`user\` ON post.user_id = user.id WHERE user.id = ${id} ORDER BY \`date\` DESC`;
-    const posts = await DB.query(qString);
+    let queryString = `SELECT post.*, user.first_name, user.last_name FROM \`post\` INNER JOIN \`user\` ON post.user_id = user.id WHERE user.id = ${id} ORDER BY \`date\` DESC`;
+    const posts = await DB.query(queryString);
     return posts;
   } catch (error) {
     Logger.error(error);
@@ -70,12 +70,12 @@ async function getAllUserPosts({ id }) {
 
 async function getAllFriendPosts({ id }) {
   try {
-    let qString = `SELECT DISTINCT p.*, u.first_name, u.last_name
+    let queryString = `SELECT DISTINCT p.*, u.first_name, u.last_name
                   FROM (SELECT user.id, user.first_name, user.last_name from \`user\`
                         INNER JOIN \`request\` ON (user.id = request.sender_id OR user.id = request.receiver_id)
                         WHERE request.req_accepted = 1 AND request.blocked = 0 AND (request.sender_id = ${id} OR request.receiver_id = ${id}) AND user.id != ${id}) as u
                         INNER JOIN post as p ON p.user_id = u.id ORDER BY \`date\` DESC`;
-    const posts = await DB.query(qString);
+    const posts = await DB.query(queryString);
     return posts;
   } catch (error) {
     Logger.error(error);

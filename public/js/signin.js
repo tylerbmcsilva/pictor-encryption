@@ -13,13 +13,16 @@ async function handleSignInSubmit(e) {
     email: USER_EMAIL,
     password: PASSWORD
   };
-  let response = await postDataToUrl("/signin", payload);
-
-  if(response.data.message ==="success"){
+  try {
+    let response = await postDataToUrl("/signin", payload);
     window.location.pathname = "/feed";
-  }
-  else {
+  } catch (error) {
+    console.log(error);
     hidePreloader();
-    document.getElementById("login-error").innerHTML = "Incorrect email or password";
+    if(error.message === 'Request failed with status code 401') {
+      document.getElementById("login-error").innerHTML = "Incorrect email or password";
+    } else {
+      console.error(error);
+    }
   }
 }
