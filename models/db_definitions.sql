@@ -45,6 +45,7 @@ CREATE TABLE `request` (
     `req_accepted` tinyint(1) DEFAULT 0,
     `blocked` tinyint(1) DEFAULT 0,
     PRIMARY KEY(`id`),
+    UNIQUE(`sender_id`, `receiver_id`), 
     CONSTRAINT `request_ibfk_1` FOREIGN KEY (`sender_id`)
     REFERENCES `user`(`id`),
     CONSTRAINT `request_ibfk_2` FOREIGN KEY (`receiver_id`)

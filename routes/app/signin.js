@@ -12,7 +12,7 @@ router.post('/signin', async function(req, res) {
 
   try {
     const result = await User.findPass({email, password});
-    if( result.length === 0 ) throw new Error('User does not exist.');
+    if( result.length === 0 ) throw new Error('Request failed with status code 401');
     const user = result[0].id;
     const hash = result[0].password;
 
@@ -24,13 +24,13 @@ router.post('/signin', async function(req, res) {
         message: 'success'
       });
     } else {
-      res.status(401); // send unauthorized
+      throw new Error('Request failed with status code 401');
     }
   } catch (error) {
     Logger.error(error);
-    res.status(500).json({
-      error: error.message
-    })
+    res.status(401).json({
+      message: error.message
+    });
   }
 
 });
