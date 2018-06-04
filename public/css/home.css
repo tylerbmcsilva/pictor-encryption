@@ -30,6 +30,11 @@ nav {
 
 .pad5 {
   padding: .5em;
+}
+
+.pad1 {
+  padding: 1em;
+}
 
 textarea:focus {
   border-bottom: none !important;
@@ -44,18 +49,16 @@ input {
   text-align: center;
 }
 
-.btn {
-  width: 100%;
-  border-radius: 10px;
-}
-
 .modal-close {
   font-size: 150%;
 }
 
 .modal-close.modal-trigger{
   font-size: 100%;
+}
 
+.bottom-modal-text {
+  padding-top:2em;
 }
 
 #signup,
