@@ -98,19 +98,12 @@ router.get('/friends/unblock/:id', async function(req, res) {
 });
 
 
-router.get('/friends/accept/:id', async function(req, res) {
+router.put('/friend/:id/accept', async function(req, res) {
   try {
+    console.log(req.params);
     const response  = await Friend.acceptFriendRequest(req.user, req.params.id);
-    const results   = await Friend.getAllFriendsAndRequests(req, res);
-    if(results.length === 0) {
-      // ****************************************
-      // IF NOTHING, SEND TEST DATA FOR NOW
-      // ****************************************
-      res.json(nothingFoundUser);
-    } else {
-      // ENCRYPTION HERE
-      res.json(results);
-    }
+    //const results   = await Friend.getAllFriendsAndRequests(req, res);
+    res.json("Success"); 
   } catch (error) {
     Logger.error(error);
     res.status(500).json({

@@ -102,6 +102,19 @@ async function main(window, document) {
     }
   }
 
+  function getRequestType(reqName){
+    switch(reqName) {
+      case 'DELETE':
+        return deleteFromUrl;
+        break;
+      case 'POST':
+        return postDataToUrl;
+        break;
+      case 'PUT':
+        return putDataToUrl;
+        break;
+    }
+  }
 
   // mapping argument looks like this:
   //   [ { id: 'id-to-map-to', data: 'data-to-put-in-id'} ]
@@ -138,6 +151,20 @@ async function main(window, document) {
     return;
   }
 
+  function addSecondaryContentListeners(htmlArray) {
+    Array.from(htmlArray).forEach(function(el) {
+      ///console.log(el);
+      el.addEventListener("click", function(e){
+        e.preventDefault;
+        const requestData = e.currentTarget.id.split(" ");
+        const requestType = requestData[0];
+        const pathName = requestData[1];
+        const makeRequest = getRequestType(requestType);
+        return makeRequest(`${window.location.origin}/api${pathName}`);
+      });
+    });
+    return;
+  }
 
   function FeedPage(data) {
     let postsListFormatted = data.map(el => {
@@ -232,8 +259,11 @@ async function main(window, document) {
       if (el.id === el.sender_id) {
         return createCollectionItem({
           title: `${el.first_name} ${el.last_name}`,
-          link: `#`,
-          icon: 'check'
+          id: `${el.id}`,
+          icon1: 'check',
+          icon2: 'close',
+          linkId1: `PUT /friend/${el.id}/accept`,
+          linkId2: `DELETE /friend/${el.id}`
         });
       } else {
         return '';
@@ -245,16 +275,21 @@ async function main(window, document) {
       if (el.id === el.receiver_id) {
         return createCollectionItem({
           title: `${el.first_name} ${el.last_name}`,
-          link: `/friend/${el.id}`,
-          icon: 'access_time'
+          id: `${el.id}`,
+          icon1: 'access_time',
+          icon2: 'close',
+          linkId1: '',
+          linkId2: `DELETE /friend/${el.id}`
         });
       } else {
         return '';
       }
     });
     PageAppend('sent_requests', currentOutboundRequests);
-
-    return;
+    var secondaryContent = document.getElementsByClassName('secondary-content');
+    var cardActionLinks = document.getElementsByClassName('card-act');
+    addSecondaryContentListeners(secondaryContent);
+    addSecondaryContentListeners(cardActionLinks); 
   }
 
 
@@ -269,10 +304,10 @@ async function main(window, document) {
                     <a href="/friend/${friend.id}">Visit Profile</a>
                   </div>
                   <div class="card-action">
-                    <a class="red-text darken-4" href="/friends/delete/${friend.id}">Delete</a>
+                    <a class="card-act red-text darken-4" href="/friends" id="DELETE /friend/${friend.id}">Delete</a>
                   </div>
                   <div class="card-action">
-                    <a class="indigo-text darken-4" href="/friends/block/${friend.id}">Block</a>
+                    <a class="card-act indigo-text darken-4" href="/friends" id="PUT /friend/${friend.id}/block">Block</a>
                   </div>
                 </div>
               </div>`;
@@ -280,7 +315,16 @@ async function main(window, document) {
 
 
   function createCollectionItem(item) {
-    return `<li class="collection-item"><div>${item.title}<a href="${item.link}" class="secondary-content"><i class="material-icons">${item.icon}</i></a></div></li>`;
+    return `<li class="collection-item">
+              <div>${item.title}
+                <a id="${item.linkId1}" class="secondary-content">
+                  <i class="material-icons">${item.icon1}</i>
+                </a>
+                <a id="${item.linkId2}" class="secondary-content">
+                  <i class="material-icons">${item.icon2}</i>
+                </a>
+              </div>
+            </li>`;
   }
 
 
