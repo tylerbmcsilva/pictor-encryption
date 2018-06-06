@@ -191,7 +191,7 @@ async function main(window, document) {
           prior1(id);
           if(prior2){ prior2(data); }
           const { data } = await makeRequest(`${window.location.origin}/api${pathName}`);
-          SuccessPage(data, jsonData.message);
+          successMessage(data, jsonData.message);
         } catch (error) {
           if(error.message === 'Request failed with status code 401') {
             document.getElementById("login-error").innerHTML = "Incorrect email or password";
@@ -586,7 +586,7 @@ async function main(window, document) {
     PageAppend('blocked_users', blockedFormatted);
   }
 
-  function SuccessPage(data, message) {
+  function successMessage(data, message) {
     const fullName = `${data.first_name} ${data.last_name}`;
     document.getElementById("success-message").innerHTML = fullName;
     document.getElementById("success-message").innerHTML += message;
