@@ -109,29 +109,29 @@ async function main(window, document) {
         return {
           message: '\'s request has been deleted!',
           reqFunction: deleteFromUrl,
-          priorFunction1: removeElement,
+          extraFunction1: removeElement,
         }
         break;
       case 'delete-friendship':
         return {
           message: '\ has been removed from your friends list!',
           reqFunction: deleteFromUrl,
-          priorFunction1: removeElement,
+          extraFunction1: removeElement,
         }
         break;
       case 'accept-friend':
         return {
           message: '\'s is now your friend',
           reqFunction: putToUrl,
-          priorFunction1: removeElement,
-          priorFunction2: addFriendPageFriend,
+          extraFunction1: removeElement,
+          extraFunction2: addFriendPageFriend,
         }
         break;
       case 'send-request':
         return {
           message: '\ has been sent a friend request',
           reqFunction: putToUrl,
-          priorFunction1: updateReqSentElement,
+          extraFunction1: updateReqSentElement,
           param: 'Request Sent'
         }
         break;
@@ -183,14 +183,15 @@ async function main(window, document) {
         const pathName = e.currentTarget.dataset.path;
         const actionType = e.currentTarget.dataset.act;
         const id = e.currentTarget.id;
+        console.log(actionType);
         const jsonData = await getFriendActionAttributes(actionType);
         try {
           const makeRequest = jsonData.reqFunction;
-          const prior1 = jsonData.priorFunction1;
-          const prior2 = jsonData.priorFunction2;
-          prior1(id);
-          if(prior2){ prior2(data); }
+          const extraFunction1 = jsonData.extraFunction1;
+          const extraFunction2 = jsonData.extraFunction2;
+          extraFunction1(id);
           const { data } = await makeRequest(`${window.location.origin}/api${pathName}`);
+          if(extraFunction2){ extraFunction2(data); }
           successMessage(data, jsonData.message);
         } catch (error) {
           if(error.message === 'Request failed with status code 401') {
@@ -292,7 +293,7 @@ async function main(window, document) {
         photo: 'https://i.imgur.com/FyWI0.jpg',
         path1: `/friend/${el.id}`,
         path2: `/friend/${el.id}/block`,
-        act1: 'delete-friend',
+        act1: 'delete-friendship',
         act2: 'block-friend'
       };
       return createFriendCard(friend);
@@ -671,12 +672,14 @@ async function main(window, document) {
         photo: 'https://i.imgur.com/FyWI0.jpg',
         path1: `/friend/${data.id}`,
         path2: `/friend/${data.id}/block`,
-        act1: 'delete-friend',
+        act1: 'delete-friendship',
         act2: 'block-friend'
       };
     const friendCard = createFriendCard(friend);
     var element = document.getElementById('friends_list');
     element.innerHTML += friendCard;
+    var cardActionLinks = document.getElementsByClassName('friend-action-content');
+    addPageListeners(cardActionLinks);
   }
 }
 
