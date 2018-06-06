@@ -109,29 +109,29 @@ async function main(window, document) {
         return {
           message: '\'s request has been deleted!',
           reqFunction: deleteFromUrl,
-          ajaxFunction1: removeElement,
+          priorFunction1: removeElement,
         }
         break;
       case 'delete-friendship':
         return {
           message: '\ has been removed from your friends list!',
           reqFunction: deleteFromUrl,
-          ajaxFunction1: removeElement,
+          priorFunction1: removeElement,
         }
         break;
       case 'accept-friend':
         return {
           message: '\'s is now your friend',
           reqFunction: putToUrl,
-          ajaxFunction1: removeElement,
-          ajaxFunction2: addFriendPageFriend,
+          priorFunction1: removeElement,
+          priorFunction2: addFriendPageFriend,
         }
         break;
       case 'send-request':
         return {
           message: '\ has been sent a friend request',
           reqFunction: putToUrl,
-          ajaxFunction1: updateReqSentElement,
+          priorFunction1: updateReqSentElement,
           param: 'Request Sent'
         }
         break;
@@ -186,12 +186,11 @@ async function main(window, document) {
         const jsonData = await getFriendActionAttributes(actionType);
         try {
           const makeRequest = jsonData.reqFunction;
-          const ajax1 = jsonData.ajaxFunction1;
-          const ajax2 = jsonData.ajaxFunction2;
+          const prior1 = jsonData.priorFunction1;
+          const prior2 = jsonData.priorFunction2;
+          prior1(id);
+          if(prior2){ prior2(data); }
           const { data } = await makeRequest(`${window.location.origin}/api${pathName}`);
-
-          ajax1(id);
-          if(ajax2){ ajax2(data); }
           SuccessPage(data, jsonData.message);
         } catch (error) {
           if(error.message === 'Request failed with status code 401') {
