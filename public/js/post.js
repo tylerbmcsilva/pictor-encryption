@@ -38,7 +38,7 @@ function main(window, document) {
       window.location.pathname = `/post/${postId}`;
     } else {
       console.log('new post');
-      const { data }  = await postDataToUrl('/api/post/new', payload);
+      const { data }  = await postDataToUrl('/api/post', payload);
       window.location.pathname = `/post/${data.id}`;
     }
   }

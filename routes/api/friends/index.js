@@ -53,7 +53,7 @@ router.get('/friends/delete/:id', async function(req, res) {
 });
 
 
-router.get('/friends/block/:id', async function(req, res) {
+router.put('/friend/:id/block', async function(req, res) {
   try {
     const response  = await Friend.blockUser(req.user, req.params.id);
     const results   = await Friend.getAllFriendsAndRequests(req, res);
@@ -61,7 +61,7 @@ router.get('/friends/block/:id', async function(req, res) {
       // ****************************************
       // IF NOTHING, SEND TEST DATA FOR NOW
       // ****************************************
-      res.json(nothingFoundUser);
+      res.status(401).json("Unknown Error User Not Found");
     } else {
       // ENCRYPTION HERE
       res.json(results);
@@ -75,7 +75,7 @@ router.get('/friends/block/:id', async function(req, res) {
 });
 
 
-router.get('/friends/unblock/:id', async function(req, res) {
+router.put('/friend/:id/unblock', async function(req, res) {
   try {
     const { user }  = req.session.passport;
     const response  = await Friend.unblockUser(req.user, req.params.id);
@@ -84,7 +84,7 @@ router.get('/friends/unblock/:id', async function(req, res) {
       // ****************************************
       // IF NOTHING, SEND TEST DATA FOR NOW
       // ****************************************
-      res.json(nothingFoundUser);
+      res.status(401).json("Unknown Error User Not Found");
     } else {
       // ENCRYPTION HERE
       res.json(results);

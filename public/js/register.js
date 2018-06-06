@@ -43,7 +43,7 @@ async function main(window, document) {
 
     // Encrypt payload with server public key
     // POST data from form
-    const response = await postDataToUrl("/api/user/new", data);
+    const response = await postDataToUrl("/api/user", data);
     window.location.pathname = "/feed";
   }
 
