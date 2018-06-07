@@ -8,7 +8,7 @@ const router    = new Router();
 module.exports  = router;
 
 
-router.post('/post/new', async function(req, res) {
+router.post('/post', async function(req, res) {
   const { user_id, title, body, date, url, post_type } = req.body;
   const response = await Post.create({ user_id, title, body, date, url, post_type });
   res.json({
