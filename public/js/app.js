@@ -475,7 +475,7 @@ async function main(window, document) {
   }
 
   function createSearchInfoSendRequestCard(user) {
-    return `<li class="collection-item avatar" id="${user.id}">>
+    return `<li class="collection-item avatar" id="${user.id}">
               <img src="${user.photo}" alt="" class="circle">
               <span class="title">Name: ${user.name}</span>
               <p>From: ${user.location}</p>
