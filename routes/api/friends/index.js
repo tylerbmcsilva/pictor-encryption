@@ -3,24 +3,29 @@ const Friend      = require('../../../models/friend');
 const Post        = require('../../../models/post');
 const Logger      = require('../../../models/logger');
 const passport    = require('passport');
-
+const USER      = require('../../../models/user');
 
 const router      = new Router();
 module.exports    = router;
 
 
-router.get('/friends/sendRequest/:id', async function(req, res) {
+router.put('/friend/:id/request', async function(req, res) {
   try {
     const response  = await Friend.sendFriendRequest({receiver_id: req.params.id, sender_id: req.user});
-    const results   = await Friend.getAllFriendsAndRequests(req, res);
-    if(results.length === 0) {
+    const userResults = await USER.getOne({id: req.params.id});
+
+    if(userResults.length === 0) {
       // ****************************************
       // IF NOTHING, SEND TEST DATA FOR NOW
       // ****************************************
-      res.json(nothingFoundUser);
+      res.status(401).json("Unknown Error User Not Found");
     } else {
       // ENCRYPTION HERE
-      res.json(results);
+      res.json({
+        id: userResults.id,
+        first_name: userResults.first_name,
+        last_name: userResults.last_name,
+      });
     }
   } catch (error) {
     Logger.error(error);
@@ -31,18 +36,23 @@ router.get('/friends/sendRequest/:id', async function(req, res) {
 });
 
 
-router.get('/friends/delete/:id', async function(req, res) {
+router.delete('/friend/:id', async function(req, res) {
   try {
     const response  = await Friend.deleteFriendRequest(req.user, req.params.id);
-    const results   = await Friend.getAllFriendsAndRequests(req, res);
-    if(results.length === 0) {
+    const userResults = await USER.getOne({id: req.params.id});
+
+    if(userResults.length === 0) {
       // ****************************************
       // IF NOTHING, SEND TEST DATA FOR NOW
       // ****************************************
-      res.json(nothingFoundUser);
+      res.status(401).json("Unknown Error User Not Found");
     } else {
       // ENCRYPTION HERE
-      res.json(results);
+      res.json({
+        id: userResults.id,
+        first_name: userResults.first_name,
+        last_name: userResults.last_name,
+      });
     }
   } catch (error) {
     Logger.error(error);
@@ -78,7 +88,7 @@ router.put('/friend/:id/block', async function(req, res) {
 router.put('/friend/:id/unblock', async function(req, res) {
   try {
     const { user }  = req.session.passport;
-    const response  = await Friend.unblockUser(req.user, req.params.id);
+    const response  = await Friend.unblockUser(req.user, req.params);
     const results   = await Friend.getAllFriendsAndRequests({ id: user});
     if(results.length === 0) {
       // ****************************************
@@ -98,18 +108,25 @@ router.put('/friend/:id/unblock', async function(req, res) {
 });
 
 
-router.get('/friends/accept/:id', async function(req, res) {
+router.put('/friend/:id/accept', async function(req, res) {
   try {
+    console.log(req.params);
     const response  = await Friend.acceptFriendRequest(req.user, req.params.id);
-    const results   = await Friend.getAllFriendsAndRequests(req, res);
-    if(results.length === 0) {
+    //const results   = await Friend.getAllFriendsAndRequests(req, res);
+    const userResults = await USER.getOne({id: req.params.id});
+    if(userResults.length === 0) {
       // ****************************************
       // IF NOTHING, SEND TEST DATA FOR NOW
       // ****************************************
-      res.json(nothingFoundUser);
+      res.status(401).json("Unknown Error User Not Found");
     } else {
       // ENCRYPTION HERE
-      res.json(results);
+      res.json({
+        id: userResults.id,
+        first_name: userResults.first_name,
+        last_name: userResults.last_name,
+      });
+
     }
   } catch (error) {
     Logger.error(error);

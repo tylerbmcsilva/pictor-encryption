@@ -44,6 +44,7 @@ async function main(window, document) {
       case /\/not\-found/.test(pathname):
       case /\/post\/\d+\/edit/.test(pathname):
       case /\/post\/new/.test(pathname):
+      case /\/success/.test(pathname):
         return true;
         break;
       default:
@@ -102,6 +103,43 @@ async function main(window, document) {
     }
   }
 
+  async function getFriendActionAttributes(actionType){
+    switch(actionType) {
+      case 'delete-request':
+        return {
+          message: '\'s request has been deleted!',
+          reqFunction: deleteFromUrl,
+          extraFunction1: removeElement,
+        }
+        break;
+      case 'delete-friendship':
+        return {
+          message: '\ has been removed from your friends list!',
+          reqFunction: deleteFromUrl,
+          extraFunction1: removeElement,
+        }
+        break;
+      case 'accept-friend':
+        return {
+          message: '\'s is now your friend',
+          reqFunction: putToUrl,
+          extraFunction1: removeElement,
+          extraFunction2: addFriendPageFriend,
+        }
+        break;
+      case 'send-request':
+        return {
+          message: '\ has been sent a friend request',
+          reqFunction: putToUrl,
+          extraFunction1: updateReqSentElement,
+          param: 'Request Sent'
+        }
+        break;
+      case 'block-friend':
+        return ' has been blocked!';
+        break;
+    }
+  }
 
   // mapping argument looks like this:
   //   [ { id: 'id-to-map-to', data: 'data-to-put-in-id'} ]
@@ -138,6 +176,35 @@ async function main(window, document) {
     return;
   }
 
+  function addPageListeners(htmlArray) {
+    Array.from(htmlArray).forEach(function(el) {
+      el.addEventListener("click", async function(e){
+        e.preventDefault;
+        const pathName = e.currentTarget.dataset.path;
+        const actionType = e.currentTarget.dataset.act;
+        const id = e.currentTarget.id;
+        console.log(actionType);
+        const jsonData = await getFriendActionAttributes(actionType);
+        try {
+          const makeRequest = jsonData.reqFunction;
+          const extraFunction1 = jsonData.extraFunction1;
+          const extraFunction2 = jsonData.extraFunction2;
+          extraFunction1(id);
+          const { data } = await makeRequest(`${window.location.origin}/api${pathName}`);
+          if(extraFunction2){ extraFunction2(data); }
+          successMessage(data, jsonData.message);
+        } catch (error) {
+          if(error.message === 'Request failed with status code 401') {
+            document.getElementById("login-error").innerHTML = "Incorrect email or password";
+          } else {
+            console.error(error);
+          }
+        }
+        return;
+      });
+    });
+    return;
+  }
 
   function FeedPage(data) {
     let postsListFormatted = data.map(el => {
@@ -217,12 +284,17 @@ async function main(window, document) {
 
 
   function FriendsPage(data) {
-
+    var elems = document.querySelectorAll('.modal');
+    var instances = M.Modal.init(elems, {dismissible:true});
     const friendsFormatted = data.friends.map((el) => {
       let friend = {
         id: el.id,
         name: `${el.first_name} ${el.last_name}`,
         photo: 'https://i.imgur.com/FyWI0.jpg',
+        path1: `/friend/${el.id}`,
+        path2: `/friend/${el.id}/block`,
+        act1: 'delete-friendship',
+        act2: 'block-friend'
       };
       return createFriendCard(friend);
     });
@@ -230,10 +302,15 @@ async function main(window, document) {
 
     const currentInboundRequests = data.currentRequests.map((el) => {
       if (el.id === el.sender_id) {
-        return createCollectionItem({
+        return createCollectionItemInbound({
           title: `${el.first_name} ${el.last_name}`,
-          link: `#`,
-          icon: 'check'
+          id: el.id,
+          icon1: 'check',
+          icon2: 'close',
+          path1: `/friend/${el.id}/accept`,
+          path2: `/friend/${el.id}`,
+          act1: 'accept-friend',
+          act2: 'delete-request'
         });
       } else {
         return '';
@@ -243,36 +320,45 @@ async function main(window, document) {
 
     const currentOutboundRequests = data.currentRequests.map((el) => {
       if (el.id === el.receiver_id) {
-        return createCollectionItem({
+        return createCollectionItemOutbound({
           title: `${el.first_name} ${el.last_name}`,
-          link: `/friend/${el.id}`,
-          icon: 'access_time'
+          id: el.id,
+          icon1: 'close',
+          path1: `/friend/${el.id}`,
+          act1: 'delete-request'
         });
       } else {
         return '';
       }
     });
     PageAppend('sent_requests', currentOutboundRequests);
-
+    var secondaryContent = document.getElementsByClassName('secondary-content');
+    var cardActionLinks = document.getElementsByClassName('friend-action-content');
+    addPageListeners(secondaryContent);
+    addPageListeners(cardActionLinks);
     return;
   }
 
 
   function createFriendCard(friend) {
-    return `<div class="col s6 m4 l3">
+    return `<div class="col s6 m4 l3" id="friend${friend.id}">
                 <div class="card">
                   <div class="card-image">
                     <img src="${friend.photo}">
                     <span class="card-title">${friend.name}</span>
                   </div>
                   <div class="card-action">
-                    <a href="/friend/${friend.id}">Visit Profile</a>
+                    <a href="/friend/${friend.id}" >Visit Profile</a>
                   </div>
                   <div class="card-action">
-                    <a class="red-text darken-4" href="/friends/delete/${friend.id}">Delete</a>
+                  <a href="#success-modal" id="friend${friend.id}" class="friend-action-content card-action red-text darken-4 modal-trigger" data-path="${friend.path1}" data-act="delete-friendship">
+                    DELETE
+                  </a>
                   </div>
                   <div class="card-action">
-                    <a class="indigo-text darken-4" href="/friends/block/${friend.id}">Block</a>
+                  <a href="#success-modal" id="friend${friend.id}" class="friend-action-content card-action indigo-text darken-4 modal-trigger" data-path="${friend.path2}" data-act="block-friend">
+                    BLOCK
+                  </a>
                   </div>
                 </div>
               </div>`;
@@ -280,22 +366,102 @@ async function main(window, document) {
 
 
   function createCollectionItem(item) {
-    return `<li class="collection-item"><div>${item.title}<a href="${item.link}" class="secondary-content"><i class="material-icons">${item.icon}</i></a></div></li>`;
+    return `<li class="collection-item" id="req${item.id}">
+              <div id="req${item.id}">${item.title}
+                <a href="#success-modal" id="req${item.id}" class="secondary-content modal-trigger" data-path="${item.path1}" data-act="${item.act1}">
+                  <i class="material-icons">${item.icon1}</i>
+                </a>
+                <a href="#success-modal" id="req${item.id}" class="secondary-content modal-trigger" data-path="${item.path2}" data-act="${item.act2}">
+                  <i class="material-icons">${item.icon2}</i>
+                </a>
+              </div>
+            </li>`;
+  }
+
+  function createCollectionItemOutbound(item) {
+    return `<li class="collection-item" id="req${item.id}">
+              <div id="req${item.id}">${item.title}
+                <a href="#success-modal" id="req${item.id}" class="secondary-content modal-trigger" data-path="${item.path1}" data-act="${item.act1}">
+                  <i class="material-icons">${item.icon1}</i>
+                </a>
+              </div>
+            </li>`;
+  }
+
+  function createCollectionItemInbound(item) {
+    return `<li class="collection-item" id="req${item.id}">
+              <div id="req${item.id}">${item.title}
+                <a href="#success-modal" id="req${item.id}" class="secondary-content modal-trigger" data-path="${item.path1}" data-act="${item.act1}">
+                  <i class="material-icons">${item.icon1}</i>
+                </a>
+                <a href="#success-modal" id="req${item.id}" class="secondary-content modal-trigger" data-path="${item.path2}" data-act="${item.act2}">
+                  <i class="material-icons">${item.icon2}</i>
+                </a>
+              </div>
+            </li>`;
   }
 
 
+
   function SearchPage(data) {
-    const usersFormatted = data.map(el => {
-      let user = {
+    var elems = document.querySelectorAll('.modal');
+    var instances = M.Modal.init(elems, {dismissible:true, inDuration: 400});
+    const friendResults = data.friends.map(el => {
+      return createSearchInfoCard({
         id:       el.id,
         name:     `${el.first_name} ${el.last_name}`,
         location: el.location,
         photo:    'https://i.imgur.com/FyWI0.jpg', //replace with image eventually
-        url:      `/friend/${el.id}`
-      };
-      return createSearchInfoCard(user);
+        link:      `/friend/${el.id}`,
+        message: 'View Profile',
+        color: 'light-blue-text text-darken-3'
+      });
     });
-    return PageAppend('search_results', usersFormatted);
+    PageAppend('search_results', friendResults);
+
+    const noRequestResults = data.notFriendsNoRequest.map((el) => {
+      return createSearchInfoSendRequestCard({
+          id:       el.id,
+          name:     `${el.first_name} ${el.last_name}`,
+          location: el.location,
+          photo:    'https://i.imgur.com/FyWI0.jpg', //replace with image eventually,
+          path1: `/friend/${el.id}/request`,
+          message: 'Send Request',
+          act1: 'send-request',
+          color: 'green-text text-darken-4'
+        });
+    });
+    PageAppend('search_results', noRequestResults);
+
+    const requestSentResults= data.notFriendsRequestSent.map((el) => {
+      return createSearchInfoCard({
+          id:       el.id,
+          name:     `${el.first_name} ${el.last_name}`,
+          location: el.location,
+          photo:    'https://i.imgur.com/FyWI0.jpg', //replace with image eventually
+          link:      `/friends`,
+          message: 'Request Sent',
+          color: 'green-text text-lighten-4'
+      });
+    });
+    PageAppend('search_results', requestSentResults);
+
+
+    const requestReceivedResults= data.notFriendsRequestReceived.map((el) => {
+      return createSearchInfoCard({
+            id:       el.id,
+            name:     `${el.first_name} ${el.last_name}`,
+            location: el.location,
+            photo:    'https://i.imgur.com/FyWI0.jpg', //replace with image eventually
+            link:      `/friends`,
+            message: 'Respond to request',
+            color: 'indigo-text text-darken-4'
+      });
+    });
+    PageAppend('search_results', requestReceivedResults);
+
+    var secondaryContent = document.getElementsByClassName('sent');
+    addPageListeners(secondaryContent);
   }
 
 
@@ -304,7 +470,18 @@ async function main(window, document) {
               <img src="${user.photo}" alt="" class="circle">
               <span class="title">Name: ${user.name}</span>
               <p>From: ${user.location}</p>
-              <a href="/friend/${user.id}">Visit Profile</a>
+              <a href="${user.link}" class="${user.color}"> ${user.message}</a>
+            </li>`;
+  }
+
+  function createSearchInfoSendRequestCard(user) {
+    return `<li class="collection-item avatar" id="${user.id}">>
+              <img src="${user.photo}" alt="" class="circle">
+              <span class="title">Name: ${user.name}</span>
+              <p>From: ${user.location}</p>
+              <a href="#success-modal" id="req${user.id}" class="sent modal-trigger ${user.color}" data-path="${user.path1}" data-act="${user.act1}">
+              ${user.message}
+              </a>
             </li>`;
   }
 
@@ -394,7 +571,7 @@ async function main(window, document) {
               <span class="title">${user.name}</span>
               <p>${user.location}</p>
               <p><a href="/friends/unblock/${user.id}">Unblock</a></p>
-            </li>`;
+            </li>`
   }
 
   function BlockedUsersPage(data) {
@@ -410,6 +587,11 @@ async function main(window, document) {
     PageAppend('blocked_users', blockedFormatted);
   }
 
+  function successMessage(data, message) {
+    const fullName = `${data.first_name} ${data.last_name}`;
+    document.getElementById("success-message").innerHTML = fullName;
+    document.getElementById("success-message").innerHTML += message;
+  }
 
   function SettingsPage(data) {
     const { basic, encrypted, blocked } = data;
@@ -469,6 +651,35 @@ async function main(window, document) {
   function formatSQLDatetime(datetime) {
     const d = new Date(datetime);
     return d.toDateString();
+  }
+
+  function removeElement(elementId) {
+    // Removes an element from the document
+    var element = document.getElementById(elementId);
+    element.parentNode.removeChild(element);
+  }
+
+  function updateReqSentElement(elementId) {
+    // Removes an element from the document
+    var element = document.getElementById(elementId);
+    element.innerHTML = "";
+  }
+
+  function addFriendPageFriend(data) {
+    const friend = {
+        id: data.id,
+        name: `${data.first_name} ${data.last_name}`,
+        photo: 'https://i.imgur.com/FyWI0.jpg',
+        path1: `/friend/${data.id}`,
+        path2: `/friend/${data.id}/block`,
+        act1: 'delete-friendship',
+        act2: 'block-friend'
+      };
+    const friendCard = createFriendCard(friend);
+    var element = document.getElementById('friends_list');
+    element.innerHTML += friendCard;
+    var cardActionLinks = document.getElementsByClassName('friend-action-content');
+    addPageListeners(cardActionLinks);
   }
 }
 
