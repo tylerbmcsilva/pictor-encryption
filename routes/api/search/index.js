@@ -12,14 +12,21 @@ router.get('/updateSounds', async function(req, res) {
 
 router.get('/search/:name', async function(req, res) {
   var sounds_like = metaphone(req.params.name);
-  var friendResults = await Search.searchFriends(req.user, sounds_like);
-  for (var i in friendResults){
-    friendResults[i].friend_bool = true;
+  try {
+    var searchResults = await Search.search(req.user, sounds_like);
+    if(searchResults.length === 0) {
+      // ****************************************
+      // IF NOTHING, SEND TEST DATA FOR NOW
+      // ****************************************
+      res.status(401).json("Unknown Error User Not Found");
+    } else {
+      // ENCRYPTION HERE
+      res.json(searchResults);
+    }
+  } catch (error) {
+    Logger.error(error);
+    res.status(500).json({
+      error: error.message
+    })
   }
-  var notFriendResults = await Search.searchNotFriends(req.user, sounds_like);
-  for (var i in notFriendResults){
-    notFriendResults[i].friend_bool = false;
-  }
-  const allResults = friendResults.concat(notFriendResults);
-  res.json(allResults);
 });

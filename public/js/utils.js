@@ -120,8 +120,14 @@ function putDataToUrl(url, data) {
 }
 
 
+function putToUrl(url) {
+  return axios.put(url)
+    .catch(function(error) {
+      throw error;
+    });
+}
 
-function deleteFromUrl(url, data) {
+function deleteFromUrl(url) {
   return axios.delete(url)
     .catch(function(error) {
       throw error;

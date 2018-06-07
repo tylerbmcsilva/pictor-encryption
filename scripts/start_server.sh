@@ -14,6 +14,6 @@ dbname=$(aws ssm get-parameters --region us-east-1 --names pictor-dbname --with-
 dbpassword=$(aws ssm get-parameters --region us-east-1 --names pictor-dbpassword --with-decryption --query Parameters[0].Value | sed 's/\"//g')
 
 pm2 delete all
-DBUSER=pictor DBHOST=$dbhost DBNAME=$dbname DBPASSWORD=$dbpassword pm2 start index.js -l pictor.log
+sudo DBUSER=pictor DBHOST=$dbhost DBNAME=$dbname DBPASSWORD=$dbpassword pm2 start index.js -l pictor.log
 
-sudo service nginx start
+sudo service nginx restart
