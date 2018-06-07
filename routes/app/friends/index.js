@@ -16,7 +16,11 @@ router.get('/friends*', function(req, res) {
 
 
 router.get('/friend/:id', function(req, res) {
-  res.render('app/user');
+  if (req.params.id == req.session.passport.user) {
+    res.redirect('/profile')
+  } else {
+    res.render('app/user');
+  }
 });
 
 

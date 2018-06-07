@@ -26,6 +26,8 @@ async function create({ first_name, last_name, email, password, location, public
 
 async function update(id, updates) {
   try {
+    const sounds_like = metaphone(updates.first_name+" "+updates.last_name);
+    updates.sounds_like = sounds_like;
     const user = await DB.query('UPDATE `user` SET ? WHERE ?', [updates, { id }]);
     return user;
   } catch (error) {
