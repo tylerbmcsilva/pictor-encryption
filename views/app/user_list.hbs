@@ -1,20 +1,15 @@
 <section class="section pad1">
-
   <div class="row">
     <div class="col s12">
-      <div class="row">
-        <form id="search">
-          <div class="input-field col s12">
-            <i class="material-icons prefix">search</i>
-            <input type="text" id="autocomplete-input" class="autocomplete">
-            <label for="autocomplete-input">Find someone</label>
-          </div>
-        </form>
-      </div>
+      <form id="search">
+        <div class="input-field col s12">
+          <i class="material-icons prefix">search</i>
+          <input type="text" id="autocomplete-input" class="autocomplete">
+          <label for="autocomplete-input">Find someone</label>
+        </div>
+      </form>
     </div>
-  </div>
-  <div class="row">
-    <div class="col s4">
+    <div class="col s12 m6 l4">
       <ul class="collapsible">
         <li>
           <div class="collapsible-header"><i class="material-icons">filter_drama</i>Received Requests</div>
@@ -23,7 +18,7 @@
         </li>
       </ul>
     </div>
-    <div class="col s4">
+    <div class="col s12 m6 l4">
       <ul class="collapsible">
         <li>
           <div class="collapsible-header"><i class="material-icons">filter_drama</i>Sent Requests</div>
@@ -32,34 +27,24 @@
         </li>
       </ul>
     </div>
-    <!-- <div class="col s4">
-      <ul class="collapsible">
-        <li>
-          <div class="collapsible-header"><i class="material-icons">terrain</i>Blocked Users</div>
-          <div class="collapsible-body">
-            <ul class="collection" id="blocked_users">
-            </ul>
-          </div>
-        </li>
-      </ul>
-    </div> -->
   </div>
 
   <div class="row">
-    <h1>Friends</h1>
+    <h1 class="center-align">Friends</h1>
     <div class="row" id="friends_list">
+      <h4 class="center-align blue-grey-text text-lighten-4">No Friends available :(</h4>
     </div>
 
-    <div id="success-modal" class="modal bottom">
-      <div class="row">
-        <div class="col s4">
-          <a class="modal-close"> <i class="medium material-icons">close</i><a>
+    <div id="success-modal" class="modal bottom pad1">
+      <div class="row no-margin">
+        <div class="col s4 offset-s8 right-align">
+          <i class="modal-close small material-icons indigo-text">close</i>
         </div>
-        <div class="modal-content col s12">
-          <h4 id=success-message></h4>
+        <div class="col s12">
+          <h4 id="success-message" class="indigo-text"></h4>
         </div>
+      </div>
     </div>
-  </div>
 
 
 </section>
