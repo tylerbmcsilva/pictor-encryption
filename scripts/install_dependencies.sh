@@ -17,8 +17,12 @@ source ~/.bashrc
 
 echo -e "Installing PM2"
 sudo npm install -g pm2
+
 echo -e "Installing Application Dependencies"
+sudo rm -rf ./npm-*
 sudo rm -rf ./node_modules
-sudo rm yarn.lock
+sudo rm -rf ./v8-compile-cache-*
+sudo rm -f ./*.log
+sudo rm -f yarn.lock
 sudo yarn clear cache
 sudo yarn
