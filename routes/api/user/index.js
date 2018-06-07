@@ -48,7 +48,7 @@ router.get('/profile', async function(req, res) {
 });
 
 
-router.post('/user/new', async function(req, res) {
+router.post('/user', async function(req, res) {
   const { first_name, last_name, email, location, public_key, password } = req.body;
 
   try {
