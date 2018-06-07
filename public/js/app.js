@@ -107,14 +107,14 @@ async function main(window, document) {
     switch(actionType) {
       case 'delete-request':
         return {
-          message: '\'s request has been deleted!',
+          message: '\'s request has been deleted',
           reqFunction: deleteFromUrl,
           extraFunction1: removeElement,
         }
         break;
       case 'delete-friendship':
         return {
-          message: '\ has been removed from your friends list!',
+          message: '\ has been removed from your friends list',
           reqFunction: deleteFromUrl,
           extraFunction1: removeElement,
         }
@@ -135,8 +135,19 @@ async function main(window, document) {
           param: 'Request Sent'
         }
         break;
-      case 'block-friend':
-        return ' has been blocked!';
+      case 'unblock-user':
+        return {
+          message: '\ has been unblocked',
+          reqFunction: putToUrl,
+          extraFunction1: removeElement,
+        }
+        break;
+      case 'block-user':
+        return {
+          message: '\ has been blocked',
+          reqFunction: putToUrl,
+          extraFunction1: removeElement,
+        }
         break;
     }
   }
@@ -183,7 +194,6 @@ async function main(window, document) {
         const pathName = e.currentTarget.dataset.path;
         const actionType = e.currentTarget.dataset.act;
         const id = e.currentTarget.id;
-        console.log(actionType);
         const jsonData = await getFriendActionAttributes(actionType);
         try {
           const makeRequest = jsonData.reqFunction;
@@ -294,7 +304,7 @@ async function main(window, document) {
         path1: `/friend/${el.id}`,
         path2: `/friend/${el.id}/block`,
         act1: 'delete-friendship',
-        act2: 'block-friend'
+        act2: 'block-user'
       };
       return createFriendCard(friend);
     });
@@ -356,7 +366,7 @@ async function main(window, document) {
                   </a>
                   </div>
                   <div class="card-action">
-                  <a href="#success-modal" id="friend${friend.id}" class="friend-action-content card-action indigo-text darken-4 modal-trigger" data-path="${friend.path2}" data-act="block-friend">
+                  <a href="#success-modal" id="friend${friend.id}" class="friend-action-content card-action indigo-text darken-4 modal-trigger" data-path="${friend.path2}" data-act="block-user">
                     BLOCK
                   </a>
                   </div>
@@ -566,25 +576,33 @@ async function main(window, document) {
   }
 
   function createBlockedListCard(user) {
-    return `<li class="collection-item avatar">
+    return `<li class="collection-item avatar" id="${user.id}">
               <img src="${user.photo}" alt="" class="circle">
-              <span class="title">${user.name}</span>
-              <p>${user.location}</p>
-              <p><a href="/friends/unblock/${user.id}">Unblock</a></p>
-            </li>`
+              <span class="title">Name: ${user.name}</span>
+              <p>From: ${user.location}</p>
+              <a href="#success-modal" id="req${user.id}" class="unblock modal-trigger ${user.color}" data-path="${user.path1}" data-act="${user.act1}">
+              ${user.message}
+              </a>
+            </li>`;
   }
 
   function BlockedUsersPage(data) {
     const blockedFormatted = data.map((el) => {
-      let blocked = {
-        id: el.id,
-        name: `${el.first_name} ${el.last_name}`,
-        photo: 'https://i.imgur.com/FyWI0.jpg',
-        location: `${el.location}`
-      };
-      return createBlockedListCard(blocked);
+      return createBlockedListCard({
+          id:       el.id,
+          name:     `${el.first_name} ${el.last_name}`,
+          location: el.location,
+          photo:    'https://i.imgur.com/FyWI0.jpg', //replace with image eventually,
+          path1: `/friend/${el.id}/unblock`,
+          message: 'Unblock',
+          act1: 'unblock-user',
+          color: 'green-text text-darken-4'
+        });
     });
     PageAppend('blocked_users', blockedFormatted);
+
+    var cardActionLinks = document.getElementsByClassName('unblock');
+    addPageListeners(cardActionLinks);
   }
 
   function successMessage(data, message) {
@@ -673,7 +691,7 @@ async function main(window, document) {
         path1: `/friend/${data.id}`,
         path2: `/friend/${data.id}/block`,
         act1: 'delete-friendship',
-        act2: 'block-friend'
+        act2: 'block-user'
       };
     const friendCard = createFriendCard(friend);
     var element = document.getElementById('friends_list');
