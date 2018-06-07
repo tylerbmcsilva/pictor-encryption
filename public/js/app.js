@@ -160,6 +160,7 @@ async function main(window, document) {
       if (mapping[i].id === 'user-picture' && mapping[i].data) {
         document.getElementById(mapping[i].id).src = mapping[i].data;
       } else if (mapping[i].data) {
+        document.getElementById(mapping[i].id).innerHTML = "";
         document.getElementById(mapping[i].id).innerHTML = mapping[i].data;
       }
     }
@@ -172,7 +173,7 @@ async function main(window, document) {
       if (mapping[i].id === 'user-picture' && mapping[i].data) {
         document.getElementById(mapping[i].id).src = mapping[i].data;
       } else if (mapping[i].data) {
-        // console.log(mapping[i].id);
+        document.getElementById(mapping[i].id).innerHTML = "";
         document.getElementById(mapping[i].id).value = mapping[i].data;
       }
     }
@@ -181,9 +182,14 @@ async function main(window, document) {
 
 
   function PageAppend(id, htmlArray) {
+    if(htmlArray.length === 0) return;
+
+    let element = document.getElementById(id)
+    element.innerHTML = "";
     htmlArray.forEach(function(el) {
-      document.getElementById(id).innerHTML += el;
+      element.innerHTML += el;
     });
+
     return;
   }
 
@@ -227,19 +233,21 @@ async function main(window, document) {
 
 
   function createPostFeedHTML(post) {
-    return `<div class="card-panel">
-              <a href="/post/${post.id}" class="indigo-text"><h3 style="margin:0">${post.title}</h3></a>
-              <div class="row">
-                <div class="col s6">
-                  <a href="/friend/${post.user_id}" class="indigo-text"><h5 class="truncate">${post.first_name} ${post.last_name}</h5></a>
+    return `<div class="col s12 m8 offset-m2">
+              <div class="card-panel">
+                <a href="/post/${post.id}" class="indigo-text"><h4 style="margin:0">${post.title}</h4></a>
+                <div class="row">
+                  <div class="col s12 m6">
+                    <a href="/friend/${post.user_id}" class="indigo-text"><h6 class="truncate">${post.first_name} ${post.last_name}</h6></a>
+                  </div>
+                  <div class="col s12 m6">
+                    <h6 class="right-align">${formatSQLDatetime(post.date)}</h6>
+                  </div>
                 </div>
-                <div class="col s6">
-                  <h5 class="right-align">${formatSQLDatetime(post.date)}</h5>
+                <a href="${post.url ? post.url : '#'}" class="truncate indigo-text ${post.url ? '' : 'hide'}"><h6>${post.url ? post.url : ''}</h6></a>
+                <div id="post-body" class="truncate">
+                  ${post.body}
                 </div>
-              </div>
-              <a href="${post.url ? post.url : '#'}" class="indigo-text ${post.url ? '' : 'hide'}"><h5>${post.url ? post.url : ''}</h5></a>
-              <div id="post-body" class="truncate">
-                ${post.body}
               </div>
             </div>`;
   }
@@ -351,7 +359,7 @@ async function main(window, document) {
 
 
   function createFriendCard(friend) {
-    return `<div class="col s6 m4 l3" id="friend${friend.id}">
+    return `<div class="col s10 offset-s1 m4 l3" id="friend${friend.id}">
                 <div class="card">
                   <div class="card-image">
                     <img src="${friend.photo}">
@@ -361,12 +369,12 @@ async function main(window, document) {
                     <a href="/friend/${friend.id}" >Visit Profile</a>
                   </div>
                   <div class="card-action">
-                  <a href="#success-modal" id="friend${friend.id}" class="friend-action-content card-action red-text darken-4 modal-trigger" data-path="${friend.path1}" data-act="delete-friendship">
+                  <a href="#success-modal" id="friend${friend.id}" class="friend-action-content red-text darken-4 modal-trigger" data-path="${friend.path1}" data-act="delete-friendship">
                     DELETE
                   </a>
                   </div>
                   <div class="card-action">
-                  <a href="#success-modal" id="friend${friend.id}" class="friend-action-content card-action indigo-text darken-4 modal-trigger" data-path="${friend.path2}" data-act="block-user">
+                  <a href="#success-modal" id="friend${friend.id}" class="friend-action-content indigo-text darken-4 modal-trigger" data-path="${friend.path2}" data-act="block-user">
                     BLOCK
                   </a>
                   </div>

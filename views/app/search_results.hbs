@@ -1,31 +1,27 @@
-<section class="section pad5">
+<section class="section pad1">
   <div class="row">
-    <div class="col s12">
-      <div class="row">
-        <form id="search">
-          <div class="input-field col s12">
-            <i class="material-icons prefix">search</i>
-            <input type="text" id="autocomplete-input" class="autocomplete">
-            <label for="autocomplete-input">Find someone</label>
-          </div>
-        </form>
+    <form id="search">
+      <div class="input-field col s12">
+        <i class="material-icons prefix">search</i>
+        <input type="text" id="autocomplete-input" class="autocomplete">
+        <label for="autocomplete-input">Find someone</label>
       </div>
-    </div>
+    </form>
   </div>
-  <div class="row">
-    <h1>Search Results</h1>
+  <div class="pad1">
+    <h3>Search Results</h3>
     <ul class="collection" id="search_results">
+      <li class="pad1"><h5 class="blue-grey-text text-lighten-4">Nothing found :(</h5></li>
     </ul>
   </div>
 
-
-  <div id="success-modal" class="modal bottom">
-    <div class="row">
-      <div class="col s4">
-        <a class="modal-close"> <i class="medium material-icons">close</i><a>
+  <div id="success-modal" class="modal bottom pad1">
+    <div class="row no-margin">
+      <div class="col s4 offset-s8 right-align">
+        <i class="modal-close small material-icons indigo-text">close</i>
       </div>
-      <div class="modal-content col s12">
-        <h4 id="success-message"></h4>
+      <div class="col s12">
+        <h4 id="success-message" class="indigo-text">test</h4>
       </div>
     </div>
   </div>
