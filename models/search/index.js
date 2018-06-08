@@ -58,7 +58,7 @@ async function searchNotFriendsNoRequest( id , sounds_like) {
       'WHERE u.id!=? AND sounds_like like ' + full + ') as notU '+
       'WHERE notU.id NOT IN '+
       '(SELECT r.receiver_id as `id` FROM `request` r '+
-      'WHERE r.sender_id=? AND r.blocked=0 '+
+      'WHERE r.sender_id=?'+
       'UNION SELECT r.sender_id FROM `request` r '+
       'WHERE r.receiver_id=?);';
     const users = await DB.query(queryString, [id, id, id]);
