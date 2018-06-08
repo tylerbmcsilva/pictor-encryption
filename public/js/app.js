@@ -478,7 +478,7 @@ async function main(window, document) {
     });
     PageAppend('search_results', requestReceivedResults);
 
-    var secondaryContent = document.getElementsByClassName('sent');
+    var secondaryContent = document.getElementsByClassName('send-block');
     addPageListeners(secondaryContent);
   }
 
@@ -489,6 +489,10 @@ async function main(window, document) {
               <span class="title">Name: ${user.name}</span>
               <p>From: ${user.location}</p>
               <a href="${user.link}" class="${user.color}"> ${user.message}</a>
+              <br>
+              <a href="#success-modal" id="search${user.id}" class="send-block indigo-text darken-4 modal-trigger" data-path="/friend/${user.id}/block" data-act="block-user">
+                Block User
+              </a>
             </li>`;
   }
 
@@ -497,9 +501,15 @@ async function main(window, document) {
               <img src="${user.photo}" alt="" class="circle">
               <span class="title">Name: ${user.name}</span>
               <p>From: ${user.location}</p>
-              <a href="#success-modal" id="req${user.id}" class="sent modal-trigger ${user.color}" data-path="${user.path1}" data-act="${user.act1}">
+              <div id="req${user.id}"> 
+              <a href="#success-modal" id="req${user.id}" class="send-block modal-trigger ${user.color}" data-path="${user.path1}" data-act="${user.act1}">
               ${user.message}
               </a>
+              <br>
+              <a href="#success-modal" id="req${user.id}" class="send-block indigo-text darken-5 modal-trigger" data-path="/friend/${user.id}/block" data-act="block-user">
+                Block User
+              </a>
+              </div>
             </li>`;
   }
 
