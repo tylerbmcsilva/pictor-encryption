@@ -159,7 +159,7 @@ async function main(window, document) {
     for (i = 0; i < mapping.length; i++) {
       if (mapping[i].id === 'user-picture' && mapping[i].data) {
         document.getElementById(mapping[i].id).src = mapping[i].data;
-      } else if (mapping[i].data) {
+      } else {
         document.getElementById(mapping[i].id).innerHTML = "";
         document.getElementById(mapping[i].id).innerHTML = mapping[i].data;
       }
@@ -308,7 +308,7 @@ async function main(window, document) {
       let friend = {
         id: el.id,
         name: `${el.first_name} ${el.last_name}`,
-        photo: 'https://i.imgur.com/FyWI0.jpg',
+        photo: '/images/profile/blank.png',
         path1: `/friend/${el.id}`,
         path2: `/friend/${el.id}/block`,
         act1: 'delete-friendship',
@@ -429,7 +429,7 @@ async function main(window, document) {
         id:       el.id,
         name:     `${el.first_name} ${el.last_name}`,
         location: el.location,
-        photo:    'https://i.imgur.com/FyWI0.jpg', //replace with image eventually
+        photo:    '/images/profile/blank.png', //replace with image eventually
         link:      `/friend/${el.id}`,
         message: 'View Profile',
         color: 'light-blue-text text-darken-3'
@@ -442,7 +442,7 @@ async function main(window, document) {
           id:       el.id,
           name:     `${el.first_name} ${el.last_name}`,
           location: el.location,
-          photo:    'https://i.imgur.com/FyWI0.jpg', //replace with image eventually,
+          photo:    '/images/profile/blank.png', //replace with image eventually,
           path1: `/friend/${el.id}/request`,
           message: 'Send Request',
           act1: 'send-request',
@@ -456,7 +456,7 @@ async function main(window, document) {
           id:       el.id,
           name:     `${el.first_name} ${el.last_name}`,
           location: el.location,
-          photo:    'https://i.imgur.com/FyWI0.jpg', //replace with image eventually
+          photo:    '/images/profile/blank.png', //replace with image eventually
           link:      `/friends`,
           message: 'Request Sent',
           color: 'green-text text-lighten-4'
@@ -470,7 +470,7 @@ async function main(window, document) {
             id:       el.id,
             name:     `${el.first_name} ${el.last_name}`,
             location: el.location,
-            photo:    'https://i.imgur.com/FyWI0.jpg', //replace with image eventually
+            photo:    '/images/profile/blank.png', //replace with image eventually
             link:      `/friends`,
             message: 'Respond to request',
             color: 'indigo-text text-darken-4'
@@ -486,7 +486,7 @@ async function main(window, document) {
   function createSearchInfoCard(user) {
     return `<li class="collection-item avatar">
               <img src="${user.photo}" alt="" class="circle">
-              <span class="title">Name: ${user.name}</span>
+              <span class="title">Name: <a href="/friend/${user.id}">${user.name}</a></span>
               <p>From: ${user.location}</p>
               <a href="${user.link}" class="${user.color}"> ${user.message}</a>
               <br>
@@ -499,7 +499,7 @@ async function main(window, document) {
   function createSearchInfoSendRequestCard(user) {
     return `<li class="collection-item avatar" id="${user.id}">
               <img src="${user.photo}" alt="" class="circle">
-              <span class="title">Name: ${user.name}</span>
+              <span class="title">Name: <a href="/friend/${user.id}">${user.name}</a></span>
               <p>From: ${user.location}</p>
               <div id="req${user.id}"> 
               <a href="#success-modal" id="req${user.id}" class="send-block modal-trigger ${user.color}" data-path="${user.path1}" data-act="${user.act1}">
@@ -528,7 +528,7 @@ async function main(window, document) {
       let friend = {
         id: el.id,
         name: `${el.first_name} ${el.last_name}`,
-        photo: 'https://i.imgur.com/FyWI0.jpg',
+        photo: '/images/profile/blank.png',
         // location: `${el.location}`
       };
       return createFriendListCard(friend);
@@ -610,7 +610,7 @@ async function main(window, document) {
           id:       el.id,
           name:     `${el.first_name} ${el.last_name}`,
           location: el.location,
-          photo:    'https://i.imgur.com/FyWI0.jpg', //replace with image eventually,
+          photo:    '/images/profile/blank.png', //replace with image eventually,
           path1: `/friend/${el.id}/unblock`,
           message: 'Unblock',
           act1: 'unblock-user',
@@ -705,7 +705,7 @@ async function main(window, document) {
     const friend = {
         id: data.id,
         name: `${data.first_name} ${data.last_name}`,
-        photo: 'https://i.imgur.com/FyWI0.jpg',
+        photo: '/images/profile/blank.png',
         path1: `/friend/${data.id}`,
         path2: `/friend/${data.id}/block`,
         act1: 'delete-friendship',
