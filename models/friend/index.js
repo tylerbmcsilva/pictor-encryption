@@ -184,7 +184,7 @@ async function getBlockedUsers({ id }) {
       FROM
         (SELECT u.first_name, u.last_name, u.id, u.location FROM \`user\` u WHERE u.id!=${id}) as notU
       WHERE notU.id IN
-        (SELECT r.receiver_id as \`id\` FROM \`request\` r WHERE r.sender_id=${id} AND r.blocked=1 UNION SELECT r.sender_id FROM \`request\` r WHERE r.receiver_id=${id} AND r.blocked=1)`;
+        (SELECT b.blockee_id as \`id\` FROM \`blocked\` b WHERE b.blocker_id=${id})`;
     const users = await DB.query(queryString);
     Logger.debug(users);
     return users;
@@ -199,11 +199,21 @@ async function getBlockedUsers({ id }) {
 async function blockUser(uId, notUId) {
   try {
     // needs to be changed to reflect situations where ids are swapped (see delete friend request query)
-    var queryString = 'UPDATE `request` SET `blocked`=1 '  +
-      'WHERE (`receiver_id`=? AND `sender_id`=?) ' +
-      'OR (`receiver_id`=? AND `sender_id`=?)';
-    const results = await DB.query(queryString,
-      [uId, notUId, notUId, uId ]);
+    var queryString = 'INSERT INTO `request` SET `receiver_id`=?, `sender_id`=?, `blocked`=1 ' +
+        'ON DUPLICATE KEY UPDATE `blocked`=1';
+    const results = await DB.query(queryString, [uId, notUId]);
+    const auxResults = await blockUserAux(uId, notUId);
+    return auxResults;
+  }  catch (error) {
+    Logger.error(error);
+    throw error;
+  }
+}
+
+async function blockUserAux(uId, notUId) {
+  try {
+    var queryString = 'INSERT INTO `blocked` SET `blocker_id`=?, `blockee_id`=? ';
+    const results = await DB.query(queryString, [uId, notUId]);
     return results;
   }  catch (error) {
     Logger.error(error);
@@ -216,18 +226,30 @@ async function blockUser(uId, notUId) {
 async function unblockUser(uId, notUId) {
   try {
     // needs to be changed to reflect situations where ids are swapped (see delete friend request query)
-    var queryString = 'UPDATE `request` SET `blocked`=0 ' +
+    var queryString = 'DELETE FROM `request` ' +
       'WHERE (`receiver_id`=? AND `sender_id`=?) ' +
       'OR (`receiver_id`=? AND `sender_id`=?)';
     const results = await DB.query(queryString,
       [uId, notUId, notUId, uId ]);
-    return results;
+    const auxResults = await unblockUserAux(uId, notUId);
+    return auxResults;
   }  catch (error) {
     Logger.error(error);
     throw error;
   }
 }
 
+async function unblockUserAux(uId, notUId) {
+  try {
+    // needs to be changed to reflect situations where ids are swapped (see delete friend request query)
+    const queryString = `DELETE FROM \`blocked\` WHERE \`blocker_id\`=${uId} AND \`blockee_id\`=${notUId} ;`;
+    const results = await DB.query(queryString);
+    return results;
+  } catch (error) {
+    Logger.error(error);
+    throw error;
+  }
+}
 
 async function getAllCurrentRequests({ id }) {
   try {

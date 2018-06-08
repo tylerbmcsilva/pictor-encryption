@@ -45,7 +45,7 @@ CREATE TABLE `request` (
     `req_accepted` tinyint(1) DEFAULT 0,
     `blocked` tinyint(1) DEFAULT 0,
     PRIMARY KEY(`id`),
-    UNIQUE(`sender_id`, `receiver_id`), 
+    UNIQUE(`sender_id`, `receiver_id`),
     CONSTRAINT `request_ibfk_1` FOREIGN KEY (`sender_id`)
     REFERENCES `user`(`id`),
     CONSTRAINT `request_ibfk_2` FOREIGN KEY (`receiver_id`)
@@ -58,3 +58,13 @@ CREATE TABLE `server`(
   `private_key` varchar(3000),
   PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE `blocked`(
+  `id` int NOT NULL AUTO_INCREMENT,
+  `blockee_id` int NOT NULL,
+  `blocker_id` int NOT NULL,
+  CONSTRAINT `blocked_ibfk_1` FOREIGN KEY (`blockee_id`)
+  REFERENCES `user`(`id`),
+  CONSTRAINT `blocked_ibfk_2` FOREIGN KEY (`blocker_id`)
+  REFERENCES `user`(`id`)
+)

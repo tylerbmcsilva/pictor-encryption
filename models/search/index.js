@@ -60,7 +60,7 @@ async function searchNotFriendsNoRequest( id , sounds_like) {
       '(SELECT r.receiver_id as `id` FROM `request` r '+
       'WHERE r.sender_id=? AND r.blocked=0 '+
       'UNION SELECT r.sender_id FROM `request` r '+
-      'WHERE r.receiver_id=? AND r.blocked=0);';
+      'WHERE r.receiver_id=?);';
     const users = await DB.query(queryString, [id, id, id]);
     return users;
   } catch (error) {
