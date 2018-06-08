@@ -212,13 +212,8 @@ async function blockUser(uId, notUId) {
 
 async function blockUserAux(uId, notUId) {
   try {
-    // needs to be changed to reflect situations where ids are swapped (see delete friend request query)
-    console.log(uId);
-    console.log(notUId);
     var queryString = 'INSERT INTO `blocked` SET `blocker_id`=?, `blockee_id`=? ';
     const results = await DB.query(queryString, [uId, notUId]);
-    Logger.error(uId);
-    Logger.error(notUId);
     return results;
   }  catch (error) {
     Logger.error(error);
@@ -247,8 +242,8 @@ async function unblockUser(uId, notUId) {
 async function unblockUserAux(uId, notUId) {
   try {
     // needs to be changed to reflect situations where ids are swapped (see delete friend request query)
-    var queryString = 'DELETE FROM `blocked` WHERE `blocker_id`=? AND `blockee_id`=? ';
-    const results = await DB.query(queryString,[ uId, notUId ]);
+    const queryString = `DELETE FROM \`blocked\` WHERE \`blocker_id\`=${uId} AND \`blockee_id\`=${notUId} ;`;
+    const results = await DB.query(queryString);
     return results;
   } catch (error) {
     Logger.error(error);
