@@ -17,4 +17,3 @@ fi
 
 echo -e "Installing dependencies..."
 yarn
-git submodule update --init --recursive
